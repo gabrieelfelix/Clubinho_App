@@ -7,7 +7,7 @@ class CustomTextField extends StatelessWidget {
         suffixIcon = null;
 
   const CustomTextField.suffixIcon(
-      {super.key, required this.hint, this.suffixIcon})
+      {super.key, required this.hint, required this.suffixIcon})
       : maxLines = null;
 
   const CustomTextField.box({super.key, required this.hint, required int max})

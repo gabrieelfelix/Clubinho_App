@@ -4,6 +4,7 @@ import 'package:club_app/pages/manage_children_page/manage_children_page.dart';
 import 'package:club_app/pages/manage_club_page/manage_club_page.dart';
 import 'package:club_app/pages/sign_in_page/sign_in_page.dart';
 import 'package:club_app/pages/sign_up_page/sign_up_page.dart';
+import 'package:club_app/pages/verification_code_page/verification_code_page.dart';
 import 'package:go_router/go_router.dart';
 
 // extension AppRouterContext on BuildContext {
@@ -27,6 +28,8 @@ class AppRouter {
 
   static const String childRegistration = '/child_registration';
 
+  static const String codeVerification = '/code_verification';
+
   static final router = GoRouter(
     initialLocation: '/',
     routes: [
@@ -36,7 +39,7 @@ class AppRouter {
       ),
       GoRoute(
         path: signUpScreen,
-        builder: (context, state) => const SignUpPage(),
+        builder: (context, state) => SignUpPage(),
       ),
       GoRoute(
         path: homeScreen,
@@ -53,6 +56,10 @@ class AppRouter {
       GoRoute(
         path: childRegistration,
         builder: (context, state) => const ChildRegistration(),
+      ),
+      GoRoute(
+        path: codeVerification,
+        builder: (context, state) => const VerificationCode(),
       ),
     ],
   );

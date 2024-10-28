@@ -1,10 +1,8 @@
 import 'package:app_ui/app_ui.dart';
-import 'package:club_app/routes/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-class SignUpPage extends StatelessWidget {
-  const SignUpPage({super.key});
+class VerificationCode extends StatelessWidget {
+  const VerificationCode({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -33,28 +31,28 @@ class SignUpPage extends StatelessWidget {
                     ),
                   ),
                   const Align(
-                    alignment: Alignment.centerLeft,
+                    alignment: Alignment.center,
                     child: Text(
-                      'Entre na sua conta',
-                      style: TextStyle(fontSize: 22),
+                      'Digite o código de verificação',
+                      style:
+                          TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(height: 7),
+                  const Align(
+                    alignment: Alignment.center,
+                    child: Text(
+                      'Enviamos um código para (92)99999-9999',
+                      style: TextStyle(fontSize: 17),
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const CustomTextField(hint: 'Nome Completo'),
-                  const SizedBox(height: 25),
-                  const CustomTextField(hint: 'Email'),
-                  const SizedBox(height: 25),
-                  const CustomTextField(hint: 'Senha'),
-                  const SizedBox(height: 25),
-                  const CustomTextField(hint: 'Digite a senha novamente'),
-                  const SizedBox(height: 25),
-                  const CustomTextField.suffixIcon(
-                      hint: 'Telefone', suffixIcon: Icon(Icons.phone)),
-                  const SizedBox(height: 45),
+                  const VerificationInput(),
+                  const SizedBox(height: 40),
                   CustomButton(
                     textLabel: 'Cadastrar',
                     height: 50,
-                    onPressed: () => onTapCodeVerification(context),
+                    onPressed: () {},
                   ),
                   const SizedBox(height: 28),
                 ],
@@ -64,10 +62,5 @@ class SignUpPage extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  /// Navigates to the code verification screen when login is performed.
-  onTapCodeVerification(BuildContext context) {
-    context.push(AppRouter.codeVerification);
   }
 }

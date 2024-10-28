@@ -37,7 +37,7 @@ class GlobalThemData {
     background: Color(0xFFE6EBEB),
     onBackground: Color(0xFFE6EBEB),
     surface: Color(0xFF9E9E9E),
-    onSurface: Color(0xFF241E30),
+    onSurface: Color(0xFF3A3D90),
     brightness: Brightness.light,
   );
 }
