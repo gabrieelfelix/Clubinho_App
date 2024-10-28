@@ -64,9 +64,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-     - assets/logo_clubinho.png
-     - assets/logo_ibavin.png
-     - assets/icons/wired-outline-1531-rocking-horse-hover-pinch.png
+    - assets/branding/
+    - assets/icons/
+    
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

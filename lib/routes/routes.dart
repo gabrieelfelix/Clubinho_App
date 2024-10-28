@@ -1,8 +1,9 @@
 import 'package:club_app/pages/child_registration_page/child_registration_page.dart';
 import 'package:club_app/pages/home_page/home_page.dart';
-import 'package:club_app/pages/login_page/login_page.dart';
 import 'package:club_app/pages/manage_children_page/manage_children_page.dart';
 import 'package:club_app/pages/manage_club_page/manage_club_page.dart';
+import 'package:club_app/pages/sign_in_page/sign_in_page.dart';
+import 'package:club_app/pages/sign_up_page/sign_up_page.dart';
 import 'package:go_router/go_router.dart';
 
 // extension AppRouterContext on BuildContext {
@@ -14,7 +15,9 @@ import 'package:go_router/go_router.dart';
 // }
 
 class AppRouter {
-  static const String loginScreen = '/';
+  static const String signInScreen = '/';
+
+  static const String signUpScreen = '/sign_up';
 
   static const String homeScreen = '/home';
 
@@ -28,8 +31,12 @@ class AppRouter {
     initialLocation: '/',
     routes: [
       GoRoute(
-        path: loginScreen,
-        builder: (context, state) => const LoginScreen(),
+        path: signInScreen,
+        builder: (context, state) => const SignInPage(),
+      ),
+      GoRoute(
+        path: signUpScreen,
+        builder: (context, state) => const SignUpPage(),
       ),
       GoRoute(
         path: homeScreen,

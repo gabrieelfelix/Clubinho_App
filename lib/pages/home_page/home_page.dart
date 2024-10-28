@@ -18,7 +18,7 @@ class HomeScreen extends StatelessWidget {
         leadingWidth: 80,
         leading: SizedBox(
           child: Image.asset(
-            'assets/logo_ibavin.png',
+            ImageConstant.logoIbavin,
             filterQuality: FilterQuality.high,
             fit: BoxFit.contain,
           ),

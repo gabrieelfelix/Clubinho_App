@@ -4,14 +4,14 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  State<SignInPage> createState() => _SignInPageState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _SignInPageState extends State<SignInPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.only(bottom: 20),
                   child: SizedBox(
                     child: Image.asset(
-                      'assets/logo_clubinho.png',
+                      ImageConstant.logoClub,
                       filterQuality: FilterQuality.high,
                       fit: BoxFit.contain,
                       height: 230,
@@ -72,15 +72,20 @@ class _LoginScreenState extends State<LoginScreen> {
             style: TextStyle(
               color: context.colors.tertiary,
             ),
-            recognizer: TapGestureRecognizer()..onTap = () {},
+            recognizer: TapGestureRecognizer()..onTap = onTapSignUp,
           ),
         ],
       ),
     );
   }
 
-  /// Navigates to the home screen when login is performed
+  /// Navigates to the home screen when login is performed.
   onTapLogin() {
     context.push(AppRouter.homeScreen);
+  }
+
+  /// Navigates to the Sign Up screen when login is performed.
+  onTapSignUp() {
+    context.push(AppRouter.signUpScreen);
   }
 }
