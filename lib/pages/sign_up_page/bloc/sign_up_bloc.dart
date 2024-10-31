@@ -25,7 +25,13 @@ class SignUpBloc extends Bloc<ISignUpEvent, ISignUpState> {
       password: event.password,
     );
 
-    response.when((success) => emit(SignUpSuccess(authUserModel: success)),
-        (failure) => emit(SignUpFailure(message: failure.message)));
+    response.when(
+      (success) => emit(
+        SignUpSuccess(message: success),
+      ),
+      (failure) => emit(
+        SignUpFailure(message: failure.message),
+      ),
+    );
   }
 }

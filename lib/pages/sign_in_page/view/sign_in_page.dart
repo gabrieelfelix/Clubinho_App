@@ -1,71 +1,70 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
-import 'package:club_app/pages/sign_up_page/bloc/sign_up_bloc.dart';
+import 'package:club_app/pages/sign_in_page/bloc/authentication_bloc.dart';
+import 'package:club_app/routes/routes.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 
-class SignUpPage extends StatelessWidget {
-  const SignUpPage({super.key});
+class SignInPage extends StatelessWidget {
+  const SignInPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SignUpBloc(authRepository: FirebaseAuthRepository()),
-      child: const SignUpPageView(),
+      create: (context) =>
+          AuthenticationBloc(authRepository: FirebaseAuthRepository()),
+      child: const SignInPageView(),
     );
   }
 }
 
-class SignUpPageView extends StatefulWidget {
-  const SignUpPageView({super.key});
+class SignInPageView extends StatefulWidget {
+  const SignInPageView({super.key});
 
   @override
-  State<SignUpPageView> createState() => _SignUpPageViewState();
+  State<SignInPageView> createState() => _SignInPageViewState();
 }
 
-class _SignUpPageViewState extends State<SignUpPageView> {
-  final TextEditingController _nameController = TextEditingController();
-
+class _SignInPageViewState extends State<SignInPageView> {
   final TextEditingController _emailController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
-
-  final TextEditingController _passwordRepeatController =
-      TextEditingController();
-
-  final TextEditingController _phoneController = TextEditingController();
 
   bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
-    final bloc = context.read<SignUpBloc>();
-    return BlocListener<SignUpBloc, ISignUpState>(
+    final bloc = context.read<AuthenticationBloc>();
+    return BlocListener<AuthenticationBloc, IAuthenticationState>(
       listener: (context, state) {
-        if (state is SignUpSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-            ),
-          );
-          setState(() {
-            isLoading = false;
-          });
-        }
-        if (state is SignUpFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-            ),
-          );
-          setState(() {
-            isLoading = false;
-          });
-        }
-        if (state is SignUpProcess) {
+        if (state is SignInProcess) {
           setState(() {
             isLoading = true;
           });
+        }
+        if (state is SignInFailure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+            ),
+          );
+          setState(() {
+            isLoading = false;
+          });
+        }
+        if (state is SignInSuccess) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Login realizado com sucesso'),
+            ),
+          );
+          setState(
+            () {
+              isLoading = false;
+            },
+          );
         }
       },
       child: GestureDetector(
@@ -96,16 +95,11 @@ class _SignUpPageViewState extends State<SignUpPageView> {
                     const Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        'Crie uma conta',
+                        'Entre na sua conta',
                         style: TextStyle(fontSize: 22),
                       ),
                     ),
                     const SizedBox(height: 20),
-                    CustomTextField(
-                      hint: 'Nome Completo',
-                      textEditingController: _nameController,
-                    ),
-                    const SizedBox(height: 25),
                     CustomTextField(
                       hint: 'Email',
                       textEditingController: _emailController,
@@ -115,38 +109,23 @@ class _SignUpPageViewState extends State<SignUpPageView> {
                       hint: 'Senha',
                       textEditingController: _passwordController,
                     ),
-                    const SizedBox(height: 25),
-                    CustomTextField(
-                      hint: 'Digite a senha novamente',
-                      textEditingController: _passwordRepeatController,
-                    ),
-                    const SizedBox(height: 25),
-                    CustomTextField.suffixIcon(
-                      textEditingController: _phoneController,
-                      hint: 'Telefone',
-                      suffixIcon: const Icon(Icons.phone),
-                    ),
                     const SizedBox(height: 45),
                     isLoading
                         ? const CircularProgressIndicator()
                         : const SizedBox.shrink(),
                     const SizedBox(height: 25),
                     CustomButton(
-                      textLabel: 'Cadastrar',
+                      textLabel: 'Entrar',
                       height: 50,
-                      onPressed: () {
-                        bloc.add(
-                          SignUpRequired(
-                            phone: _phoneController.text,
-                            email: _emailController.text,
-                            username: _nameController.text,
-                            password: _passwordRepeatController.text,
-                          ),
-                        );
-                        // onTapCodeVerification(context);
-                      },
+                      onPressed: () => bloc.add(
+                        SignInRequired(
+                          email: _emailController.text,
+                          password: _passwordController.text,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 28),
+                    _buildSignUp(context),
                   ],
                 ),
               ),
@@ -155,5 +134,32 @@ class _SignUpPageViewState extends State<SignUpPageView> {
         ),
       ),
     );
+  }
+
+  ///Section Widget
+  Widget _buildSignUp(BuildContext context) {
+    return RichText(
+      text: TextSpan(
+        style: TextStyle(color: context.colors.onSecondary, fontSize: 15),
+        children: <TextSpan>[
+          const TextSpan(text: 'Não tem uma conta? '),
+          TextSpan(
+            text: 'Cadastre-se',
+            style: TextStyle(
+              color: context.colors.tertiary,
+            ),
+            recognizer: TapGestureRecognizer()..onTap = onTapSignUp,
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Navigates to the home screen when login is performed.
+  onTapLogin() {}
+
+  /// Navigates to the Sign Up screen when login is performed.
+  onTapSignUp() {
+    context.push(AppRouter.signUpScreen);
   }
 }

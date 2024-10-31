@@ -8,9 +8,9 @@ abstract class ISignUpState extends Equatable {
 final class SignUpInitial extends ISignUpState {}
 
 final class SignUpSuccess extends ISignUpState {
-  final AuthUserModel authUserModel;
+  final String message;
 
-  SignUpSuccess({required this.authUserModel});
+  SignUpSuccess({required this.message});
 }
 
 final class SignUpFailure extends ISignUpState {

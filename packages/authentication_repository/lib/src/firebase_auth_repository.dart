@@ -52,7 +52,7 @@ class FirebaseAuthRepository implements IAuthenticationRepository {
   }
 
   @override
-  Future<Result<AuthUserModel, Failure>> signUp({
+  Future<Result<String, Failure>> signUp({
     required String email,
     required String password,
     required String name,
@@ -77,11 +77,34 @@ class FirebaseAuthRepository implements IAuthenticationRepository {
         'classIds': [],
       });
 
-      AuthUserModel authUserModel = AuthUserModel(userId: userId);
-
-      return Success(authUserModel);
+      return const Success('Conta criada! Ative sua conta pelo Email');
     } on FirebaseAuthException catch (e) {
       return Error(CreateUserWithEmailAndPasswordFailure.fromCode(e.code));
     }
+  }
+
+  @override
+  Future<Result<AuthUserModel, Failure>> signIn(
+      {required String email, required String password}) async {
+    try {
+      final UserCredential userCredential =
+          await _firebaseAuth.signInWithEmailAndPassword(
+        email: email.trim(),
+        password: password.trim(),
+      );
+
+      // Saves the userId for searching data user
+      final String userId = userCredential.user!.uid;
+
+      AuthUserModel authUserModel = AuthUserModel(userId: userId);
+      return Success(authUserModel);
+    } on FirebaseAuthException catch (e) {
+      return Error(SignInWithEmailAndPasswordFailure.fromCode(e.code));
+    }
+  }
+
+  @override
+  Future<void> logOut() async {
+    await _firebaseAuth.signOut();
   }
 }
