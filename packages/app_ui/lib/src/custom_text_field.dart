@@ -2,15 +2,23 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  const CustomTextField({super.key, required this.hint})
+  const CustomTextField(
+      {super.key, required this.hint, this.textEditingController})
       : maxLines = null,
         suffixIcon = null;
 
   const CustomTextField.suffixIcon(
-      {super.key, required this.hint, required this.suffixIcon})
+      {super.key,
+      required this.hint,
+      required this.suffixIcon,
+      this.textEditingController})
       : maxLines = null;
 
-  const CustomTextField.box({super.key, required this.hint, required int max})
+  const CustomTextField.box(
+      {super.key,
+      required this.hint,
+      required int max,
+      this.textEditingController})
       : maxLines = max,
         suffixIcon = null;
 
@@ -19,6 +27,8 @@ class CustomTextField extends StatelessWidget {
   final int? maxLines;
 
   final Widget? suffixIcon;
+
+  final TextEditingController? textEditingController;
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +47,7 @@ class CustomTextField extends StatelessWidget {
       ),
       child: TextField(
         maxLines: maxLines,
+        controller: textEditingController,
         decoration: InputDecoration(
           suffixIcon: suffixIcon,
           hintText: hint,

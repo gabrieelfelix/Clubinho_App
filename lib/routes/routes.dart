@@ -3,7 +3,7 @@ import 'package:club_app/pages/home_page/home_page.dart';
 import 'package:club_app/pages/manage_children_page/manage_children_page.dart';
 import 'package:club_app/pages/manage_club_page/manage_club_page.dart';
 import 'package:club_app/pages/sign_in_page/sign_in_page.dart';
-import 'package:club_app/pages/sign_up_page/sign_up_page.dart';
+import 'package:club_app/pages/sign_up_page/view/sign_up_page.dart';
 import 'package:club_app/pages/verification_code_page/verification_code_page.dart';
 import 'package:go_router/go_router.dart';
 
