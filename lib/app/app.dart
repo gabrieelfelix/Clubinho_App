@@ -4,6 +4,7 @@ import 'package:club_app/pages/sign_in_page/bloc/authentication_bloc.dart';
 import 'package:club_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 // class MainApp extends StatelessWidget {
 //   const MainApp({super.key});
 
@@ -19,8 +20,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
-  final AuthenticationBloc authBloc =
-      AuthenticationBloc(authRepository: FirebaseAuthRepository());
+  final AuthenticationBloc authBloc = AuthenticationBloc(
+      authRepository: GetIt.instance<IAuthenticationRepository>());
 
   late final AppRouter appRouter = AppRouter(
     authBloc: authBloc,
