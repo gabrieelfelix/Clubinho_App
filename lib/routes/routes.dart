@@ -1,4 +1,7 @@
-import 'package:authentication_repository/authentication_repository.dart';
+import 'dart:developer';
+
+import 'package:club_app/utils/stream_to_listenable.dart';
+import 'package:go_router/go_router.dart';
 import 'package:club_app/pages/child_registration_page/child_registration_page.dart';
 import 'package:club_app/pages/home_page/home_page.dart';
 import 'package:club_app/pages/manage_children_page/manage_children_page.dart';
@@ -7,9 +10,6 @@ import 'package:club_app/pages/sign_in_page/bloc/authentication_bloc.dart';
 import 'package:club_app/pages/sign_in_page/view/sign_in_page.dart';
 import 'package:club_app/pages/sign_up_page/view/sign_up_page.dart';
 import 'package:club_app/pages/verification_code_page/verification_code_page.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 // extension AppRouterContext on BuildContext {
 //   // Direct navigation to a specific route
@@ -34,47 +34,52 @@ class AppRouter {
 
   static const String codeVerification = '/code_verification';
 
-  static final router = GoRouter(
+  final AuthenticationBloc authBloc;
+
+  AppRouter({required this.authBloc});
+
+  late final router = GoRouter(
     initialLocation: '/',
     routes: [
       GoRoute(
-        path: signInScreen,
+        path: AppRouter.signInScreen,
         builder: (context, state) => const SignInPage(),
       ),
       GoRoute(
-        path: signUpScreen,
+        path: AppRouter.signUpScreen,
         builder: (context, state) => const SignUpPage(),
       ),
       GoRoute(
-        path: homeScreen,
+        path: AppRouter.homeScreen,
         builder: (context, state) => const HomeScreen(),
       ),
       GoRoute(
-        path: manageClub,
+        path: AppRouter.manageClub,
         builder: (context, state) => const ManageClub(),
       ),
       GoRoute(
-        path: manageChildren,
+        path: AppRouter.manageChildren,
         builder: (context, state) => const ManageChildren(),
       ),
       GoRoute(
-        path: childRegistration,
+        path: AppRouter.childRegistration,
         builder: (context, state) => const ChildRegistration(),
       ),
       GoRoute(
-        path: codeVerification,
+        path: AppRouter.codeVerification,
         builder: (context, state) => const VerificationCode(),
       ),
     ],
+    refreshListenable: StreamToListenable([authBloc.stream]),
     redirect: (context, state) {
-      final authBloc = BlocProvider.of<AuthenticationBloc>(context);
-
-      if (authBloc.state is SignInSuccess) {
-        return homeScreen;
+      final isAuthenticated = authBloc.state is SignInSuccess;
+      log("Redirecionamento chamado com estado: ${authBloc.state}");
+      if (isAuthenticated) {
+        return AppRouter.homeScreen;
       }
 
       if (authBloc.state is LogOut) {
-        return signInScreen;
+        return AppRouter.signInScreen;
       }
 
       return null;

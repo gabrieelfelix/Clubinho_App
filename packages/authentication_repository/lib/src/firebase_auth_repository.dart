@@ -46,12 +46,6 @@ class FirebaseAuthRepository implements IAuthenticationRepository {
   }
 
   @override
-  Future validationSms() {
-    // TODO: implement validationSms
-    throw UnimplementedError();
-  }
-
-  @override
   Future<Result<String, Failure>> signUp({
     required String email,
     required String password,

@@ -65,6 +65,7 @@ class _SignInPageViewState extends State<SignInPageView> {
               isLoading = false;
             },
           );
+          onTapLogin();
         }
       },
       child: GestureDetector(
@@ -156,7 +157,9 @@ class _SignInPageViewState extends State<SignInPageView> {
   }
 
   /// Navigates to the home screen when login is performed.
-  onTapLogin() {}
+  onTapLogin() {
+    context.go(AppRouter.homeScreen);
+  }
 
   /// Navigates to the Sign Up screen when login is performed.
   onTapSignUp() {
