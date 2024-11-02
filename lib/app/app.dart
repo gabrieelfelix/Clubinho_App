@@ -1,5 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:club_app/main.dart';
 import 'package:club_app/pages/sign_in_page/bloc/authentication_bloc.dart';
 import 'package:club_app/routes/routes.dart';
 import 'package:flutter/material.dart';
@@ -20,8 +21,8 @@ import 'package:get_it/get_it.dart';
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
-  final AuthenticationBloc authBloc = AuthenticationBloc(
-      authRepository: GetIt.instance<IAuthenticationRepository>());
+  final AuthenticationBloc authBloc =
+      AuthenticationBloc(authRepository: getIt<IAuthenticationRepository>());
 
   late final AppRouter appRouter = AppRouter(
     authBloc: authBloc,

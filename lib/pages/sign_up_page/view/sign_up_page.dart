@@ -1,9 +1,9 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:club_app/main.dart';
 import 'package:club_app/pages/sign_up_page/bloc/sign_up_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
@@ -11,8 +11,8 @@ class SignUpPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => SignUpBloc(
-          authRepository: GetIt.instance<IAuthenticationRepository>()),
+      create: (context) =>
+          SignUpBloc(authRepository: getIt<IAuthenticationRepository>()),
       child: const SignUpPageView(),
     );
   }

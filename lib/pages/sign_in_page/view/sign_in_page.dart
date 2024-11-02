@@ -1,11 +1,11 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:club_app/main.dart';
 import 'package:club_app/pages/sign_in_page/bloc/authentication_bloc.dart';
 import 'package:club_app/routes/routes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
 
 class SignInPage extends StatelessWidget {
@@ -15,7 +15,8 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AuthenticationBloc(
-          authRepository: GetIt.instance<IAuthenticationRepository>()),
+        authRepository: getIt<IAuthenticationRepository>(),
+      ),
       child: const SignInPageView(),
     );
   }
@@ -64,9 +65,9 @@ class _SignInPageViewState extends State<SignInPageView> {
           setState(
             () {
               isLoading = false;
+              onTapLogin();
             },
           );
-          onTapLogin();
         }
       },
       child: GestureDetector(

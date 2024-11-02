@@ -23,5 +23,6 @@ final getIt = GetIt.instance;
 Future<void> setupDependences() async {
   // Register service authentication
   getIt.registerLazySingleton<IAuthenticationRepository>(
-      () => FirebaseAuthRepository());
+    () => FirebaseAuthRepository(),
+  );
 }
