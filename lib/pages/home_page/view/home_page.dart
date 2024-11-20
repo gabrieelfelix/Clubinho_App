@@ -14,17 +14,23 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => HomeBloc(clubRepository: getIt<IClubRepository>()),
-      child: const HomeScreenView(),
+      child: HomeScreenView(),
     );
   }
 }
 
 class HomeScreenView extends StatelessWidget {
-  const HomeScreenView({super.key});
+  HomeScreenView({super.key});
+
+  final TextEditingController _nameClubController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _buildAlertDialog(context),
+        child: const Icon(Icons.add),
+      ),
       appBar: AppBar(
         toolbarHeight: 70,
         title: Text(
@@ -112,6 +118,69 @@ class HomeScreenView extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  /// Section Widget
+  _buildAlertDialog(BuildContext context) {
+    final bloc = context.read<HomeBloc>();
+    bool isLoading = false;
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BlocListener<HomeBloc, HomeBlocState>(
+          listener: (context, state) {
+            if (state.isLoading) {
+              isLoading = true;
+            } else if (state.isFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message!),
+                ),
+              );
+              isLoading = false;
+            } else if (state.isCreated) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message!),
+                ),
+              );
+              isLoading = false;
+            }
+          },
+          child: AlertDialog(
+            title: const Text('Crie um clubinho'),
+            content: Column(
+              children: [
+                SizedBox(
+                  height: 100,
+                  child: TextField(
+                    controller: _nameClubController,
+                  ),
+                ),
+                isLoading
+                    ? const CircularProgressIndicator()
+                    : const SizedBox.shrink(),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  bloc.add(AddClubRequired(name: _nameClubController.text));
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Criar'),
+              ),
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Voltar'),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

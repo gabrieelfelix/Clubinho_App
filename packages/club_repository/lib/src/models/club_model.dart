@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:club_repository/src/models/kids_model.dart';
 import 'package:club_repository/src/models/teachers_model.dart';
 import 'package:equatable/equatable.dart';
@@ -32,13 +33,32 @@ class ClubModel extends Equatable {
     );
   }
 
-  // ver como iterar kids e teachers
-  factory ClubModel.fromJson(Map<String, dynamic> json) {
+  factory ClubModel.fromJson(DocumentSnapshot<Map<String, dynamic>> json) {
+    final data = json.data()!;
     return ClubModel(
-        id: json['user_id'] ?? '',
-        name: json['username'] ?? '',
-        kids: json['login'] ?? '',
-        teachers: json['role'] ?? '');
+      id: json.id,
+      name: data['name'] ?? '',
+      kids: (data['kids'] as List<dynamic>?)
+              ?.map((e) => KidsModel.fromJson(
+                  e as DocumentSnapshot<Map<String, dynamic>>))
+              .toList() ??
+          [],
+      teachers: (data['teachers'] as List<dynamic>?)
+              ?.map((e) => TeachersModel.fromJson(
+                  e as DocumentSnapshot<Map<String, dynamic>>))
+              .toList() ??
+          [],
+    );
+  }
+
+  factory ClubModel.fromJsonBasic(DocumentSnapshot<Map<String, dynamic>> json) {
+    final data = json.data()!;
+    return ClubModel(
+      id: json.id,
+      name: data['name'] ?? '',
+      kids: const [],
+      teachers: const [],
+    );
   }
 
   // Convenience getter to determine whether the current user is empty

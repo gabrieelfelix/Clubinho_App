@@ -1,6 +1,8 @@
+import 'dart:developer';
+
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:club_repository/club_repository.dart';
-import 'package:club_repository/src/failure/failure.dart';
 import 'package:multiple_result/multiple_result.dart';
 import 'package:uuid/uuid.dart';
 
@@ -9,6 +11,9 @@ class FirebaseClubRepository implements IClubRepository {
 
   FirebaseClubRepository({FirebaseFirestore? firebaseFirestore})
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
+
+  /// User cache key.
+  final userCacheKey = '__user_cache_key__';
 
   @override
   Future<Result<String, Failure>> createClub({required String name}) async {
@@ -28,8 +33,37 @@ class FirebaseClubRepository implements IClubRepository {
   }
 
   @override
-  Future<Result<List<ClubModel>, Failure>> getAllClubs({required String name}) {
-    // TODO: implement getAllClubs
-    throw UnimplementedError();
+  Future<Result<List<ClubModel>, FailureClub>> getAllClubs(
+      {required String uuid}) async {
+    try {
+      final String userCache =
+          CacheClient.read<AuthUserModel>(key: userCacheKey)!.userId;
+
+      final teacherDoc =
+          await _firebaseFirestore.collection('teachers').doc(userCache).get();
+
+      if (!teacherDoc.exists) {
+        throw Exception('Clubinhos não encontrados');
+      }
+
+      final List<String> classIds = teacherDoc.data()?['classIds'] ?? [];
+
+      if (classIds.isEmpty) const Success([]);
+
+      final classesQuery = await _firebaseFirestore
+          .collection('clubs')
+          .where(FieldPath.documentId, whereIn: classIds)
+          .get();
+      log('log clubs query ==> ${classesQuery.docs}');
+
+      final clubList = classesQuery.docs
+          .map((doc) =>
+              ClubModel.fromJson(doc as DocumentSnapshot<Map<String, dynamic>>))
+          .toList();
+
+      return Success(clubList);
+    } on FirebaseException catch (e) {
+      return const Error(FailureClub(message: 'Erro ao criar clubinho!'));
+    }
   }
 }

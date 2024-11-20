@@ -1,6 +1,6 @@
 part of 'home_bloc.dart';
 
-enum HomePageStatus { initial, loading, empty, loaded, failure }
+enum HomePageStatus { initial, loading, empty, loaded, failure, successCreate }
 
 class HomeBlocState extends Equatable {
   final HomePageStatus state;
@@ -21,10 +21,12 @@ class HomeBlocState extends Equatable {
   const HomeBlocState.failure({required String message})
       : this._(state: HomePageStatus.failure, message: message);
 
+  const HomeBlocState.successCreate({required String message})
+      : this._(state: HomePageStatus.successCreate, message: message);
+
   const HomeBlocState.loading() : this._();
 
-  const HomeBlocState.empty({required String message})
-      : this._(state: HomePageStatus.empty, message: message);
+  const HomeBlocState.empty() : this._(state: HomePageStatus.empty);
 
   @override
   List<Object?> get props => [state, users, message];
@@ -36,4 +38,5 @@ extension HomePageStateExtensions on HomeBlocState {
   bool get isEmpty => state == HomePageStatus.empty;
   bool get isLoaded => state == HomePageStatus.loaded;
   bool get isFailure => state == HomePageStatus.failure;
+  bool get isCreated => state == HomePageStatus.successCreate;
 }

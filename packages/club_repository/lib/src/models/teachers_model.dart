@@ -1,41 +1,53 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class TeachersModel extends Equatable {
   final String id;
-  final String email;
+  final String contact;
   final String name;
-  final String adm;
-  final String phone;
+  final String email;
+  final List<String> classIds;
+
   const TeachersModel({
     required this.id,
-    required this.email,
+    required this.contact,
+    required this.classIds,
     required this.name,
-    required this.adm,
-    required this.phone,
+    required this.email,
   });
 
   // Empty user witch represents an unauthenticaded user
   static const empty =
-      TeachersModel(id: '', email: '', name: '', adm: '', phone: '');
+      TeachersModel(contact: '', name: '', email: '', classIds: [], id: '');
 
   //modify TeachersModel parameters
-  TeachersModel copyWith(
-      {String? id, String? email, String? name, String? adm, String? phone}) {
+  TeachersModel copyWith({
+    String? contact,
+    String? name,
+    String? email,
+    String? id,
+    List<String>? classIds,
+  }) {
     return TeachersModel(
-        id: id ?? this.id,
-        email: email ?? this.email,
-        name: name ?? this.name,
-        adm: adm ?? this.adm,
-        phone: phone ?? this.phone);
+      id: id ?? this.id,
+      classIds: classIds ?? this.classIds,
+      contact: contact ?? this.contact,
+      name: name ?? this.name,
+      email: email ?? this.email,
+    );
   }
 
-  factory TeachersModel.fromJson(Map<String, dynamic> json) {
+  factory TeachersModel.fromJson(DocumentSnapshot<Map<String, dynamic>> json) {
+    final data = json.data()!;
     return TeachersModel(
-      id: json['user_id'] ?? '',
-      name: json['username'] ?? '',
-      email: json['login'] ?? '',
-      adm: json['role'] ?? '',
-      phone: json['role'],
+      id: json.id,
+      name: data['name'] ?? '',
+      contact: data['contact'] ?? '',
+      email: data['email'] ?? '',
+      classIds: (data['classIds'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          [],
     );
   }
 
@@ -45,5 +57,5 @@ class TeachersModel extends Equatable {
   bool get isNotEmpty => this != TeachersModel.empty;
 
   @override
-  List<Object?> get props => [id, email, name, adm];
+  List<Object?> get props => [contact, name, email, classIds, id];
 }

@@ -7,8 +7,13 @@ abstract class IHomeEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class GetClubsRequired extends IHomeEvent {
-  final String userId;
+class GetClubsRequired extends IHomeEvent {}
 
-  const GetClubsRequired({required this.userId});
+class AddClubRequired extends IHomeEvent {
+  final String name;
+
+  const AddClubRequired({required this.name});
+
+  @override
+  List<Object> get props => [name];
 }

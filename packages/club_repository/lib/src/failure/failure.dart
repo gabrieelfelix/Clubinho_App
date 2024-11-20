@@ -1,8 +1,12 @@
-import 'package:equatable/equatable.dart';
+// ignore_for_file: overridden_fields
 
-class Failure extends Equatable {
+import 'package:authentication_repository/authentication_repository.dart';
+
+class FailureClub extends Failure {
+  const FailureClub({required this.message}) : super(message: '');
+
+  @override
   final String message;
-  const Failure({required this.message});
 
   @override
   List<Object> get props => [message];
