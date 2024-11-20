@@ -15,6 +15,9 @@ class FirebaseAuthRepository implements IAuthenticationRepository {
       : _firebaseAuth = firebaseAuth ?? FirebaseAuth.instance,
         _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
+  /// User cache key.
+  final userCacheKey = '__user_cache_key__';
+
   @override
   Future<void> verifyPhone({required String phoneNumber}) async {
     await _firebaseAuth.verifyPhoneNumber(
@@ -78,7 +81,7 @@ class FirebaseAuthRepository implements IAuthenticationRepository {
   }
 
   @override
-  Future<Result<AuthUserModel, Failure>> signIn(
+  Future<Result<String, Failure>> signIn(
       {required String email, required String password}) async {
     try {
       final UserCredential userCredential =
@@ -89,9 +92,12 @@ class FirebaseAuthRepository implements IAuthenticationRepository {
 
       // Saves the userId for searching data user
       final String userId = userCredential.user!.uid;
+      CacheClient.write<AuthUserModel>(
+        key: userCacheKey,
+        value: AuthUserModel(userId: userId),
+      );
 
-      AuthUserModel authUserModel = AuthUserModel(userId: userId);
-      return Success(authUserModel);
+      return const Success('Login realizado com sucesso');
     } on FirebaseAuthException catch (e) {
       return Error(SignInWithEmailAndPasswordFailure.fromCode(e.code));
     }

@@ -58,8 +58,8 @@ class _SignInPageViewState extends State<SignInPageView> {
         }
         if (state is SignInSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Login realizado com sucesso'),
+            SnackBar(
+              content: Text(state.message),
             ),
           );
           setState(

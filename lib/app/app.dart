@@ -5,7 +5,6 @@ import 'package:club_app/pages/sign_in_page/bloc/authentication_bloc.dart';
 import 'package:club_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
 // class MainApp extends StatelessWidget {
 //   const MainApp({super.key});
 
@@ -24,10 +23,6 @@ class MyApp extends StatelessWidget {
   final AuthenticationBloc authBloc =
       AuthenticationBloc(authRepository: getIt<IAuthenticationRepository>());
 
-  late final AppRouter appRouter = AppRouter(
-    authBloc: authBloc,
-  );
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider<AuthenticationBloc>(
@@ -36,9 +31,9 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.light,
         theme: GlobalThemData.lightThemeData,
-        routerDelegate: appRouter.router.routerDelegate,
-        routeInformationParser: appRouter.router.routeInformationParser,
-        routeInformationProvider: appRouter.router.routeInformationProvider,
+        routerDelegate: AppRouter.router.routerDelegate,
+        routeInformationParser: AppRouter.router.routeInformationParser,
+        routeInformationProvider: AppRouter.router.routeInformationProvider,
       ),
     );
   }

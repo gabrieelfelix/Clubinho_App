@@ -34,7 +34,7 @@ class AuthenticationBloc
 
     response.when(
       (success) => emit(
-        SignInSuccess(authUserModel: success),
+        SignInSuccess(message: success),
       ),
       (failure) => emit(
         SignInFailure(message: failure.message),

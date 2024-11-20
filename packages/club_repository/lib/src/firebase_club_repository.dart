@@ -7,7 +7,7 @@ import 'package:uuid/uuid.dart';
 class FirebaseClubRepository implements IClubRepository {
   final FirebaseFirestore _firebaseFirestore;
 
-  FirebaseClubRepository({required FirebaseFirestore? firebaseFirestore})
+  FirebaseClubRepository({FirebaseFirestore? firebaseFirestore})
       : _firebaseFirestore = firebaseFirestore ?? FirebaseFirestore.instance;
 
   @override
@@ -25,5 +25,11 @@ class FirebaseClubRepository implements IClubRepository {
     } on FirebaseException catch (e) {
       return const Error(Failure(message: ''));
     }
+  }
+
+  @override
+  Future<Result<List<ClubModel>, Failure>> getAllClubs({required String name}) {
+    // TODO: implement getAllClubs
+    throw UnimplementedError();
   }
 }

@@ -1,10 +1,26 @@
+import 'package:club_app/main.dart';
+import 'package:club_app/pages/home_page/bloc/home_bloc.dart';
 import 'package:club_app/routes/routes.dart';
+import 'package:club_repository/club_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:app_ui/app_ui.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({super.key});
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => HomeBloc(clubRepository: getIt<IClubRepository>()),
+      child: const HomeScreenView(),
+    );
+  }
+}
+
+class HomeScreenView extends StatelessWidget {
+  const HomeScreenView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +46,13 @@ class HomeScreen extends StatelessWidget {
         child: ListView.builder(
           itemCount: 3,
           itemBuilder: (context, index) {
-            return Column(children: [
-              const SizedBox(height: 20),
-              _buildRoundedSquare(context),
-              const SizedBox(height: 20),
-            ]);
+            return Column(
+              children: [
+                const SizedBox(height: 20),
+                _buildRoundedSquare(context),
+                const SizedBox(height: 20),
+              ],
+            );
           },
         ),
       ),

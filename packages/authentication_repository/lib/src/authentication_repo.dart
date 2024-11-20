@@ -14,7 +14,7 @@ abstract class IAuthenticationRepository {
 
   Future<void> logOut();
 
-  Future<Result<AuthUserModel, Failure>> signIn({
+  Future<Result<String, Failure>> signIn({
     required String email,
     required String password,
   });

@@ -8,9 +8,9 @@ abstract class IAuthenticationState extends Equatable {
 final class SignInInitial extends IAuthenticationState {}
 
 final class SignInSuccess extends IAuthenticationState {
-  final AuthUserModel authUserModel;
+  final String message;
 
-  SignInSuccess({required this.authUserModel});
+  SignInSuccess({required this.message});
 }
 
 final class SignInFailure extends IAuthenticationState {

@@ -1,12 +1,8 @@
-import 'dart:developer';
-
-import 'package:club_app/utils/stream_to_listenable.dart';
 import 'package:go_router/go_router.dart';
 import 'package:club_app/pages/child_registration_page/child_registration_page.dart';
-import 'package:club_app/pages/home_page/home_page.dart';
+import 'package:club_app/pages/home_page/view/home_page.dart';
 import 'package:club_app/pages/manage_children_page/manage_children_page.dart';
 import 'package:club_app/pages/manage_club_page/manage_club_page.dart';
-import 'package:club_app/pages/sign_in_page/bloc/authentication_bloc.dart';
 import 'package:club_app/pages/sign_in_page/view/sign_in_page.dart';
 import 'package:club_app/pages/sign_up_page/view/sign_up_page.dart';
 import 'package:club_app/pages/verification_code_page/verification_code_page.dart';
@@ -34,11 +30,11 @@ class AppRouter {
 
   static const String codeVerification = '/code_verification';
 
-  final AuthenticationBloc authBloc;
+  //final AuthenticationBloc authBloc;
 
-  AppRouter({required this.authBloc});
+//  AppRouter({required this.authBloc});
 
-  late final router = GoRouter(
+  static final router = GoRouter(
     initialLocation: '/',
     routes: [
       GoRoute(
@@ -51,7 +47,7 @@ class AppRouter {
       ),
       GoRoute(
         path: AppRouter.homeScreen,
-        builder: (context, state) => const HomeScreen(),
+        builder: (context, state) => const HomePage(),
       ),
       GoRoute(
         path: AppRouter.manageClub,
@@ -70,19 +66,19 @@ class AppRouter {
         builder: (context, state) => const VerificationCode(),
       ),
     ],
-    refreshListenable: StreamToListenable([authBloc.stream]),
-    redirect: (context, state) {
-      final isAuthenticated = authBloc.state is SignInSuccess;
-      log("Redirecionamento chamado com estado: ${authBloc.state}");
-      if (isAuthenticated) {
-        return AppRouter.homeScreen;
-      }
+    // refreshListenable: StreamToListenable([authBloc.stream]),
+    // redirect: (context, state) {
+    //   final isAuthenticated = authBloc.state is SignInSuccess;
+    //   log("Redirecionamento chamado com estado: ${authBloc.state}");
+    //   if (isAuthenticated) {
+    //     return AppRouter.homeScreen;
+    //   }
 
-      if (authBloc.state is LogOut) {
-        return AppRouter.signInScreen;
-      }
+    //   if (authBloc.state is LogOut) {
+    //     return AppRouter.signInScreen;
+    //   }
 
-      return null;
-    },
+    //   return null;
+    // },
   );
 }
