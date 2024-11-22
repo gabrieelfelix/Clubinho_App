@@ -26,11 +26,11 @@ class HomeBloc extends Bloc<IHomeEvent, HomeBlocState> {
     final response = await _clubRepository.getAllClubs(uuid: userId);
 
     response.when(
-      (success) => (success) => emit(
-            success.isNotEmpty
-                ? HomeBlocState.loaded(users: success)
-                : const HomeBlocState.empty(),
-          ),
+      (success) => emit(
+        success.isNotEmpty
+            ? HomeBlocState.loaded(clubs: success)
+            : const HomeBlocState.empty(),
+      ),
       (failure) => emit(
         HomeBlocState.failure(message: failure.message),
       ),

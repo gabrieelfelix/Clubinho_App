@@ -28,7 +28,7 @@ class FirebaseClubRepository implements IClubRepository {
       });
       return const Success('Clubinho criado com sucesso!');
     } on FirebaseException catch (e) {
-      return const Error(Failure(message: ''));
+      return const Error(Failure(message: 'Erro ao criar clubinho!'));
     }
   }
 
@@ -57,13 +57,13 @@ class FirebaseClubRepository implements IClubRepository {
       log('log clubs query ==> ${classesQuery.docs}');
 
       final clubList = classesQuery.docs
-          .map((doc) =>
-              ClubModel.fromJson(doc as DocumentSnapshot<Map<String, dynamic>>))
+          .map((doc) => ClubModel.fromJsonBasic(
+              doc as DocumentSnapshot<Map<String, dynamic>>))
           .toList();
 
       return Success(clubList);
     } on FirebaseException catch (e) {
-      return const Error(FailureClub(message: 'Erro ao criar clubinho!'));
+      return const Error(FailureClub(message: 'Nenhum Clubinho Vinculado!'));
     }
   }
 }

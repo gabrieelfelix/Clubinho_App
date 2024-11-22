@@ -4,19 +4,19 @@ enum HomePageStatus { initial, loading, empty, loaded, failure, successCreate }
 
 class HomeBlocState extends Equatable {
   final HomePageStatus state;
-  final List<ClubModel>? users;
+  final List<ClubModel>? clubs;
   final String? message;
 
   const HomeBlocState._({
     this.state = HomePageStatus.loading,
-    this.users,
+    this.clubs,
     this.message,
   });
 
   const HomeBlocState.initial() : this._(state: HomePageStatus.initial);
 
-  const HomeBlocState.loaded({required List<ClubModel> users})
-      : this._(state: HomePageStatus.loaded, users: users);
+  const HomeBlocState.loaded({required List<ClubModel> clubs})
+      : this._(state: HomePageStatus.loaded, clubs: clubs);
 
   const HomeBlocState.failure({required String message})
       : this._(state: HomePageStatus.failure, message: message);
@@ -29,7 +29,7 @@ class HomeBlocState extends Equatable {
   const HomeBlocState.empty() : this._(state: HomePageStatus.empty);
 
   @override
-  List<Object?> get props => [state, users, message];
+  List<Object?> get props => [state, clubs, message];
 }
 
 extension HomePageStateExtensions on HomeBlocState {

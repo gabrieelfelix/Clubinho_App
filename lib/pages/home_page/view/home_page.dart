@@ -49,16 +49,43 @@ class HomeScreenView extends StatelessWidget {
         backgroundColor: context.colors.primary,
       ),
       body: SafeArea(
-        child: ListView.builder(
-          itemCount: 3,
-          itemBuilder: (context, index) {
-            return Column(
-              children: [
-                const SizedBox(height: 20),
-                _buildRoundedSquare(context),
-                const SizedBox(height: 20),
-              ],
-            );
+        child: BlocConsumer<HomeBloc, HomeBlocState>(
+          listener: (context, state) {
+            if (state.isFailure) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message!),
+                ),
+              );
+            } else if (state.isLoaded) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message!),
+                ),
+              );
+            }
+          },
+          builder: (context, state) {
+            if (state.isLoaded) {
+              return ListView.builder(
+                itemCount: state.clubs!.length,
+                itemBuilder: (context, index) {
+                  return Column(
+                    children: [
+                      const SizedBox(height: 20),
+                      _buildRoundedSquare(context, state.clubs![index].name),
+                      const SizedBox(height: 20),
+                    ],
+                  );
+                },
+              );
+            } else if (state.isLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else {
+              return const Center(child: Text('Nenhum Clubinho Vinculado!'));
+            }
           },
         ),
       ),
@@ -66,7 +93,7 @@ class HomeScreenView extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildRoundedSquare(BuildContext context) {
+  Widget _buildRoundedSquare(BuildContext context, String name) {
     return ElevatedButton(
       onPressed: () => onTapManageClub(context),
       style: ElevatedButton.styleFrom(
@@ -79,7 +106,7 @@ class HomeScreenView extends StatelessWidget {
         children: [
           Center(
             child: Text(
-              'Crianças',
+              name,
               style: TextStyle(
                 color: context.colors.onPrimary,
                 fontSize: 20,
@@ -124,60 +151,62 @@ class HomeScreenView extends StatelessWidget {
   /// Section Widget
   _buildAlertDialog(BuildContext context) {
     final bloc = context.read<HomeBloc>();
-    bool isLoading = false;
     return showDialog(
       context: context,
       builder: (BuildContext context) {
-        return BlocListener<HomeBloc, HomeBlocState>(
-          listener: (context, state) {
-            if (state.isLoading) {
-              isLoading = true;
-            } else if (state.isFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message!),
-                ),
-              );
-              isLoading = false;
-            } else if (state.isCreated) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message!),
-                ),
-              );
-              isLoading = false;
-            }
-          },
-          child: AlertDialog(
-            title: const Text('Crie um clubinho'),
-            content: Column(
-              children: [
-                SizedBox(
-                  height: 100,
-                  child: TextField(
-                    controller: _nameClubController,
+        return BlocProvider.value(
+          value: bloc,
+          child: BlocConsumer<HomeBloc, HomeBlocState>(
+            listener: (context, state) {
+              if (state.isFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message!),
                   ),
+                );
+              } else if (state.isCreated) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message!),
+                  ),
+                );
+              }
+            },
+            builder: (context, state) {
+              return AlertDialog(
+                backgroundColor: context.theme.colorScheme.onPrimary,
+                title: const Text('Crie um clubinho'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      height: 50,
+                      child: TextField(
+                        controller: _nameClubController,
+                      ),
+                    ),
+                    state.isLoading
+                        ? const CircularProgressIndicator()
+                        : const SizedBox.shrink(),
+                  ],
                 ),
-                isLoading
-                    ? const CircularProgressIndicator()
-                    : const SizedBox.shrink(),
-              ],
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  bloc.add(AddClubRequired(name: _nameClubController.text));
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Criar'),
-              ),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text('Voltar'),
-              ),
-            ],
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      bloc.add(AddClubRequired(name: _nameClubController.text));
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Criar'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Voltar'),
+                  ),
+                ],
+              );
+            },
           ),
         );
       },
