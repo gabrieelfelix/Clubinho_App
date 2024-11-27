@@ -60,8 +60,8 @@ class HomeScreenView extends StatelessWidget {
               );
             } else if (state.isLoaded) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message!),
+                const SnackBar(
+                  content: Text('Carregado'),
                 ),
               );
             } else if (state.isCreated) {
@@ -74,17 +74,20 @@ class HomeScreenView extends StatelessWidget {
           },
           builder: (context, state) {
             if (state.isLoaded) {
-              return ListView.builder(
-                itemCount: state.clubs!.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      const SizedBox(height: 20),
-                      _buildRoundedSquare(context, state.clubs![index].name),
-                      const SizedBox(height: 20),
-                    ],
-                  );
-                },
+              return RefreshIndicator(
+                onRefresh: () => _onRefresh(context),
+                child: ListView.builder(
+                  itemCount: state.clubs!.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        _buildRoundedSquare(context, state.clubs![index].name),
+                        const SizedBox(height: 20),
+                      ],
+                    );
+                  },
+                ),
               );
             } else if (state.isLoading) {
               return const Center(
@@ -111,7 +114,9 @@ class HomeScreenView extends StatelessWidget {
       ),
       child: Stack(
         children: [
-          Center(
+          Positioned(
+            top: 30,
+            left: 150,
             child: Text(
               name,
               style: TextStyle(
@@ -157,12 +162,11 @@ class HomeScreenView extends StatelessWidget {
 
   /// Section Widget
   _buildAlertDialog(BuildContext context) {
-    final bloc = context.read<HomeBloc>();
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return BlocProvider.value(
-          value: bloc,
+          value: context.read<HomeBloc>(),
           child: BlocConsumer<HomeBloc, HomeBlocState>(
             listener: (context, state) {
               if (state.isFailure) {
@@ -200,7 +204,9 @@ class HomeScreenView extends StatelessWidget {
                 actions: [
                   TextButton(
                     onPressed: () {
-                      bloc.add(AddClubRequired(name: _nameClubController.text));
+                      context
+                          .read<HomeBloc>()
+                          .add(AddClubRequired(name: _nameClubController.text));
                       Navigator.of(context).pop();
                     },
                     child: const Text('Criar'),
@@ -223,5 +229,9 @@ class HomeScreenView extends StatelessWidget {
   /// Navigates to the manage club when the action is triggered.
   onTapManageClub(BuildContext context) {
     context.push(AppRouter.manageClub);
+  }
+
+  _onRefresh(BuildContext context) async {
+    context.read<HomeBloc>().add(GetClubsRequired());
   }
 }
