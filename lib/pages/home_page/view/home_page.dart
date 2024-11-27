@@ -65,6 +65,7 @@ class HomeScreenView extends StatelessWidget {
                 ),
               );
             } else if (state.isCreated) {
+              context.read<HomeBloc>().add(GetClubsRequired());
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message!),
@@ -162,11 +163,12 @@ class HomeScreenView extends StatelessWidget {
 
   /// Section Widget
   _buildAlertDialog(BuildContext context) {
+    final bloc = context.read<HomeBloc>();
     return showDialog(
       context: context,
       builder: (BuildContext context) {
         return BlocProvider.value(
-          value: context.read<HomeBloc>(),
+          value: bloc,
           child: BlocConsumer<HomeBloc, HomeBlocState>(
             listener: (context, state) {
               if (state.isFailure) {
