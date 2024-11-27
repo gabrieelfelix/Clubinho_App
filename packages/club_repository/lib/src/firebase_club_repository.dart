@@ -21,10 +21,17 @@ class FirebaseClubRepository implements IClubRepository {
     final customId = 'club-${uuid.v4().substring(0, 5)}';
 
     try {
+      final String userCache =
+          CacheClient.read<AuthUserModel>(key: userCacheKey)!.userId;
+
       await _firebaseFirestore.collection('clubs').doc(customId).set({
         'name': name.trim(),
-        'teachers': [],
+        'teachers': [userCache],
         'kids': [],
+      });
+
+      await _firebaseFirestore.collection('teachers').doc(userCache).update({
+        'classIds': FieldValue.arrayUnion([customId]),
       });
       return const Success('Clubinho criado com sucesso!');
     } on FirebaseException catch (e) {
@@ -43,17 +50,20 @@ class FirebaseClubRepository implements IClubRepository {
           await _firebaseFirestore.collection('teachers').doc(userCache).get();
 
       if (!teacherDoc.exists) {
-        throw Exception('Clubinhos não encontrados');
+        throw Exception('Professor não encontrado');
       }
 
-      final List<String> classIds = teacherDoc.data()?['classIds'] ?? [];
+      final classIds = teacherDoc.data()?['classIds'] ?? [];
 
-      if (classIds.isEmpty) const Success([]);
-
+      if (classIds.isEmpty) {
+        return const Success([]);
+      }
+      // isso vai ate 10
       final classesQuery = await _firebaseFirestore
           .collection('clubs')
           .where(FieldPath.documentId, whereIn: classIds)
           .get();
+
       log('log clubs query ==> ${classesQuery.docs}');
 
       final clubList = classesQuery.docs
@@ -63,7 +73,11 @@ class FirebaseClubRepository implements IClubRepository {
 
       return Success(clubList);
     } on FirebaseException catch (e) {
+      log('Firebase error: ${e.message}');
       return const Error(FailureClub(message: 'Nenhum Clubinho Vinculado!'));
+    } catch (e) {
+      log('General error: $e');
+      return Error(FailureClub(message: e.toString()));
     }
   }
 }

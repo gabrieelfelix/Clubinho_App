@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:club_app/utils/constants.dart';
 import 'package:club_repository/club_repository.dart';
@@ -44,8 +46,7 @@ class HomeBloc extends Bloc<IHomeEvent, HomeBlocState> {
     final response = await _clubRepository.createClub(name: event.name.trim());
 
     response.when(
-      (success) =>
-          (success) => emit(HomeBlocState.successCreate(message: success)),
+      (success) => emit(HomeBlocState.successCreate(message: success)),
       (failure) => emit(
         HomeBlocState.failure(message: failure.message),
       ),

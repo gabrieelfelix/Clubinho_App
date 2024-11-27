@@ -13,7 +13,8 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomeBloc(clubRepository: getIt<IClubRepository>()),
+      create: (context) => HomeBloc(clubRepository: getIt<IClubRepository>())
+        ..add(GetClubsRequired()),
       child: HomeScreenView(),
     );
   }
@@ -58,6 +59,12 @@ class HomeScreenView extends StatelessWidget {
                 ),
               );
             } else if (state.isLoaded) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.message!),
+                ),
+              );
+            } else if (state.isCreated) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(state.message!),
