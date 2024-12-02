@@ -27,32 +27,21 @@ class HomeScreenView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _buildAlertDialog(context),
-        child: const Icon(Icons.add),
-      ),
-      appBar: AppBar(
-        toolbarHeight: 70,
-        title: Text(
-          'Clubinhos',
-          style: TextStyle(color: context.colors.onPrimary),
-        ),
-        leadingWidth: 80,
-        leading: SizedBox(
-          child: Image.asset(
-            ImageConstant.logoIbavin,
-            filterQuality: FilterQuality.high,
-            fit: BoxFit.contain,
-          ),
-        ),
-        automaticallyImplyLeading: false,
-        backgroundColor: context.colors.primary,
-      ),
-      body: SafeArea(
-        child: BlocConsumer<HomeBloc, HomeBlocState>(
-          listener: _handlerListener,
-          builder: _handlerBuilder,
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        floatingActionButton: _buildFloatingActionButton(context),
+        appBar: _buildAppBar(context),
+        body: TabBarView(
+          children: [
+            BlocConsumer<HomeBloc, HomeBlocState>(
+              listener: _handlerListener,
+              builder: _handlerBuilder,
+            ),
+            Container(
+              color: Colors.red,
+            )
+          ],
         ),
       ),
     );
@@ -180,6 +169,45 @@ class HomeScreenView extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return AppBar(
+      toolbarHeight: 70,
+      title: Text(
+        'Clubinhos',
+        style: TextStyle(color: context.colors.onPrimary),
+      ),
+      leadingWidth: 80,
+      leading: SizedBox(
+        child: Image.asset(
+          ImageConstant.logoIbavin,
+          filterQuality: FilterQuality.high,
+          fit: BoxFit.contain,
+        ),
+      ),
+      automaticallyImplyLeading: false,
+      backgroundColor: context.colors.primary,
+      bottom: const TabBar(
+        labelColor: Colors.black,
+        tabs: [
+          Tab(
+            text: 'Home',
+          ),
+          Tab(
+            text: 'Usuários',
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Section Widget
+  Widget _buildFloatingActionButton(BuildContext context) {
+    return FloatingActionButton(
+      onPressed: () => _buildAlertDialog(context),
+      child: const Icon(Icons.add),
     );
   }
 
