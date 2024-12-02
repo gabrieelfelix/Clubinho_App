@@ -5,3 +5,4 @@ export 'src/custom_button.dart';
 export 'src/theme/theme.dart';
 export 'src/utils/image_constant.dart';
 export 'src/verification_input.dart';
+export 'src/custom_snackbar.dart';

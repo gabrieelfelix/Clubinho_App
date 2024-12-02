@@ -51,53 +51,8 @@ class HomeScreenView extends StatelessWidget {
       ),
       body: SafeArea(
         child: BlocConsumer<HomeBloc, HomeBlocState>(
-          listener: (context, state) {
-            if (state.isFailure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message!),
-                ),
-              );
-            } else if (state.isLoaded) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Carregado'),
-                ),
-              );
-            } else if (state.isCreated) {
-              context.read<HomeBloc>().add(GetClubsRequired());
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(state.message!),
-                ),
-              );
-            }
-          },
-          builder: (context, state) {
-            if (state.isLoaded) {
-              return RefreshIndicator(
-                onRefresh: () => _onRefresh(context),
-                child: ListView.builder(
-                  itemCount: state.clubs!.length,
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        const SizedBox(height: 20),
-                        _buildRoundedSquare(context, state.clubs![index].name),
-                        const SizedBox(height: 20),
-                      ],
-                    );
-                  },
-                ),
-              );
-            } else if (state.isLoading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else {
-              return const Center(child: Text('Nenhum Clubinho Vinculado!'));
-            }
-          },
+          listener: _handlerListener,
+          builder: _handlerBuilder,
         ),
       ),
     );
@@ -233,7 +188,47 @@ class HomeScreenView extends StatelessWidget {
     context.push(AppRouter.manageClub);
   }
 
-  _onRefresh(BuildContext context) async {
+  /// Refreshes the list of clubs.
+  Future<void> _refreshClubs(BuildContext context) async {
     context.read<HomeBloc>().add(GetClubsRequired());
+  }
+
+  /// Dealing with block listening
+  _handlerListener(BuildContext context, HomeBlocState state) {
+    if (state.isFailure) {
+      showCustomSnackBar(context, state.message!);
+    } else if (state.isLoaded) {
+      showCustomSnackBar(context, 'Carregado!');
+    } else if (state.isCreated) {
+      context.read<HomeBloc>().add(GetClubsRequired());
+      showCustomSnackBar(context, state.message!);
+    }
+  }
+
+  /// Dealing with block listening
+  Widget _handlerBuilder(BuildContext context, HomeBlocState state) {
+    if (state.isLoaded) {
+      return RefreshIndicator(
+        onRefresh: () => _refreshClubs(context),
+        child: ListView.builder(
+          itemCount: state.clubs!.length,
+          itemBuilder: (context, index) {
+            return Column(
+              children: [
+                const SizedBox(height: 20),
+                _buildRoundedSquare(context, state.clubs![index].name),
+                const SizedBox(height: 20),
+              ],
+            );
+          },
+        ),
+      );
+    } else if (state.isLoading) {
+      return const Center(
+        child: CircularProgressIndicator(),
+      );
+    } else {
+      return const Center(child: Text('Nenhum Clubinho Vinculado!'));
+    }
   }
 }
