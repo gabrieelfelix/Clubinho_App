@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 
 class TeachersModel extends Equatable {
@@ -37,14 +36,15 @@ class TeachersModel extends Equatable {
     );
   }
 
-  factory TeachersModel.fromJson(DocumentSnapshot<Map<String, dynamic>> json) {
-    final data = json.data()!;
+  factory TeachersModel.fromJson(Map<String, dynamic> json) {
+    // final data = json.data()!;
     return TeachersModel(
-      id: json.id,
-      name: data['name'] ?? '',
-      contact: data['contact'] ?? '',
-      email: data['email'] ?? '',
-      classIds: (data['classIds'] as List<dynamic>?)
+      // id: json.id,
+      id: "",
+      name: json['name'] ?? '',
+      contact: json['contact'] ?? '',
+      email: json['email'] ?? '',
+      classIds: (json['classIds'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
           [],

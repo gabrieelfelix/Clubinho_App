@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:club_app/utils/constants.dart';
 import 'package:club_repository/club_repository.dart';

@@ -48,9 +48,9 @@ class HomeScreenView extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildRoundedSquare(BuildContext context, String name) {
+  Widget _buildRoundedSquare(BuildContext context, String name, String id) {
     return ElevatedButton(
-      onPressed: () => onTapManageClub(context),
+      onPressed: () => onTapManageClub(context, id),
       style: ElevatedButton.styleFrom(
         backgroundColor: context.colors.surface.withOpacity(0.01),
         shape: RoundedRectangleBorder(
@@ -212,8 +212,8 @@ class HomeScreenView extends StatelessWidget {
   }
 
   /// Navigates to the manage club when the action is triggered.
-  onTapManageClub(BuildContext context) {
-    context.push(AppRouter.manageClub);
+  onTapManageClub(BuildContext context, String id) {
+    context.push(AppRouter.manageClub, extra: id);
   }
 
   /// Refreshes the list of clubs.
@@ -233,7 +233,7 @@ class HomeScreenView extends StatelessWidget {
     }
   }
 
-  /// Dealing with block listening
+  /// Dealing with block builder
   Widget _handlerBuilder(BuildContext context, HomeBlocState state) {
     if (state.isLoaded) {
       return RefreshIndicator(
@@ -244,7 +244,8 @@ class HomeScreenView extends StatelessWidget {
             return Column(
               children: [
                 const SizedBox(height: 20),
-                _buildRoundedSquare(context, state.clubs![index].name),
+                _buildRoundedSquare(
+                    context, state.clubs![index].name, state.clubs![index].id),
                 const SizedBox(height: 20),
               ],
             );

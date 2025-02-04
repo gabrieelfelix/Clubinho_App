@@ -28,6 +28,7 @@ class FirebaseClubRepository implements IClubRepository {
         'name': name.trim(),
         'teachers': [userCache],
         'kids': [],
+        'address': 'Rua teste'
       });
 
       await _firebaseFirestore.collection('teachers').doc(userCache).update({
@@ -78,6 +79,52 @@ class FirebaseClubRepository implements IClubRepository {
     } catch (e) {
       log('General error: $e');
       return Error(FailureClub(message: e.toString()));
+    }
+  }
+
+  @override
+  Future<Result<String, Failure>> editAddress(
+      {required String uuid, required String address}) async {
+    try {
+      await _firebaseFirestore.collection('clubs').doc(uuid).update({
+        'address': address,
+      });
+      return const Success('Editado com sucesso!');
+    } on FirebaseException catch (e) {
+      return Error(FailureClub(message: e.message!));
+    }
+  }
+
+  @override
+  Future<Result<String, Failure>> editName(
+      {required String uuid, required String name}) async {
+    try {
+      await _firebaseFirestore.collection('clubs').doc(uuid).update({
+        'name': name,
+      });
+      return const Success('Editado com sucesso!');
+    } on FirebaseException catch (e) {
+      return Error(FailureClub(message: e.message!));
+    }
+  }
+
+  @override
+  Future<Result<ClubModel, Failure>> getClubInfo({required String id}) async {
+    try {
+      DocumentSnapshot documentSnapshot =
+          await _firebaseFirestore.collection('clubs').doc(id).get();
+
+      if (documentSnapshot.exists) {
+        // final data =
+        //     documentSnapshot.data() as DocumentSnapshot<Map<String, dynamic>>;
+        final data = documentSnapshot.data();
+
+        return Success(ClubModel.fromJson(data as Map<String, dynamic>));
+      } else {
+        return const Error(Failure(message: 'Clubinho não existe'));
+      }
+    } on FirebaseException catch (e) {
+      return const Error(Failure(message: "Erro ao buscar dados"));
     }
   }
 }

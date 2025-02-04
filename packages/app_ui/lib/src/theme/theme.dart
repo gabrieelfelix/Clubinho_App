@@ -36,6 +36,8 @@ class GlobalThemData {
     onError: Color(0xFFFFFFFF),
     background: Color(0xFFE6EBEB),
     onBackground: Color(0xFFE6EBEB),
+
+    // surface: Color(0xFF808080),
     surface: Color(0xFF9E9E9E),
     onSurface: Color(0xFF3A3D90),
     brightness: Brightness.light,
