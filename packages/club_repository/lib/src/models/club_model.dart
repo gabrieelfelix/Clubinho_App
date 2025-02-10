@@ -45,8 +45,8 @@ class ClubModel extends Equatable {
       id: "",
       // id: json.id,
       name: json['name'] ?? '',
-      kids: [],
-      teachers: [],
+      kids: const [],
+      teachers: const [],
       // kids: (data['kids'] as List<dynamic>?)
       //         ?.map((e) => KidsModel.fromJson(Map<String, dynamic>.from(e)))
       //         .toList() ??

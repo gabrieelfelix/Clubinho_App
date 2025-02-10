@@ -3,7 +3,7 @@ import 'package:club_app/utils/helpers.dart';
 import 'package:go_router/go_router.dart';
 import 'package:club_app/pages/child_registration_page/child_registration_page.dart';
 import 'package:club_app/pages/home_page/view/home_page.dart';
-import 'package:club_app/pages/manage_children_page/manage_children_page.dart';
+import 'package:club_app/pages/manage_users_page/view/manage_users_page.dart';
 import 'package:club_app/pages/sign_in_page/view/sign_in_page.dart';
 import 'package:club_app/pages/sign_up_page/view/sign_up_page.dart';
 import 'package:club_app/pages/verification_code_page/verification_code_page.dart';
@@ -25,7 +25,7 @@ class AppRouter {
 
   static const String manageClub = '/manage_club';
 
-  static const String manageChildren = '/manage_children';
+  static const String manageUsers = '/manage_Users';
 
   static const String childRegistration = '/child_registration';
 
@@ -59,8 +59,12 @@ class AppRouter {
         ),
       ),
       GoRoute(
-        path: AppRouter.manageChildren,
-        builder: (context, state) => const ManageChildren(),
+        path: AppRouter.manageUsers,
+        builder: (context, state) => Helpers.openPage<String>(
+          context,
+          state,
+          (club) => ManageUsersPage(id: club),
+        ),
       ),
       GoRoute(
         path: AppRouter.childRegistration,

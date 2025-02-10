@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:app_ui/app_ui.dart';
 import 'package:club_app/main.dart';
-import 'package:club_app/pages/home_page/bloc/home_bloc.dart';
 import 'package:club_app/pages/manage_club_page/bloc/manage_club_bloc.dart';
 import 'package:club_app/routes/routes.dart';
 import 'package:club_app/utils/helpers.dart';
@@ -11,9 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-// ver design onde aparece as infos do clubinho
-// editar
-// passar uuid entre as pags
 class ManageClubPage extends StatelessWidget {
   const ManageClubPage({super.key, required this.id});
 
@@ -66,9 +60,9 @@ class ManageClubView extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildRoundedSquare(BuildContext context, String title) {
+  Widget _buildRoundedSquare(BuildContext context, String title, String id) {
     return ElevatedButton(
-      onPressed: () => onTapManageChildren(context),
+      onPressed: () => onTapManageChildren(context, id),
       style: ElevatedButton.styleFrom(
         backgroundColor: context.colors.onSurface.withOpacity(0),
         shape: RoundedRectangleBorder(
@@ -121,7 +115,7 @@ class ManageClubView extends StatelessWidget {
     );
   }
 
-  /// Dealing with block builder
+  /// Dealing with bloc builder
   Widget _handlerBuilder(BuildContext context, ManageClubBlocState state) {
     if (state.isLoading) {
       return const CircularProgressIndicator();
@@ -169,9 +163,21 @@ class ManageClubView extends StatelessWidget {
                 ),
                 padding: const EdgeInsets.all(10),
                 children: [
-                  _buildRoundedSquare(context, "Professores"),
-                  _buildRoundedSquare(context, "Crianças"),
-                  _buildRoundedSquare(context, "Relatórios"),
+                  _buildRoundedSquare(
+                    context,
+                    "Professores",
+                    state.clubModel!.id,
+                  ),
+                  _buildRoundedSquare(
+                    context,
+                    "Crianças",
+                    state.clubModel!.id,
+                  ),
+                  _buildRoundedSquare(
+                    context,
+                    "Relatórios",
+                    state.clubModel!.id,
+                  ),
                 ],
               ),
             ),
@@ -184,7 +190,7 @@ class ManageClubView extends StatelessWidget {
   }
 
   /// Navigates to the manage children when login is performed.
-  onTapManageChildren(BuildContext context) {
-    context.push(AppRouter.manageChildren);
+  onTapManageChildren(BuildContext context, String id) {
+    context.push(AppRouter.manageUsers, extra: id);
   }
 }

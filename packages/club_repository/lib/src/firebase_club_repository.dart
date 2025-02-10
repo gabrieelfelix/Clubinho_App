@@ -127,4 +127,25 @@ class FirebaseClubRepository implements IClubRepository {
       return const Error(Failure(message: "Erro ao buscar dados"));
     }
   }
+
+  @override
+  Future<Result<List<TeachersModel>, Failure>> getUsers(
+      {required String id}) async {
+    try {
+      QuerySnapshot querySnapshot = await _firebaseFirestore
+          .collection('teachers')
+          .where('classIds', arrayContains: id)
+          .get();
+
+      List<TeachersModel> teachers = querySnapshot.docs
+          .map((doc) =>
+              TeachersModel.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+
+      return Success(teachers);
+    } on FirebaseException catch (e) {
+      return Error(
+          Failure(message: "Erro ao buscar professores: ${e.message}"));
+    }
+  }
 }

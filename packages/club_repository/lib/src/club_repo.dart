@@ -1,5 +1,5 @@
 import 'package:authentication_repository/authentication_repository.dart';
-import 'package:club_repository/src/models/club_model.dart';
+import 'package:club_repository/club_repository.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 abstract class IClubRepository {
@@ -18,4 +18,6 @@ abstract class IClubRepository {
   });
 
   Future<Result<ClubModel, Failure>> getClubInfo({required String id});
+
+  Future<Result<List<TeachersModel>, Failure>> getUsers({required String id});
 }

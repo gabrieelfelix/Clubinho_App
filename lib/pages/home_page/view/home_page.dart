@@ -221,7 +221,7 @@ class HomeScreenView extends StatelessWidget {
     context.read<HomeBloc>().add(GetClubsRequired());
   }
 
-  /// Dealing with block listening
+  /// Dealing with bloc listening
   _handlerListener(BuildContext context, HomeBlocState state) {
     if (state.isFailure) {
       showCustomSnackBar(context, state.message!);
@@ -233,7 +233,7 @@ class HomeScreenView extends StatelessWidget {
     }
   }
 
-  /// Dealing with block builder
+  /// Dealing with bloc builder
   Widget _handlerBuilder(BuildContext context, HomeBlocState state) {
     if (state.isLoaded) {
       return RefreshIndicator(
