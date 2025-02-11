@@ -1,6 +1,7 @@
+import 'package:club_repository/club_repository.dart';
 import 'package:equatable/equatable.dart';
 
-class KidsModel extends Equatable {
+class KidsModel extends Equatable implements DefaultModel {
   // final String id;
   final String age;
   final String fullName;

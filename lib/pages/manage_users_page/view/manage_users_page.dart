@@ -69,7 +69,8 @@ class ManageUsersView extends StatelessWidget {
             title: Text(state.teatchersModel![index].name),
             subtitle: Text(state.teatchersModel![index].contact),
             trailing: const Icon(Icons.arrow_forward_ios),
-            onTap: () {},
+            onTap: () =>
+                onTapUserInfo(context, state.teatchersModel![index].id),
           );
         },
       );
@@ -93,5 +94,10 @@ class ManageUsersView extends StatelessWidget {
   /// Navigates to the child registration when the action is triggered.
   onTapChildRegistration(BuildContext context) {
     context.push(AppRouter.childRegistration);
+  }
+
+  /// Navigates to the user information when the action is triggered.
+  onTapUserInfo(BuildContext context, String id) {
+    context.push(AppRouter.userInformation, extra: id);
   }
 }

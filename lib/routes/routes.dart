@@ -1,3 +1,4 @@
+import 'package:club_app/pages/detail_page/view/detail_page.dart';
 import 'package:club_app/pages/manage_club_page/view/manage_club_page.dart';
 import 'package:club_app/utils/helpers.dart';
 import 'package:go_router/go_router.dart';
@@ -28,6 +29,8 @@ class AppRouter {
   static const String manageUsers = '/manage_Users';
 
   static const String childRegistration = '/child_registration';
+
+  static const String userInformation = '/user_information';
 
   static const String codeVerification = '/code_verification';
 
@@ -69,6 +72,14 @@ class AppRouter {
       GoRoute(
         path: AppRouter.childRegistration,
         builder: (context, state) => const ChildRegistration(),
+      ),
+      GoRoute(
+        path: AppRouter.userInformation,
+        builder: (context, state) => Helpers.openPage<String>(
+          context,
+          state,
+          (user) => DetailPage.teacher(id: user),
+        ),
       ),
       GoRoute(
         path: AppRouter.codeVerification,

@@ -137,15 +137,34 @@ class FirebaseClubRepository implements IClubRepository {
           .where('classIds', arrayContains: id)
           .get();
 
-      List<TeachersModel> teachers = querySnapshot.docs
-          .map((doc) =>
-              TeachersModel.fromJson(doc.data() as Map<String, dynamic>))
-          .toList();
+      List<TeachersModel> teachers = querySnapshot.docs.map((doc) {
+        return TeachersModel.fromJson(doc.data() as Map<String, dynamic>)
+            .copyWith(id: doc.id);
+      }).toList();
 
       return Success(teachers);
     } on FirebaseException catch (e) {
       return Error(
           Failure(message: "Erro ao buscar professores: ${e.message}"));
+    }
+  }
+
+  @override
+  Future<Result<TeachersModel, Failure>> getUserInfo(
+      {required String id}) async {
+    try {
+      DocumentSnapshot documentSnapshot =
+          await _firebaseFirestore.collection('teachers').doc(id).get();
+
+      if (documentSnapshot.exists) {
+        final data = documentSnapshot.data();
+
+        return Success(TeachersModel.fromJson(data as Map<String, dynamic>));
+      } else {
+        return const Error(Failure(message: 'Clubinho não existe'));
+      }
+    } on FirebaseException catch (e) {
+      return const Error(Failure(message: "Erro ao buscar dados"));
     }
   }
 }

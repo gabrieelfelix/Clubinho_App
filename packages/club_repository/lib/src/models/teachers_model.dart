@@ -1,6 +1,7 @@
+import 'package:club_repository/club_repository.dart';
 import 'package:equatable/equatable.dart';
 
-class TeachersModel extends Equatable {
+class TeachersModel extends Equatable implements DefaultModel {
   final String id;
   final String contact;
   final String name;
