@@ -12,6 +12,7 @@ class ManageUsersBloc extends Bloc<IManageUsersEvent, ManageUsersState> {
       : _clubRepository = clubRepository,
         super(const ManageUsersState.initial()) {
     on<GetTeatchersRequired>(_onGetTeatchersDataRequired);
+    on<GetChildrenRequired>(_onGetChildrenDataRequired);
   }
 
   Future<void> _onGetTeatchersDataRequired(
@@ -23,6 +24,22 @@ class ManageUsersBloc extends Bloc<IManageUsersEvent, ManageUsersState> {
     response.when(
       (success) => emit(
         ManageUsersState.success(teatchersModel: success),
+      ),
+      (failure) => emit(
+        ManageUsersState.failure(message: failure.message),
+      ),
+    );
+  }
+
+  Future<void> _onGetChildrenDataRequired(
+      GetChildrenRequired event, Emitter<ManageUsersState> emit) async {
+    emit(const ManageUsersState.loading());
+
+    final response = await _clubRepository.getChildren(id: event.id);
+
+    response.when(
+      (success) => emit(
+        ManageUsersState.successChildren(childrenModel: success),
       ),
       (failure) => emit(
         ManageUsersState.failure(message: failure.message),

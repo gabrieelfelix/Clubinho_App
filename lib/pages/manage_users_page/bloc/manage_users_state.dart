@@ -13,11 +13,13 @@ class ManageUsersState extends Equatable {
   final ManageUsersPageStatus state;
   final String? message;
   final List<TeachersModel>? teatchersModel;
+  final List<KidsModel>? childrenModel;
 
   const ManageUsersState._({
     this.state = ManageUsersPageStatus.loading,
     this.message,
     this.teatchersModel,
+    this.childrenModel,
   });
 
   const ManageUsersState.initial()
@@ -36,6 +38,13 @@ class ManageUsersState extends Equatable {
       : this._(
             state: ManageUsersPageStatus.loaded,
             teatchersModel: teatchersModel);
+
+  const ManageUsersState.successChildren(
+      {required List<KidsModel>? childrenModel})
+      : this._(
+          state: ManageUsersPageStatus.loaded,
+          childrenModel: childrenModel,
+        );
 
   const ManageUsersState.loading() : this._();
 

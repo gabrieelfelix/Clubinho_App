@@ -8,23 +8,43 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 class ManageUsersPage extends StatelessWidget {
-  const ManageUsersPage({required this.id, super.key});
+  const ManageUsersPage.teachers({required this.id, super.key})
+      : isTeacher = true;
+
+  const ManageUsersPage.children({required this.id, super.key})
+      : isTeacher = false;
+
+  final bool isTeacher;
 
   final String id;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          ManageUsersBloc(clubRepository: getIt<IClubRepository>())
-            ..add(GetTeatchersRequired(id: id)),
-      child: const ManageUsersView(),
+      create: (context) {
+        final bloc = ManageUsersBloc(clubRepository: getIt<IClubRepository>());
+        _initializeBloc(bloc);
+        return bloc;
+      },
+      child: ManageUsersView(isTeacher: isTeacher),
     );
+  }
+
+  /// Dealing bloc initialize
+  void _initializeBloc(ManageUsersBloc bloc) {
+    final event = isTeacher
+        ? GetTeatchersRequired(id: id)
+        : //
+        GetChildrenRequired(id: id);
+
+    bloc.add(event);
   }
 }
 
 class ManageUsersView extends StatelessWidget {
-  const ManageUsersView({super.key});
+  const ManageUsersView({super.key, required this.isTeacher});
+
+  final bool isTeacher;
 
   @override
   Widget build(BuildContext context) {
@@ -32,16 +52,18 @@ class ManageUsersView extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: BlocBuilder<ManageUsersBloc, ManageUsersState>(
-          builder: (context, state) => myAppbar(state),
+          builder: (context, state) => myAppbar(state, isTeacher),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => onTapChildRegistration(context),
-        shape: const CircleBorder(),
-        backgroundColor: context.colors.primary,
-        child: Icon(Icons.person_add_alt_1_rounded,
-            color: context.colors.onPrimary),
-      ),
+      floatingActionButton: !isTeacher
+          ? FloatingActionButton(
+              onPressed: () => onTapChildRegistration(context),
+              shape: const CircleBorder(),
+              backgroundColor: context.colors.primary,
+              child: Icon(Icons.person_add_alt_1_rounded,
+                  color: context.colors.onPrimary),
+            )
+          : null,
       body: BlocConsumer<ManageUsersBloc, ManageUsersState>(
         builder: _handlerBuilder,
         listener: _handlerListener,
@@ -62,15 +84,22 @@ class ManageUsersView extends StatelessWidget {
   Widget _handlerBuilder(BuildContext context, ManageUsersState state) {
     if (state.isLoaded) {
       return ListView.builder(
-        itemCount: state.teatchersModel!.length,
+        itemCount: isTeacher
+            ? state.teatchersModel!.length
+            : state.childrenModel!.length,
         itemBuilder: (context, index) {
           return ListTile(
             leading: const Icon(Icons.person),
-            title: Text(state.teatchersModel![index].name),
-            subtitle: Text(state.teatchersModel![index].contact),
+            title: Text(isTeacher
+                ? state.teatchersModel![index].name
+                : state.childrenModel![index].fullName),
+            subtitle: Text(isTeacher
+                ? state.teatchersModel![index].contact
+                : "${state.childrenModel![index].age} anos"),
             trailing: const Icon(Icons.arrow_forward_ios),
-            onTap: () =>
-                onTapUserInfo(context, state.teatchersModel![index].id),
+            onTap: () => isTeacher
+                ? onTapUserInfo(context, state.teatchersModel![index])
+                : onTapChildInfo(context, state.childrenModel![index]),
           );
         },
       );
@@ -84,9 +113,10 @@ class ManageUsersView extends StatelessWidget {
   }
 
   /// Section Widget
-  PreferredSizeWidget myAppbar(ManageUsersState state) {
+  PreferredSizeWidget myAppbar(ManageUsersState state, bool isTeacher) {
     return AppBar(
-      title: Text('Membros : ${state.teatchersModel?.length ?? 0}'),
+      title: Text(
+          '${isTeacher ? 'Membros' : 'Crianças'} : ${isTeacher ? state.teatchersModel?.length ?? 0 : state.childrenModel?.length ?? 0}'),
       actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
     );
   }
@@ -97,7 +127,15 @@ class ManageUsersView extends StatelessWidget {
   }
 
   /// Navigates to the user information when the action is triggered.
-  onTapUserInfo(BuildContext context, String id) {
-    context.push(AppRouter.userInformation, extra: id);
+  onTapUserInfo(BuildContext context, TeachersModel model) {
+    context.push(AppRouter.userInformation, extra: model);
+  }
+
+  /// Navigates to the user information when the action is triggered.
+  onTapChildInfo(BuildContext context, KidsModel model) {
+    context.push(AppRouter.childInformation, extra: model);
   }
 }
+
+ // return ManageUsersBloc(clubRepository: getIt<IClubRepository>())
+  //   ..add(GetTeatchersRequired(id: id));

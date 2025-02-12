@@ -21,7 +21,7 @@ abstract class IClubRepository {
 
   Future<Result<List<TeachersModel>, Failure>> getUsers({required String id});
 
-  Future<Result<TeachersModel, Failure>> getUserInfo({required String id});
+  Future<Result<List<KidsModel>, Failure>> getChildren({required String id});
 }
 
 abstract class DefaultModel {}

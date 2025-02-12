@@ -28,12 +28,15 @@ class HomeScreenView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         floatingActionButton: _buildFloatingActionButton(context),
         appBar: _buildAppBar(context),
         body: TabBarView(
           children: [
+            Container(
+              color: Colors.blue,
+            ),
             BlocConsumer<HomeBloc, HomeBlocState>(
               listener: _handlerListener,
               builder: _handlerBuilder,
@@ -193,7 +196,10 @@ class HomeScreenView extends StatelessWidget {
         labelColor: Colors.black,
         tabs: [
           Tab(
-            text: 'Home',
+            text: 'Estatisticas Gerais Dashboard',
+          ),
+          Tab(
+            text: 'Clubinhos',
           ),
           Tab(
             text: 'Usuários',

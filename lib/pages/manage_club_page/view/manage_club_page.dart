@@ -60,9 +60,10 @@ class ManageClubView extends StatelessWidget {
   }
 
   /// Section Widget
-  Widget _buildRoundedSquare(BuildContext context, String title, String id) {
+  Widget _buildRoundedSquare(BuildContext context, String title, String id,
+      void Function()? onPressed) {
     return ElevatedButton(
-      onPressed: () => onTapManageChildren(context, id),
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: context.colors.onSurface.withOpacity(0),
         shape: RoundedRectangleBorder(
@@ -164,20 +165,22 @@ class ManageClubView extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 children: [
                   _buildRoundedSquare(
-                    context,
-                    "Professores",
-                    state.clubModel!.id,
-                  ),
+                      context,
+                      "Professores",
+                      state.clubModel!.id,
+                      () => onTapManageTeacher(context, state.clubModel!.id)),
                   _buildRoundedSquare(
                     context,
                     "Crianças",
                     state.clubModel!.id,
+                    () => onTapManagechildren(context, state.clubModel!.id),
                   ),
                   _buildRoundedSquare(
-                    context,
-                    "Relatórios",
-                    state.clubModel!.id,
-                  ),
+                      context, "Relatórios", state.clubModel!.id, () {}),
+                  _buildRoundedSquare(
+                      context, "Chamada", state.clubModel!.id, () {}),
+                  _buildRoundedSquare(
+                      context, "Decisões", state.clubModel!.id, () {}),
                 ],
               ),
             ),
@@ -189,8 +192,13 @@ class ManageClubView extends StatelessWidget {
     }
   }
 
-  /// Navigates to the manage children when login is performed.
-  onTapManageChildren(BuildContext context, String id) {
+  /// Navigates to the manage Teacher when login is performed.
+  onTapManageTeacher(BuildContext context, String id) {
     context.push(AppRouter.manageUsers, extra: id);
+  }
+
+  /// Navigates to the manage children when login is performed.
+  onTapManagechildren(BuildContext context, String id) {
+    context.push(AppRouter.manageChildren, extra: id);
   }
 }

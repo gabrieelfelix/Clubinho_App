@@ -35,3 +35,12 @@ class GetTeatchersRequired extends IManageUsersEvent {
   @override
   List<Object> get props => [id];
 }
+
+class GetChildrenRequired extends IManageUsersEvent {
+  final String id;
+
+  const GetChildrenRequired({required this.id});
+
+  @override
+  List<Object> get props => [id];
+}

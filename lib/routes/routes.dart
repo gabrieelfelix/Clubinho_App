@@ -1,6 +1,7 @@
-import 'package:club_app/pages/detail_page/view/detail_page.dart';
+import 'package:club_app/pages/detail_page/detail_page.dart';
 import 'package:club_app/pages/manage_club_page/view/manage_club_page.dart';
 import 'package:club_app/utils/helpers.dart';
+import 'package:club_repository/club_repository.dart';
 import 'package:go_router/go_router.dart';
 import 'package:club_app/pages/child_registration_page/child_registration_page.dart';
 import 'package:club_app/pages/home_page/view/home_page.dart';
@@ -28,9 +29,13 @@ class AppRouter {
 
   static const String manageUsers = '/manage_Users';
 
+  static const String manageChildren = '/manage_children';
+
   static const String childRegistration = '/child_registration';
 
   static const String userInformation = '/user_information';
+
+  static const String childInformation = '/child_information';
 
   static const String codeVerification = '/code_verification';
 
@@ -66,7 +71,15 @@ class AppRouter {
         builder: (context, state) => Helpers.openPage<String>(
           context,
           state,
-          (club) => ManageUsersPage(id: club),
+          (club) => ManageUsersPage.teachers(id: club),
+        ),
+      ),
+      GoRoute(
+        path: AppRouter.manageChildren,
+        builder: (context, state) => Helpers.openPage<String>(
+          context,
+          state,
+          (club) => ManageUsersPage.children(id: club),
         ),
       ),
       GoRoute(
@@ -75,10 +88,18 @@ class AppRouter {
       ),
       GoRoute(
         path: AppRouter.userInformation,
-        builder: (context, state) => Helpers.openPage<String>(
+        builder: (context, state) => Helpers.openPage<TeachersModel>(
           context,
           state,
-          (user) => DetailPage.teacher(id: user),
+          (user) => DetailPage.teacher(teachersModel: user),
+        ),
+      ),
+      GoRoute(
+        path: AppRouter.childInformation,
+        builder: (context, state) => Helpers.openPage<KidsModel>(
+          context,
+          state,
+          (user) => DetailPage.kids(childModel: user),
         ),
       ),
       GoRoute(

@@ -150,21 +150,36 @@ class FirebaseClubRepository implements IClubRepository {
   }
 
   @override
-  Future<Result<TeachersModel, Failure>> getUserInfo(
+  Future<Result<List<KidsModel>, Failure>> getChildren(
       {required String id}) async {
     try {
-      DocumentSnapshot documentSnapshot =
-          await _firebaseFirestore.collection('teachers').doc(id).get();
+      final DocumentSnapshot docSnapshot =
+          await _firebaseFirestore.collection('clubs').doc(id).get();
 
-      if (documentSnapshot.exists) {
-        final data = documentSnapshot.data();
-
-        return Success(TeachersModel.fromJson(data as Map<String, dynamic>));
-      } else {
-        return const Error(Failure(message: 'Clubinho não existe'));
+      if (!docSnapshot.exists) {
+        return const Error(Failure(message: "Clube não encontrado"));
       }
+
+      final data = docSnapshot.data() as Map<String, dynamic>;
+      final List<dynamic> kidsData = data['kids'] ?? [];
+
+      final List<KidsModel> kids = kidsData.map((kidData) {
+        //
+        final Timestamp timestamp = kidData['birthDate'];
+        kidData['birthDate'] = timestamp.toDate().toString();
+
+        return KidsModel.fromJson(kidData as Map<String, dynamic>);
+      }).toList();
+
+      return Success(kids);
     } on FirebaseException catch (e) {
-      return const Error(Failure(message: "Erro ao buscar dados"));
+      return Error(
+        Failure(message: "Erro ao buscar crianças: ${e.message}"),
+      );
+    } catch (e) {
+      return Error(
+        Failure(message: "Erro inesperado ao buscar crianças: $e"),
+      );
     }
   }
 }
