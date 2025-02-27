@@ -22,6 +22,18 @@ abstract class IClubRepository {
   Future<Result<List<TeachersModel>, Failure>> getUsers({required String id});
 
   Future<Result<List<KidsModel>, Failure>> getChildren({required String id});
+
+  Future<Result<String, Failure>> addChild({
+    required String id,
+    required String address,
+    required String age,
+    required String birthDate,
+    required String contactNumber,
+    required String fatherName,
+    required String fullName,
+    required String motherName,
+    required String notes,
+  });
 }
 
 abstract class DefaultModel {}

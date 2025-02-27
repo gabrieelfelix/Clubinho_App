@@ -1,9 +1,9 @@
 import 'package:club_app/pages/detail_page/detail_page.dart';
 import 'package:club_app/pages/manage_club_page/view/manage_club_page.dart';
+import 'package:club_app/pages/child_registration_page/view/child_registration_page.dart';
 import 'package:club_app/utils/helpers.dart';
 import 'package:club_repository/club_repository.dart';
 import 'package:go_router/go_router.dart';
-import 'package:club_app/pages/child_registration_page/child_registration_page.dart';
 import 'package:club_app/pages/home_page/view/home_page.dart';
 import 'package:club_app/pages/manage_users_page/view/manage_users_page.dart';
 import 'package:club_app/pages/sign_in_page/view/sign_in_page.dart';
@@ -84,7 +84,11 @@ class AppRouter {
       ),
       GoRoute(
         path: AppRouter.childRegistration,
-        builder: (context, state) => const ChildRegistration(),
+        builder: (context, state) => Helpers.openPage<String>(
+          context,
+          state,
+          (club) => ChildRegistrationPage(id: club),
+        ),
       ),
       GoRoute(
         path: AppRouter.userInformation,

@@ -26,7 +26,7 @@ class ManageUsersPage extends StatelessWidget {
         _initializeBloc(bloc);
         return bloc;
       },
-      child: ManageUsersView(isTeacher: isTeacher),
+      child: ManageUsersView(isTeacher: isTeacher, id: id),
     );
   }
 
@@ -42,9 +42,11 @@ class ManageUsersPage extends StatelessWidget {
 }
 
 class ManageUsersView extends StatelessWidget {
-  const ManageUsersView({super.key, required this.isTeacher});
+  const ManageUsersView({super.key, required this.isTeacher, required this.id});
 
   final bool isTeacher;
+
+  final String id;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,7 @@ class ManageUsersView extends StatelessWidget {
       ),
       floatingActionButton: !isTeacher
           ? FloatingActionButton(
-              onPressed: () => onTapChildRegistration(context),
+              onPressed: () => onTapChildRegistration(context, id),
               shape: const CircleBorder(),
               backgroundColor: context.colors.primary,
               child: Icon(Icons.person_add_alt_1_rounded,
@@ -122,8 +124,8 @@ class ManageUsersView extends StatelessWidget {
   }
 
   /// Navigates to the child registration when the action is triggered.
-  onTapChildRegistration(BuildContext context) {
-    context.push(AppRouter.childRegistration);
+  onTapChildRegistration(BuildContext context, String id) {
+    context.push(AppRouter.childRegistration, extra: id);
   }
 
   /// Navigates to the user information when the action is triggered.
@@ -136,6 +138,3 @@ class ManageUsersView extends StatelessWidget {
     context.push(AppRouter.childInformation, extra: model);
   }
 }
-
- // return ManageUsersBloc(clubRepository: getIt<IClubRepository>())
-  //   ..add(GetTeatchersRequired(id: id));

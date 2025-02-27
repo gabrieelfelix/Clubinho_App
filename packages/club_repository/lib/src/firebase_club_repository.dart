@@ -182,4 +182,50 @@ class FirebaseClubRepository implements IClubRepository {
       );
     }
   }
+
+  @override
+  Future<Result<String, Failure>> addChild({
+    required String id,
+    required String address,
+    required String age,
+    required String birthDate,
+    required String contactNumber,
+    required String fatherName,
+    required String fullName,
+    required String motherName,
+    required String notes,
+  }) async {
+    final Map<String, dynamic> newKid = {
+      "address": address,
+      "age": age,
+      "birthDate": birthDate,
+      "contactNumber": contactNumber,
+      "fatherName": fatherName,
+      "fullName": fullName,
+      "motherName": motherName,
+      "notes": notes,
+    };
+    // final Map<String, dynamic> newKid = {
+    //   "address": "Rua teste",
+    //   "age": "10",
+    //   "birthDate": Timestamp.fromDate(DateTime(2015, 9, 29, 22, 42, 46)),
+    //   "contactNumber": "+929(92)999661401",
+    //   "fatherName": "Roberval Felix",
+    //   "fullName": "Jorge Luiz da Pinta",
+    //   "motherName": "Mônica Valéria do Nascimento Felix",
+    //   "notes": "Gosta de tomar água quente",
+    // };
+
+    try {
+      await _firebaseFirestore.collection('clubs').doc(id).update({
+        'kids': FieldValue.arrayUnion([newKid]),
+      });
+
+      return const Success('Criança adicionada com sucesso!');
+    } on FirebaseException catch (e) {
+      return Error(Failure(message: "Erro ao adicionar criança: ${e.message}"));
+    } catch (e) {
+      return Error(Failure(message: "Erro inesperado: $e"));
+    }
+  }
 }
