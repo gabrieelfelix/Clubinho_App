@@ -163,13 +163,9 @@ class FirebaseClubRepository implements IClubRepository {
       final data = docSnapshot.data() as Map<String, dynamic>;
       final List<dynamic> kidsData = data['kids'] ?? [];
 
-      final List<KidsModel> kids = kidsData.map((kidData) {
-        //
-        final Timestamp timestamp = kidData['birthDate'];
-        kidData['birthDate'] = timestamp.toDate().toString();
-
-        return KidsModel.fromJson(kidData as Map<String, dynamic>);
-      }).toList();
+      final List<KidsModel> kids = kidsData
+          .map((kidData) => KidsModel.fromJson(kidData as Map<String, dynamic>))
+          .toList();
 
       return Success(kids);
     } on FirebaseException catch (e) {
