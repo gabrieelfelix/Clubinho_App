@@ -1,3 +1,5 @@
+import 'package:club_app/pages/attendance_page/view/attendance_page.dart';
+import 'package:club_app/pages/attendance_page/view/take_attendance_page.dart';
 import 'package:club_app/pages/detail_page/detail_page.dart';
 import 'package:club_app/pages/manage_club_page/view/manage_club_page.dart';
 import 'package:club_app/pages/child_registration_page/view/child_registration_page.dart';
@@ -5,7 +7,7 @@ import 'package:club_app/utils/helpers.dart';
 import 'package:club_repository/club_repository.dart';
 import 'package:go_router/go_router.dart';
 import 'package:club_app/pages/home_page/view/home_page.dart';
-import 'package:club_app/pages/manage_users_page/view/manage_users_page.dart';
+import 'package:club_app/pages/manage_member_page/view/manage_member_page.dart';
 import 'package:club_app/pages/sign_in_page/view/sign_in_page.dart';
 import 'package:club_app/pages/sign_up_page/view/sign_up_page.dart';
 import 'package:club_app/pages/verification_code_page/verification_code_page.dart';
@@ -36,6 +38,10 @@ class AppRouter {
   static const String userInformation = '/user_information';
 
   static const String childInformation = '/child_information';
+
+  static const String attendanceChild = '/child_attendance';
+
+  static const String takeAttendance = '/take_attendance';
 
   static const String codeVerification = '/code_verification';
 
@@ -71,7 +77,7 @@ class AppRouter {
         builder: (context, state) => Helpers.openPage<String>(
           context,
           state,
-          (club) => ManageUsersPage.teachers(id: club),
+          (club) => ManageMemberPage.teachers(id: club),
         ),
       ),
       GoRoute(
@@ -79,7 +85,7 @@ class AppRouter {
         builder: (context, state) => Helpers.openPage<String>(
           context,
           state,
-          (club) => ManageUsersPage.children(id: club),
+          (club) => ManageMemberPage.children(id: club),
         ),
       ),
       GoRoute(
@@ -109,6 +115,22 @@ class AppRouter {
       GoRoute(
         path: AppRouter.codeVerification,
         builder: (context, state) => const VerificationCode(),
+      ),
+      GoRoute(
+        path: AppRouter.attendanceChild,
+        builder: (context, state) => Helpers.openPage<String>(
+          context,
+          state,
+          (club) => AttendancePage(id: club),
+        ),
+      ),
+      GoRoute(
+        path: AppRouter.takeAttendance,
+        builder: (context, state) => Helpers.openPage<String>(
+          context,
+          state,
+          (clubId) => TakeAttendancePage(id: clubId),
+        ),
       ),
     ],
     // refreshListenable: StreamToListenable([authBloc.stream]),

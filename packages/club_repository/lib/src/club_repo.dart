@@ -35,5 +35,3 @@ abstract class IClubRepository {
     required String notes,
   });
 }
-
-abstract class DefaultModel {}

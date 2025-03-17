@@ -1,12 +1,15 @@
 import 'package:authentication_repository/authentication_repository.dart';
-import 'package:club_app/app/app.dart';
-import 'package:club_app/app/simple_bloc_observer.dart';
-import 'package:club_app/firebase_options.dart';
+import 'package:attendance_repository/attendance_repository.dart';
+
 import 'package:club_repository/club_repository.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+
+import 'package:club_app/app/app.dart';
+import 'package:club_app/app/simple_bloc_observer.dart';
+import 'package:club_app/firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,5 +32,9 @@ Future<void> setupDependences() async {
   // Register service clubs
   getIt.registerLazySingleton<IClubRepository>(
     () => FirebaseClubRepository(),
+  );
+  // Register service attendances
+  getIt.registerLazySingleton<IAttendanceRepository>(
+    () => FirebaseAttendanceRepository(),
   );
 }

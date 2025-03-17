@@ -32,6 +32,7 @@ class DetailPage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          Text('Id: ${model.id}'),
           Text('Nome: ${model.fullName}'),
           Text('Idade:\n${model.age}'),
           Text('Data de nascimento: ${model.birthDate}'),

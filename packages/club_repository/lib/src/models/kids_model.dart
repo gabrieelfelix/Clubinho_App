@@ -1,8 +1,7 @@
-import 'package:club_repository/club_repository.dart';
 import 'package:equatable/equatable.dart';
 
-class KidsModel extends Equatable implements DefaultModel {
-  // final String id;
+class KidsModel extends Equatable {
+  final String id;
   final String age;
   final String fullName;
   final String address;
@@ -13,7 +12,7 @@ class KidsModel extends Equatable implements DefaultModel {
   final String notes;
 
   const KidsModel({
-    //  required this.id,
+    required this.id,
     required this.age,
     required this.fullName,
     required this.birthDate,
@@ -26,7 +25,7 @@ class KidsModel extends Equatable implements DefaultModel {
 
   /// Empty user witch represents an unauthenticaded user
   static const empty = KidsModel(
-    // id: '',
+    id: '',
     address: '',
     age: '',
     birthDate: '',
@@ -47,10 +46,10 @@ class KidsModel extends Equatable implements DefaultModel {
     String? fatherName,
     String? motherName,
     String? notes,
-    // String? id,
+    String? id,
   }) {
     return KidsModel(
-      //  id: id ?? this.id,
+      id: id ?? this.id,
       address: address ?? this.address,
       birthDate: birthDate ?? this.birthDate,
       contactNumber: contactNumber ?? this.contactNumber,
@@ -65,7 +64,7 @@ class KidsModel extends Equatable implements DefaultModel {
   factory KidsModel.fromJson(Map<String, dynamic> json) {
     // final data = json.data()!;
     return KidsModel(
-      // id: json.id,
+      id: json['id'] ?? '',
       fullName: json['fullName'] ?? '',
       age: json['age'] ?? '',
       birthDate: json['birthDate'] ?? '',

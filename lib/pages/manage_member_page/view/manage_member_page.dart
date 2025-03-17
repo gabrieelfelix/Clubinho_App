@@ -1,17 +1,17 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:club_app/main.dart';
-import 'package:club_app/pages/manage_users_page/bloc/manage_users_bloc.dart';
+import 'package:club_app/pages/manage_member_page/bloc/manage_member_bloc.dart';
 import 'package:club_app/routes/routes.dart';
 import 'package:club_repository/club_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-class ManageUsersPage extends StatelessWidget {
-  const ManageUsersPage.teachers({required this.id, super.key})
+class ManageMemberPage extends StatelessWidget {
+  const ManageMemberPage.teachers({required this.id, super.key})
       : isTeacher = true;
 
-  const ManageUsersPage.children({required this.id, super.key})
+  const ManageMemberPage.children({required this.id, super.key})
       : isTeacher = false;
 
   final bool isTeacher;
@@ -22,7 +22,7 @@ class ManageUsersPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) {
-        final bloc = ManageUsersBloc(clubRepository: getIt<IClubRepository>());
+        final bloc = ManageMemberBloc(clubRepository: getIt<IClubRepository>());
         _initializeBloc(bloc);
         return bloc;
       },
@@ -31,7 +31,7 @@ class ManageUsersPage extends StatelessWidget {
   }
 
   /// Dealing bloc initialize
-  void _initializeBloc(ManageUsersBloc bloc) {
+  void _initializeBloc(ManageMemberBloc bloc) {
     final event = isTeacher
         ? GetTeatchersRequired(id: id)
         : //
@@ -53,7 +53,7 @@ class ManageUsersView extends StatelessWidget {
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
-        child: BlocBuilder<ManageUsersBloc, ManageUsersState>(
+        child: BlocBuilder<ManageMemberBloc, ManageMemberState>(
           builder: (context, state) => myAppbar(state, isTeacher),
         ),
       ),
@@ -66,7 +66,7 @@ class ManageUsersView extends StatelessWidget {
                   color: context.colors.onPrimary),
             )
           : null,
-      body: BlocConsumer<ManageUsersBloc, ManageUsersState>(
+      body: BlocConsumer<ManageMemberBloc, ManageMemberState>(
         builder: _handlerBuilder,
         listener: _handlerListener,
       ),
@@ -74,7 +74,7 @@ class ManageUsersView extends StatelessWidget {
   }
 
   /// Dealing with bloc listening
-  _handlerListener(BuildContext context, ManageUsersState state) {
+  _handlerListener(BuildContext context, ManageMemberState state) {
     if (state.isFailure) {
       showCustomSnackBar(context, state.message!);
     } else if (state.isLoaded) {
@@ -83,7 +83,7 @@ class ManageUsersView extends StatelessWidget {
   }
 
   /// Dealing with bloc builder
-  Widget _handlerBuilder(BuildContext context, ManageUsersState state) {
+  Widget _handlerBuilder(BuildContext context, ManageMemberState state) {
     if (state.isLoaded) {
       return ListView.builder(
         itemCount: isTeacher
@@ -115,7 +115,7 @@ class ManageUsersView extends StatelessWidget {
   }
 
   /// Section Widget
-  PreferredSizeWidget myAppbar(ManageUsersState state, bool isTeacher) {
+  PreferredSizeWidget myAppbar(ManageMemberState state, bool isTeacher) {
     return AppBar(
       title: Text(
           '${isTeacher ? 'Membros' : 'Crianças'} : ${isTeacher ? state.teatchersModel?.length ?? 0 : state.childrenModel?.length ?? 0}'),

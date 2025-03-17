@@ -191,6 +191,9 @@ class FirebaseClubRepository implements IClubRepository {
     required String motherName,
     required String notes,
   }) async {
+    const uuid = Uuid();
+    final customId = 'child-${uuid.v4().substring(0, 4)}';
+
     final Map<String, dynamic> newKid = {
       "address": address,
       "age": age,
@@ -200,17 +203,8 @@ class FirebaseClubRepository implements IClubRepository {
       "fullName": fullName,
       "motherName": motherName,
       "notes": notes,
+      "id": customId,
     };
-    // final Map<String, dynamic> newKid = {
-    //   "address": "Rua teste",
-    //   "age": "10",
-    //   "birthDate": Timestamp.fromDate(DateTime(2015, 9, 29, 22, 42, 46)),
-    //   "contactNumber": "+929(92)999661401",
-    //   "fatherName": "Roberval Felix",
-    //   "fullName": "Jorge Luiz da Pinta",
-    //   "motherName": "Mônica Valéria do Nascimento Felix",
-    //   "notes": "Gosta de tomar água quente",
-    // };
 
     try {
       await _firebaseFirestore.collection('clubs').doc(id).update({

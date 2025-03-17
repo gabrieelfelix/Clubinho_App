@@ -1,7 +1,7 @@
-part of 'manage_users_bloc.dart';
+part of 'manage_member_bloc.dart';
 
-abstract class IManageUsersEvent extends Equatable {
-  const IManageUsersEvent();
+abstract class IManageMemberEvent extends Equatable {
+  const IManageMemberEvent();
 
   @override
   List<Object> get props => [];
@@ -27,7 +27,7 @@ abstract class IManageUsersEvent extends Equatable {
 //   List<Object> get props => [address];
 // }
 
-class GetTeatchersRequired extends IManageUsersEvent {
+class GetTeatchersRequired extends IManageMemberEvent {
   final String id;
 
   const GetTeatchersRequired({required this.id});
@@ -36,7 +36,7 @@ class GetTeatchersRequired extends IManageUsersEvent {
   List<Object> get props => [id];
 }
 
-class GetChildrenRequired extends IManageUsersEvent {
+class GetChildrenRequired extends IManageMemberEvent {
   final String id;
 
   const GetChildrenRequired({required this.id});

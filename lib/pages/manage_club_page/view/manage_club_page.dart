@@ -165,10 +165,11 @@ class ManageClubView extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 children: [
                   _buildRoundedSquare(
-                      context,
-                      "Professores",
-                      state.clubModel!.id,
-                      () => onTapManageTeacher(context, state.clubModel!.id)),
+                    context,
+                    "Professores",
+                    state.clubModel!.id,
+                    () => onTapManageTeacher(context, state.clubModel!.id),
+                  ),
                   _buildRoundedSquare(
                     context,
                     "Crianças",
@@ -178,7 +179,14 @@ class ManageClubView extends StatelessWidget {
                   _buildRoundedSquare(
                       context, "Relatórios", state.clubModel!.id, () {}),
                   _buildRoundedSquare(
-                      context, "Chamada", state.clubModel!.id, () {}),
+                    context,
+                    "Chamada",
+                    state.clubModel!.id,
+                    () => onTapAttendancechildren(
+                      context,
+                      state.clubModel!.id,
+                    ),
+                  ),
                   _buildRoundedSquare(
                       context, "Decisões", state.clubModel!.id, () {}),
                 ],
@@ -192,13 +200,18 @@ class ManageClubView extends StatelessWidget {
     }
   }
 
-  /// Navigates to the manage Teacher when login is performed.
+  /// Navigates to the manage Teacher when trigger is performed.
   onTapManageTeacher(BuildContext context, String id) {
     context.push(AppRouter.manageUsers, extra: id);
   }
 
-  /// Navigates to the manage children when login is performed.
+  /// Navigates to the manage children when trigger is performed.
   onTapManagechildren(BuildContext context, String id) {
     context.push(AppRouter.manageChildren, extra: id);
+  }
+
+  /// Navigates to the attendance children when trigger is performed.
+  onTapAttendancechildren(BuildContext context, String id) {
+    context.push(AppRouter.attendanceChild, extra: id);
   }
 }
