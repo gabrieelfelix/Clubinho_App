@@ -1,5 +1,6 @@
 import 'package:club_app/main.dart';
 import 'package:club_app/pages/home_page/bloc/home_bloc.dart';
+import 'package:club_app/pages/users_manage/view/users_manage.dart';
 import 'package:club_app/routes/routes.dart';
 import 'package:club_repository/club_repository.dart';
 import 'package:flutter/material.dart';
@@ -41,9 +42,10 @@ class HomeScreenView extends StatelessWidget {
               listener: _handlerListener,
               builder: _handlerBuilder,
             ),
-            Container(
-              color: Colors.red,
-            )
+            const UsersManagePage()
+            // Container(
+            //   color: Colors.red,
+            // ),
           ],
         ),
       ),

@@ -3,6 +3,7 @@ import 'package:club_app/pages/attendance_page/view/take_attendance_page.dart';
 import 'package:club_app/pages/detail_page/detail_page.dart';
 import 'package:club_app/pages/manage_club_page/view/manage_club_page.dart';
 import 'package:club_app/pages/child_registration_page/view/child_registration_page.dart';
+import 'package:club_app/pages/users_manage/view/users_manage.dart';
 import 'package:club_app/utils/helpers.dart';
 import 'package:club_repository/club_repository.dart';
 import 'package:go_router/go_router.dart';
@@ -11,14 +12,6 @@ import 'package:club_app/pages/manage_member_page/view/manage_member_page.dart';
 import 'package:club_app/pages/sign_in_page/view/sign_in_page.dart';
 import 'package:club_app/pages/sign_up_page/view/sign_up_page.dart';
 import 'package:club_app/pages/verification_code_page/verification_code_page.dart';
-
-// extension AppRouterContext on BuildContext {
-//   // Direct navigation to a specific route
-//   void goTo(String route) => GoRouter.of(this).go(route);
-
-//   // Push navigation to a specific route
-//   void pushTo(String route) => GoRouter.of(this).push(route);
-// }
 
 class AppRouter {
   static const String signInScreen = '/';
@@ -29,7 +22,7 @@ class AppRouter {
 
   static const String manageClub = '/manage_club';
 
-  static const String manageUsers = '/manage_Users';
+  static const String manageMembers = '/manage_Users';
 
   static const String manageChildren = '/manage_children';
 
@@ -45,9 +38,7 @@ class AppRouter {
 
   static const String codeVerification = '/code_verification';
 
-  //final AuthenticationBloc authBloc;
-
-//  AppRouter({required this.authBloc});
+  static const String usersManage = '/users_manage';
 
   static final router = GoRouter(
     initialLocation: '/',
@@ -73,7 +64,7 @@ class AppRouter {
         ),
       ),
       GoRoute(
-        path: AppRouter.manageUsers,
+        path: AppRouter.manageMembers,
         builder: (context, state) => Helpers.openPage<String>(
           context,
           state,
@@ -132,20 +123,14 @@ class AppRouter {
           (clubId) => TakeAttendancePage(id: clubId),
         ),
       ),
+      GoRoute(
+        path: AppRouter.usersManage,
+        builder: (context, state) => Helpers.openPage<String>(
+          context,
+          state,
+          (clubId) => const UsersManagePage(),
+        ),
+      ),
     ],
-    // refreshListenable: StreamToListenable([authBloc.stream]),
-    // redirect: (context, state) {
-    //   final isAuthenticated = authBloc.state is SignInSuccess;
-    //   log("Redirecionamento chamado com estado: ${authBloc.state}");
-    //   if (isAuthenticated) {
-    //     return AppRouter.homeScreen;
-    //   }
-
-    //   if (authBloc.state is LogOut) {
-    //     return AppRouter.signInScreen;
-    //   }
-
-    //   return null;
-    // },
   );
 }

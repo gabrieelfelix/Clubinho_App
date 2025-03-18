@@ -18,4 +18,6 @@ abstract class IAuthenticationRepository {
     required String email,
     required String password,
   });
+
+  Future<Result<List<UsersModel>, Failure>> getAllUsers();
 }

@@ -202,7 +202,7 @@ class ManageClubView extends StatelessWidget {
 
   /// Navigates to the manage Teacher when trigger is performed.
   onTapManageTeacher(BuildContext context, String id) {
-    context.push(AppRouter.manageUsers, extra: id);
+    context.push(AppRouter.manageMembers, extra: id);
   }
 
   /// Navigates to the manage children when trigger is performed.

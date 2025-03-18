@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:authentication_repository/src/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:multiple_result/multiple_result.dart';
@@ -106,5 +107,31 @@ class FirebaseAuthRepository implements IAuthenticationRepository {
   @override
   Future<void> logOut() async {
     await _firebaseAuth.signOut();
+  }
+
+  @override
+  Future<Result<List<UsersModel>, Failure>> getAllUsers() async {
+    try {
+      final userId = CacheClient.read<AuthUserModel>(key: userCacheKey)!.userId;
+
+      QuerySnapshot querySnapshot =
+          await _firebaseFirestore.collection('teachers').get();
+
+      final List<UsersModel> usersList = querySnapshot.docs
+          .where((doc) => doc.id != userId)
+          .map((doc) => UsersModel.fromJson(doc.data() as Map<String, dynamic>)
+              .copyWith(id: doc.id))
+          .toList();
+
+      return Success(usersList);
+    } on FirebaseException catch (e) {
+      return Error(
+        Failure(message: "Erro ao buscar Usuários: ${e.message}"),
+      );
+    } catch (e) {
+      return Error(
+        Failure(message: "Erro inesperado ao buscar Usuários: $e"),
+      );
+    }
   }
 }
