@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:authentication_repository/authentication_repository.dart';
-import 'package:authentication_repository/src/models/user_model.dart';
+import 'package:authentication_repository/src/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:multiple_result/multiple_result.dart';
@@ -73,6 +73,7 @@ class FirebaseAuthRepository implements IAuthenticationRepository {
         'email': email.trim(),
         'contact': phone.trim(),
         'classIds': [],
+        'role': 'teacher'
       });
 
       return const Success('Conta criada! Ative sua conta pelo Email');
@@ -93,9 +94,21 @@ class FirebaseAuthRepository implements IAuthenticationRepository {
 
       // Saves the userId for searching data user
       final String userId = userCredential.user!.uid;
+
+      final DocumentSnapshot<Map<String, dynamic>> doc =
+          await _firebaseFirestore
+              .collection('teachers')
+              .doc(userId)
+              .get(const GetOptions(source: Source.server));
+
+      final String roleUser = doc.get(FieldPath(const ['role']));
+
       CacheClient.write<AuthUserModel>(
         key: userCacheKey,
-        value: AuthUserModel(userId: userId),
+        value: AuthUserModel(
+          userId: userId,
+          userRole: Utils.userRoleToEnum(roleUser),
+        ),
       );
 
       return const Success('Login realizado com sucesso');

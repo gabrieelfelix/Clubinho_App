@@ -4,22 +4,22 @@ import 'package:club_repository/club_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-part 'home_bloc_event.dart';
-part 'home_bloc_state.dart';
+part 'clubs_event.dart';
+part 'clubs_state.dart';
 
-class HomeBloc extends Bloc<IHomeEvent, HomeBlocState> {
+class ClubsBloc extends Bloc<IClubsEvent, ClubsBlocState> {
   final IClubRepository _clubRepository;
 
-  HomeBloc({required IClubRepository clubRepository})
+  ClubsBloc({required IClubRepository clubRepository})
       : _clubRepository = clubRepository,
-        super(const HomeBlocState.initial()) {
+        super(const ClubsBlocState.initial()) {
     on<GetClubsRequired>(_onGetClubsRequired);
     on<AddClubRequired>(_onAddClubRequired);
   }
 
   Future<void> _onGetClubsRequired(
-      GetClubsRequired event, Emitter<HomeBlocState> emit) async {
-    emit(const HomeBlocState.loading());
+      GetClubsRequired event, Emitter<ClubsBlocState> emit) async {
+    emit(const ClubsBlocState.loading());
 
     final userId =
         CacheClient.read<AuthUserModel>(key: AppConstants.userCacheKey)!.userId;
@@ -28,25 +28,25 @@ class HomeBloc extends Bloc<IHomeEvent, HomeBlocState> {
     response.when(
       (success) => emit(
         success.isNotEmpty
-            ? HomeBlocState.loaded(clubs: success)
-            : const HomeBlocState.empty(),
+            ? ClubsBlocState.loaded(clubs: success)
+            : const ClubsBlocState.empty(),
       ),
       (failure) => emit(
-        HomeBlocState.failure(message: failure.message),
+        ClubsBlocState.failure(message: failure.message),
       ),
     );
   }
 
   Future<void> _onAddClubRequired(
-      AddClubRequired event, Emitter<HomeBlocState> emit) async {
-    emit(const HomeBlocState.loading());
+      AddClubRequired event, Emitter<ClubsBlocState> emit) async {
+    emit(const ClubsBlocState.loading());
 
     final response = await _clubRepository.createClub(name: event.name.trim());
 
     response.when(
-      (success) => emit(HomeBlocState.successCreate(message: success)),
+      (success) => emit(ClubsBlocState.successCreate(message: success)),
       (failure) => emit(
-        HomeBlocState.failure(message: failure.message),
+        ClubsBlocState.failure(message: failure.message),
       ),
     );
   }
