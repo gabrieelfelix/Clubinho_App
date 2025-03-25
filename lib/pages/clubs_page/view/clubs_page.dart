@@ -1,7 +1,9 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:club_app/main.dart';
 import 'package:club_app/pages/clubs_page/bloc/clubs_bloc.dart';
 import 'package:club_app/routes/routes.dart';
+import 'package:club_app/utils/constants.dart';
 import 'package:club_repository/club_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,13 +22,20 @@ class ClubsPage extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class ClubsPageView extends StatelessWidget {
   ClubsPageView({super.key});
 
   final TextEditingController _nameClubController = TextEditingController();
 
+  bool isCoordinatorOrAdmin = false;
+
   @override
   Widget build(BuildContext context) {
+    final authUser =
+        CacheClient.read<AuthUserModel>(key: AppConstants.userCacheKey);
+    isCoordinatorOrAdmin = authUser?.userRole == UserRole.coordinator ||
+        authUser?.userRole == UserRole.admin;
     return BlocConsumer<ClubsBloc, ClubsBlocState>(
       listener: _handlerListener,
       builder: _handlerBuilder,
@@ -34,10 +43,14 @@ class ClubsPageView extends StatelessWidget {
   }
 
   /// Dealing with bloc builder
-  Widget _handlerBuilder(BuildContext context, ClubsBlocState state) {
+  Widget _handlerBuilder(
+    BuildContext context,
+    ClubsBlocState state,
+  ) {
     if (state.isLoaded) {
       return Scaffold(
-        floatingActionButton: _buildFloatingActionButton(context),
+        floatingActionButton:
+            isCoordinatorOrAdmin ? _buildFloatingActionButton(context) : null,
         body: RefreshIndicator(
           onRefresh: () => _refreshClubs(context),
           child: ListView.builder(

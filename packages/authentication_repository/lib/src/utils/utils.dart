@@ -13,4 +13,17 @@ class Utils {
         return UserRole.teacher;
     }
   }
+
+  static String userRoleToString(UserRole role) {
+    switch (role) {
+      case UserRole.teacher:
+        return "teacher";
+      case UserRole.coordinator:
+        return "coordinator";
+      case UserRole.admin:
+        return "admin";
+      default:
+        return "teacher";
+    }
+  }
 }

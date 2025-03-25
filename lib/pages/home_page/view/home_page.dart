@@ -1,5 +1,7 @@
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:club_app/pages/clubs_page/view/clubs_page.dart';
 import 'package:club_app/pages/users_manage/view/users_manage_page.dart';
+import 'package:club_app/utils/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:app_ui/app_ui.dart';
 
@@ -17,22 +19,31 @@ class HomeScreenView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final authUser =
+        CacheClient.read<AuthUserModel>(key: AppConstants.userCacheKey);
+    final bool isAdmin = authUser?.userRole == UserRole.admin;
+
+    // Define o número de tabs com base na role
+    final int tabCount = isAdmin ? 4 : 3;
     return DefaultTabController(
-      length: 3,
+      length: tabCount,
       child: Scaffold(
-        appBar: _buildAppBar(context),
+        appBar: _buildAppBar(context, isAdmin),
         body: TabBarView(
           children: [
             Container(color: Colors.blue),
             const ClubsPage(),
-            const UsersManagePage()
+            if (isAdmin) const UsersManagePage(),
+            Container(
+              color: Colors.red,
+            )
           ],
         ),
       ),
     );
   }
 
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
+  PreferredSizeWidget _buildAppBar(BuildContext context, bool isAdmin) {
     return AppBar(
       toolbarHeight: 70,
       title: Text(
@@ -49,17 +60,21 @@ class HomeScreenView extends StatelessWidget {
       ),
       automaticallyImplyLeading: false,
       backgroundColor: context.colors.primary,
-      bottom: const TabBar(
+      bottom: TabBar(
         labelColor: Colors.black,
         tabs: [
-          Tab(
+          const Tab(
             text: 'Estatisticas Gerais Dashboard',
           ),
-          Tab(
+          const Tab(
             text: 'Clubinhos',
           ),
-          Tab(
-            text: 'Usuários',
+          if (isAdmin)
+            const Tab(
+              text: 'Usuários',
+            ),
+          const Tab(
+            text: 'Conta',
           ),
         ],
       ),

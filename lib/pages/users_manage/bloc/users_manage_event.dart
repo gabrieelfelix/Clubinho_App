@@ -8,3 +8,13 @@ abstract class IUsersManageEvent extends Equatable {
 }
 
 class GetAllUsersRequired extends IUsersManageEvent {}
+
+class ChangeRoleRequired extends IUsersManageEvent {
+  final UserRole role;
+  final String userId;
+
+  const ChangeRoleRequired({
+    required this.role,
+    required this.userId,
+  });
+}

@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:club_repository/club_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'child_registration_state.dart';

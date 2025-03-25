@@ -147,4 +147,22 @@ class FirebaseAuthRepository implements IAuthenticationRepository {
       );
     }
   }
+
+  @override
+  Future<Result<String, Failure>> changeRoleUser({
+    required String userId,
+    required UserRole newRole,
+  }) async {
+    try {
+      await _firebaseFirestore.collection('teachers').doc(userId).update({
+        'role': Utils.userRoleToString(newRole),
+      });
+
+      return const Success("Role atualizado com sucesso");
+    } on FirebaseException catch (e) {
+      return Error(Failure(message: "Erro ao atualizar role: ${e.message}"));
+    } catch (e) {
+      return Error(Failure(message: "Erro inesperado: $e"));
+    }
+  }
 }

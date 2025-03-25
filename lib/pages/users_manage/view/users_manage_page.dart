@@ -38,24 +38,55 @@ class UsersManageView extends StatelessWidget {
     if (state.isFailure) {
       showCustomSnackBar(context, state.message!);
     } else if (state.isLoaded) {
-      showCustomSnackBar(context, 'Carregado!');
+      //showCustomSnackBar(context, 'Carregado!');
+    } else if (state.isSuccess) {
+      showCustomSnackBar(context, state.message!);
     }
   }
 
   /// Dealing with bloc builder
   Widget _handlerBuilder(BuildContext context, UsersManageState state) {
-    if (state.isLoaded) {
+    if (state.teachers != null) {
       return RefreshIndicator(
         onRefresh: () => _refreshUsers(context),
         child: ListView.builder(
           itemCount: state.teachers!.length,
           itemBuilder: (context, index) {
+            final user = state.teachers![index];
+            final TextEditingController controller = TextEditingController(
+              text: _getRoleLabel(user.userRole),
+            );
             return ListTile(
               leading: const Icon(Icons.person),
               title: Text(
-                state.teachers![index].name,
+                user.name,
               ),
-              subtitle: Text(state.teachers![index].email),
+              enabled: true,
+              subtitle: Text(user.email),
+              trailing: DropdownMenu<UserRole>(
+                initialSelection: user.userRole,
+                dropdownMenuEntries: const [
+                  DropdownMenuEntry(
+                    value: UserRole.teacher,
+                    label: 'Teacher',
+                  ),
+                  DropdownMenuEntry(
+                    value: UserRole.coordinator,
+                    label: 'Coordinator',
+                  ),
+                  DropdownMenuEntry(
+                    value: UserRole.admin,
+                    label: 'Admin',
+                  ),
+                ],
+                onSelected: (role) {
+                  if (role != null) {
+                    controller.text = _getRoleLabel(user.userRole);
+                    _buildAlertDialog(context, role, user.id);
+                  }
+                },
+                controller: controller,
+              ),
             );
           },
         ),
@@ -68,6 +99,75 @@ class UsersManageView extends StatelessWidget {
       return const Center(child: Text('Nenhum usuário encontrado!'));
     } else {
       return const Center(child: Text('Nenhum Usuário Vinculado!'));
+    }
+  }
+
+  /// Section Widget
+  _buildAlertDialog(BuildContext context, UserRole role, String id) {
+    final bloc = context.read<UsersManageBloc>();
+    return showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BlocProvider.value(
+          value: bloc,
+          child: BlocConsumer<UsersManageBloc, UsersManageState>(
+            listener: (context, state) {
+              if (state.isFailure) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(state.message!),
+                  ),
+                );
+              }
+            },
+            builder: (context, state) {
+              return AlertDialog(
+                backgroundColor: context.theme.colorScheme.onPrimary,
+                title: const Text('Alterar role, tem certeza?'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    state.isLoading
+                        ? const CircularProgressIndicator()
+                        : const SizedBox.shrink(),
+                  ],
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      context.read<UsersManageBloc>().add(
+                            ChangeRoleRequired(role: role, userId: id),
+                          );
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Sim'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    child: const Text('Não'),
+                  ),
+                ],
+              );
+            },
+          ),
+        );
+      },
+    );
+  }
+
+  /// Função auxiliar para obter o label do role
+  String _getRoleLabel(UserRole role) {
+    switch (role) {
+      case UserRole.teacher:
+        return 'Teacher';
+      case UserRole.coordinator:
+        return 'Coordinator';
+      case UserRole.admin:
+        return 'Admin';
+      default:
+        return '';
     }
   }
 

@@ -11,6 +11,7 @@ class UsersManageBloc extends Bloc<IUsersManageEvent, UsersManageState> {
       : _authenticationRepository = authenticationRepository,
         super(const UsersManageState.initial()) {
     on<GetAllUsersRequired>(_onGetAllUsersRequired);
+    on<ChangeRoleRequired>(_onChangeRoleRequired);
   }
 
   Future<void> _onGetAllUsersRequired(
@@ -25,6 +26,32 @@ class UsersManageBloc extends Bloc<IUsersManageEvent, UsersManageState> {
             ? UsersManageState.loaded(teachers: success)
             : const UsersManageState.empty(),
       ),
+      (failure) => emit(UsersManageState.failure(message: failure.message)),
+    );
+  }
+
+  Future<void> _onChangeRoleRequired(
+      ChangeRoleRequired event, Emitter<UsersManageState> emit) async {
+    final currentTeachers = state.teachers ?? [];
+
+    emit(const UsersManageState.loading().copyWith(teachers: currentTeachers));
+
+    final response = await _authenticationRepository.changeRoleUser(
+      newRole: event.role,
+      userId: event.userId,
+    );
+
+    response.when(
+      (success) {
+        final updatedTeachers = currentTeachers.map((user) {
+          if (user.id == event.userId) {
+            return user.copyWith(userRole: event.role);
+          }
+          return user;
+        }).toList();
+        emit(UsersManageState.success(message: success)
+            .copyWith(teachers: updatedTeachers));
+      },
       (failure) => emit(UsersManageState.failure(message: failure.message)),
     );
   }

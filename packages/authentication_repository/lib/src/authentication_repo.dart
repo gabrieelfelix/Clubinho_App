@@ -20,4 +20,9 @@ abstract class IAuthenticationRepository {
   });
 
   Future<Result<List<UsersModel>, Failure>> getAllUsers();
+
+  Future<Result<String, Failure>> changeRoleUser({
+    required String userId,
+    required UserRole newRole,
+  });
 }
