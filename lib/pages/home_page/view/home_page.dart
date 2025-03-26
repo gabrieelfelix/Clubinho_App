@@ -60,11 +60,19 @@ class HomeScreenView extends StatelessWidget {
       ),
       actions: const [
         Padding(
-            padding: EdgeInsets.only(right: 15),
-            child: Icon(
-              Icons.notifications,
-              color: Colors.white,
-            ))
+          padding: EdgeInsets.only(right: 15),
+          child: Icon(
+            Icons.notifications,
+            color: Colors.white,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(right: 15),
+          child: Icon(
+            Icons.login_outlined,
+            color: Colors.white,
+          ),
+        ),
       ],
       automaticallyImplyLeading: false,
       backgroundColor: context.colors.primary,
