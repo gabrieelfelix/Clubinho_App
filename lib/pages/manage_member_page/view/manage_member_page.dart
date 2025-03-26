@@ -86,25 +86,30 @@ class ManageUsersView extends StatelessWidget {
   /// Dealing with bloc builder
   Widget _handlerBuilder(BuildContext context, ManageMemberState state) {
     if (state.isLoaded) {
-      return ListView.builder(
-        itemCount: isTeacher
-            ? state.teatchersModel!.length
-            : state.childrenModel!.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            leading: const Icon(Icons.person),
-            title: Text(isTeacher
-                ? state.teatchersModel![index].name
-                : state.childrenModel![index].fullName),
-            subtitle: Text(isTeacher
-                ? state.teatchersModel![index].contact
-                : "${state.childrenModel![index].age} anos"),
-            trailing: const Icon(Icons.arrow_forward_ios),
-            onTap: () => isTeacher
-                ? onTapUserInfo(context, state.teatchersModel![index], id)
-                : onTapChildInfo(context, state.childrenModel![index], id),
-          );
-        },
+      return RefreshIndicator(
+        onRefresh: () => isTeacher
+            ? _refreshTeachers(context, id)
+            : _refreshKids(context, id),
+        child: ListView.builder(
+          itemCount: isTeacher
+              ? state.teatchersModel!.length
+              : state.childrenModel!.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              leading: const Icon(Icons.person),
+              title: Text(isTeacher
+                  ? state.teatchersModel![index].name
+                  : state.childrenModel![index].fullName),
+              subtitle: Text(isTeacher
+                  ? state.teatchersModel![index].contact
+                  : "${state.childrenModel![index].age} anos"),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () => isTeacher
+                  ? onTapUserInfo(context, state.teatchersModel![index], id)
+                  : onTapChildInfo(context, state.childrenModel![index], id),
+            );
+          },
+        ),
       );
     } else if (state.isLoading) {
       return const Center(
@@ -143,5 +148,15 @@ class ManageUsersView extends StatelessWidget {
       AppRouter.childInformation,
       extra: model.copyWith(clubIdSave: id),
     );
+  }
+
+  /// Refreshes the list of kids.
+  Future<void> _refreshKids(BuildContext context, String id) async {
+    context.read<ManageMemberBloc>().add(GetChildrenRequired(id: id));
+  }
+
+  /// Refreshes the list of teacher.
+  Future<void> _refreshTeachers(BuildContext context, String id) async {
+    context.read<ManageMemberBloc>().add(GetTeatchersRequired(id: id));
   }
 }
