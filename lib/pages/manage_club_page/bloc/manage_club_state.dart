@@ -7,6 +7,7 @@ enum ManageClubPageStatus {
   loaded,
   failure,
   edit,
+  deleted,
 }
 
 class ManageClubBlocState extends Equatable {
@@ -32,12 +33,27 @@ class ManageClubBlocState extends Equatable {
   const ManageClubBlocState.successEdit({required String message})
       : this._(state: ManageClubPageStatus.edit, message: message);
 
+  const ManageClubBlocState.deleted({required String message})
+      : this._(state: ManageClubPageStatus.deleted, message: message);
+
   const ManageClubBlocState.success({required ClubModel clubData})
       : this._(state: ManageClubPageStatus.loaded, clubModel: clubData);
 
   const ManageClubBlocState.loading() : this._();
 
   // const ManageClubBlocState.empty() : this._(state: HomePageStatus.empty);
+
+  ManageClubBlocState copyWith({
+    ManageClubPageStatus? state,
+    ClubModel? clubModel,
+    String? message,
+  }) {
+    return ManageClubBlocState._(
+      state: state ?? this.state,
+      clubModel: clubModel ?? this.clubModel,
+      message: message ?? this.message,
+    );
+  }
 
   @override
   List<Object?> get props => [state, message];

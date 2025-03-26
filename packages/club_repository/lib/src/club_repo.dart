@@ -23,6 +23,13 @@ abstract class IClubRepository {
 
   Future<Result<List<KidsModel>, Failure>> getChildren({required String id});
 
+  Future<Result<String, Failure>> deleteClub({required String id});
+
+  Future<Result<String, Failure>> joinClub({
+    required String clubId,
+    required String userId,
+  });
+
   Future<Result<String, Failure>> addChild({
     required String id,
     required String address,

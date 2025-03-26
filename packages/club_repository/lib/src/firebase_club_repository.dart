@@ -24,16 +24,29 @@ class FirebaseClubRepository implements IClubRepository {
       final String userCache =
           CacheClient.read<AuthUserModel>(key: userCacheKey)!.userId;
 
+      final QuerySnapshot adminsSnapshot = await _firebaseFirestore
+          .collection('teachers')
+          .where('role', isEqualTo: 'admin')
+          .get();
+
+      List<String> teacherIds = [userCache];
+
+      for (var doc in adminsSnapshot.docs) {
+        teacherIds.add(doc.id);
+      }
+
       await _firebaseFirestore.collection('clubs').doc(customId).set({
         'name': name.trim(),
-        'teachers': [userCache],
+        'teachers': teacherIds,
         'kids': [],
-        'address': 'Rua teste'
+        'address': 'Rua teste',
       });
 
-      await _firebaseFirestore.collection('teachers').doc(userCache).update({
-        'classIds': FieldValue.arrayUnion([customId]),
-      });
+      for (var teacherId in teacherIds) {
+        await _firebaseFirestore.collection('teachers').doc(teacherId).update({
+          'classIds': FieldValue.arrayUnion([customId]),
+        });
+      }
       return const Success('Clubinho criado com sucesso!');
     } on FirebaseException catch (e) {
       return const Error(Failure(message: 'Erro ao criar clubinho!'));
@@ -214,6 +227,66 @@ class FirebaseClubRepository implements IClubRepository {
       return const Success('Criança adicionada com sucesso!');
     } on FirebaseException catch (e) {
       return Error(Failure(message: "Erro ao adicionar criança: ${e.message}"));
+    } catch (e) {
+      return Error(Failure(message: "Erro inesperado: $e"));
+    }
+  }
+
+  @override
+  Future<Result<String, Failure>> joinClub(
+      {required String clubId, required String userId}) async {
+    try {
+      final clubDoc = await _firebaseFirestore
+          .collection('clubs')
+          .doc('club-${clubId.trim()}')
+          .get();
+
+      if (!clubDoc.exists) {
+        return const Error(Failure(message: "Clubinho não encontrado"));
+      }
+
+      await _firebaseFirestore.collection('teachers').doc(userId).update({
+        'classIds': FieldValue.arrayUnion(['club-${clubId.trim()}']),
+      });
+
+      await _firebaseFirestore
+          .collection('clubs')
+          .doc('club-${clubId.trim()}')
+          .update({
+        'teachers': FieldValue.arrayUnion([userId]),
+      });
+
+      return const Success("Solicitado com sucesso");
+    } on FirebaseException catch (e) {
+      return Error(Failure(message: "Erro ao solicitar entrada: ${e.message}"));
+    } catch (e) {
+      return Error(Failure(message: "Erro inesperado: $e"));
+    }
+  }
+
+  @override
+  Future<Result<String, Failure>> deleteClub({required String id}) async {
+    try {
+      final clubRef = _firebaseFirestore.collection('clubs').doc(id);
+      final clubDoc = await clubRef.get();
+
+      if (!clubDoc.exists) {
+        return const Error(Failure(message: "Clube não encontrado."));
+      }
+
+      List<String> teacherIds = List<String>.from(clubDoc['teachers'] ?? []);
+
+      for (String teacherId in teacherIds) {
+        await _firebaseFirestore.collection('teachers').doc(teacherId).update({
+          'classIds': FieldValue.arrayRemove([id])
+        });
+      }
+
+      await clubRef.delete();
+
+      return const Success('Clube deletado com sucesso.');
+    } on FirebaseException catch (e) {
+      return Error(Failure(message: "Erro ao deletar clube: ${e.message}"));
     } catch (e) {
       return Error(Failure(message: "Erro inesperado: $e"));
     }

@@ -1,6 +1,14 @@
 part of 'clubs_bloc.dart';
 
-enum ClubsState { initial, loading, empty, loaded, failure, successCreate }
+enum ClubsState {
+  initial,
+  loading,
+  empty,
+  loaded,
+  failure,
+  successCreate,
+  success
+}
 
 class ClubsBlocState extends Equatable {
   final ClubsState state;
@@ -24,9 +32,24 @@ class ClubsBlocState extends Equatable {
   const ClubsBlocState.successCreate({required String message})
       : this._(state: ClubsState.successCreate, message: message);
 
+  const ClubsBlocState.success({required String message})
+      : this._(state: ClubsState.success, message: message);
+
   const ClubsBlocState.loading() : this._();
 
   const ClubsBlocState.empty() : this._(state: ClubsState.empty);
+
+  ClubsBlocState copyWith({
+    ClubsState? state,
+    List<ClubModel>? clubs,
+    String? message,
+  }) {
+    return ClubsBlocState._(
+      state: state ?? this.state,
+      clubs: clubs ?? this.clubs,
+      message: message ?? this.message,
+    );
+  }
 
   @override
   List<Object?> get props => [state, clubs, message];
@@ -39,4 +62,5 @@ extension HomePageStateExtensions on ClubsBlocState {
   bool get isLoaded => state == ClubsState.loaded;
   bool get isFailure => state == ClubsState.failure;
   bool get isCreated => state == ClubsState.successCreate;
+  bool get isSuccess => state == ClubsState.success;
 }

@@ -17,3 +17,16 @@ class AddClubRequired extends IClubsEvent {
   @override
   List<Object> get props => [name];
 }
+
+class JoinClubRequired extends IClubsEvent {
+  final String clubInput;
+  final String userId;
+
+  const JoinClubRequired({
+    required this.clubInput,
+    required this.userId,
+  });
+
+  @override
+  List<Object> get props => [clubInput, userId];
+}

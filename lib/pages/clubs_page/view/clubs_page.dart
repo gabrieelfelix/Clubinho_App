@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:club_app/main.dart';
@@ -7,6 +9,7 @@ import 'package:club_app/utils/constants.dart';
 import 'package:club_repository/club_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:go_router/go_router.dart';
 
 class ClubsPage extends StatelessWidget {
@@ -26,7 +29,7 @@ class ClubsPage extends StatelessWidget {
 class ClubsPageView extends StatelessWidget {
   ClubsPageView({super.key});
 
-  final TextEditingController _nameClubController = TextEditingController();
+  final TextEditingController _inputController = TextEditingController();
 
   bool isCoordinatorOrAdmin = false;
 
@@ -47,10 +50,9 @@ class ClubsPageView extends StatelessWidget {
     BuildContext context,
     ClubsBlocState state,
   ) {
-    if (state.isLoaded) {
+    if (state.clubs != null) {
       return Scaffold(
-        floatingActionButton:
-            isCoordinatorOrAdmin ? _buildFloatingActionButton(context) : null,
+        floatingActionButton: _buildFloatingActionButton(context),
         body: RefreshIndicator(
           onRefresh: () => _refreshClubs(context),
           child: ListView.builder(
@@ -73,13 +75,22 @@ class ClubsPageView extends StatelessWidget {
         child: CircularProgressIndicator(),
       );
     } else {
-      return const Center(child: Text('Nenhum Clubinho Vinculado!'));
+      return Scaffold(
+          floatingActionButton: _buildFloatingActionButton(context),
+          body: const Center(child: Text('Nenhum Clubinho Vinculado!')));
     }
   }
 
   /// Section Widget
-  _buildAlertDialog(BuildContext context) {
+  _buildAlertDialog(
+    BuildContext context, {
+    required String title,
+    required String actionLabel,
+    required bool event,
+  }) {
     final bloc = context.read<ClubsBloc>();
+    final authUser =
+        CacheClient.read<AuthUserModel>(key: AppConstants.userCacheKey);
     return showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -104,14 +115,14 @@ class ClubsPageView extends StatelessWidget {
             builder: (context, state) {
               return AlertDialog(
                 backgroundColor: context.theme.colorScheme.onPrimary,
-                title: const Text('Crie um clubinho'),
+                title: Text(title),
                 content: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SizedBox(
                       height: 50,
                       child: TextField(
-                        controller: _nameClubController,
+                        controller: _inputController,
                       ),
                     ),
                     state.isLoading
@@ -121,13 +132,21 @@ class ClubsPageView extends StatelessWidget {
                 ),
                 actions: [
                   TextButton(
-                    onPressed: () {
-                      context
-                          .read<ClubsBloc>()
-                          .add(AddClubRequired(name: _nameClubController.text));
+                    onPressed: () async {
+                      if (event) {
+                        context.read<ClubsBloc>().add(JoinClubRequired(
+                              clubInput: _inputController.text,
+                              userId: authUser!.userId,
+                            ));
+                      } else {
+                        context
+                            .read<ClubsBloc>()
+                            .add(AddClubRequired(name: _inputController.text));
+                      }
+                      _inputController.clear();
                       Navigator.of(context).pop();
                     },
-                    child: const Text('Criar'),
+                    child: Text(actionLabel),
                   ),
                   TextButton(
                     onPressed: () {
@@ -204,10 +223,41 @@ class ClubsPageView extends StatelessWidget {
 
   /// Section Widget
   Widget _buildFloatingActionButton(BuildContext context) {
-    return FloatingActionButton(
-      onPressed: () => _buildAlertDialog(context),
-      child: const Icon(Icons.add),
-    );
+    return isCoordinatorOrAdmin
+        ? SpeedDial(
+            animatedIcon: AnimatedIcons.menu_home,
+            children: [
+              SpeedDialChild(
+                child: const Icon(Icons.add),
+                label: 'Criar clubinho',
+                onTap: () => _buildAlertDialog(
+                  context,
+                  title: 'Crie um clubinho',
+                  actionLabel: 'Criar',
+                  event: false,
+                ),
+              ),
+              SpeedDialChild(
+                child: const Icon(Icons.join_full),
+                label: 'Entrar no clubinho',
+                onTap: () => _buildAlertDialog(
+                  context,
+                  title: 'Entrar em um clubinho',
+                  actionLabel: 'Entrar',
+                  event: true,
+                ),
+              ),
+            ],
+          )
+        : FloatingActionButton(
+            onPressed: () => _buildAlertDialog(
+              context,
+              title: 'Entrar em um clubinho',
+              actionLabel: 'Entrar',
+              event: true,
+            ),
+            child: const Icon(Icons.join_full),
+          );
   }
 
   /// Dealing with bloc listening
@@ -217,6 +267,9 @@ class ClubsPageView extends StatelessWidget {
     } else if (state.isLoaded) {
       showCustomSnackBar(context, 'Carregado!');
     } else if (state.isCreated) {
+      context.read<ClubsBloc>().add(GetClubsRequired());
+      showCustomSnackBar(context, state.message!);
+    } else if (state.isSuccess) {
       context.read<ClubsBloc>().add(GetClubsRequired());
       showCustomSnackBar(context, state.message!);
     }

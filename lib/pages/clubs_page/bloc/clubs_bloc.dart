@@ -15,6 +15,7 @@ class ClubsBloc extends Bloc<IClubsEvent, ClubsBlocState> {
         super(const ClubsBlocState.initial()) {
     on<GetClubsRequired>(_onGetClubsRequired);
     on<AddClubRequired>(_onAddClubRequired);
+    on<JoinClubRequired>(_onJoinClubRequired);
   }
 
   Future<void> _onGetClubsRequired(
@@ -47,6 +48,30 @@ class ClubsBloc extends Bloc<IClubsEvent, ClubsBlocState> {
       (success) => emit(ClubsBlocState.successCreate(message: success)),
       (failure) => emit(
         ClubsBlocState.failure(message: failure.message),
+      ),
+    );
+  }
+
+  Future<void> _onJoinClubRequired(
+      JoinClubRequired event, Emitter<ClubsBlocState> emit) async {
+    final currentClubs = state.clubs ?? [];
+
+    emit(const ClubsBlocState.loading());
+
+    final response = await _clubRepository.joinClub(
+      clubId: event.clubInput,
+      userId: event.userId,
+    );
+
+    response.when(
+      (success) {
+        emit(ClubsBlocState.success(message: success));
+      },
+      (failure) => emit(
+        currentClubs.isNotEmpty
+            ? ClubsBlocState.failure(message: failure.message)
+                .copyWith(clubs: currentClubs)
+            : ClubsBlocState.failure(message: failure.message),
       ),
     );
   }

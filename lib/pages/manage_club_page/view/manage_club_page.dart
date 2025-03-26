@@ -1,7 +1,9 @@
 import 'package:app_ui/app_ui.dart';
+import 'package:authentication_repository/authentication_repository.dart';
 import 'package:club_app/main.dart';
 import 'package:club_app/pages/manage_club_page/bloc/manage_club_bloc.dart';
 import 'package:club_app/routes/routes.dart';
+import 'package:club_app/utils/constants.dart';
 import 'package:club_app/utils/helpers.dart';
 import 'package:club_repository/club_repository.dart';
 import 'package:flutter/material.dart';
@@ -118,6 +120,10 @@ class ManageClubView extends StatelessWidget {
 
   /// Dealing with bloc builder
   Widget _handlerBuilder(BuildContext context, ManageClubBlocState state) {
+    final authUser =
+        CacheClient.read<AuthUserModel>(key: AppConstants.userCacheKey);
+    final bool isAdmin = authUser?.userRole == UserRole.admin;
+
     if (state.isLoading) {
       return const CircularProgressIndicator();
     } else if (state.isLoaded) {
@@ -133,7 +139,7 @@ class ManageClubView extends StatelessWidget {
             const SizedBox(height: 30),
             SizedBox(
               width: double.infinity,
-              height: 100,
+              height: 140,
               child: Card(
                 child: Column(
                   children: [
@@ -145,6 +151,12 @@ class ManageClubView extends StatelessWidget {
                     Text(
                       Helpers.capitalizeEachWord(
                         state.clubModel!.address,
+                      ),
+                    ),
+                    const Text("Código"),
+                    Text(
+                      Helpers.splitName(
+                        state.clubModel!.id,
                       ),
                     ),
                   ],
@@ -189,9 +201,31 @@ class ManageClubView extends StatelessWidget {
                   ),
                   _buildRoundedSquare(
                       context, "Decisões", state.clubModel!.id, () {}),
+                  _buildRoundedSquare(
+                      context, "Escala", state.clubModel!.id, () {}),
                 ],
               ),
             ),
+            if (isAdmin)
+              ElevatedButton(
+                onPressed: () => context
+                    .read<ManageClubBloc>()
+                    .add(DeleteClubRequired(id: state.clubModel!.id)),
+                style: const ButtonStyle(
+                    backgroundColor: WidgetStatePropertyAll(Colors.red)),
+                child: BlocBuilder<ManageClubBloc, ManageClubBlocState>(
+                  builder: (context, state) {
+                    if (state.isLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else {
+                      return const Text(
+                        'Apagar clubinho',
+                        style: TextStyle(color: Colors.white),
+                      );
+                    }
+                  },
+                ),
+              )
           ],
         ),
       );

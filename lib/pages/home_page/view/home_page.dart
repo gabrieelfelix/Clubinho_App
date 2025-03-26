@@ -58,6 +58,14 @@ class HomeScreenView extends StatelessWidget {
           fit: BoxFit.contain,
         ),
       ),
+      actions: const [
+        Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Icon(
+              Icons.notifications,
+              color: Colors.white,
+            ))
+      ],
       automaticallyImplyLeading: false,
       backgroundColor: context.colors.primary,
       bottom: TabBar(

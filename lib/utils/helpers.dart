@@ -20,4 +20,10 @@ class Helpers {
             : '')
         .join(' ');
   }
+
+  static String splitName(String text) {
+    int index = text.indexOf('-');
+
+    return text != -1 ? text.substring(index + 1) : "";
+  }
 }

@@ -35,3 +35,12 @@ class GetClubDataRequired extends IManageClubEvent {
   @override
   List<Object> get props => [id];
 }
+
+class DeleteClubRequired extends IManageClubEvent {
+  final String id;
+
+  const DeleteClubRequired({required this.id});
+
+  @override
+  List<Object> get props => [id];
+}
