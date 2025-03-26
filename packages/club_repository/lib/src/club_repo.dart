@@ -25,6 +25,16 @@ abstract class IClubRepository {
 
   Future<Result<String, Failure>> deleteClub({required String id});
 
+  Future<Result<String, Failure>> deleteKid({
+    required String idChild,
+    required String clubId,
+  });
+
+  Future<Result<String, Failure>> deleteTeacher({
+    required String idTeacher,
+    required String idClub,
+  });
+
   Future<Result<String, Failure>> joinClub({
     required String clubId,
     required String userId,

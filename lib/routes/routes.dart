@@ -92,7 +92,7 @@ class AppRouter {
         builder: (context, state) => Helpers.openPage<TeachersModel>(
           context,
           state,
-          (user) => DetailPage.teacher(teachersModel: user),
+          (user) => DetailPage.teacher(teacher: user),
         ),
       ),
       GoRoute(
@@ -100,7 +100,7 @@ class AppRouter {
         builder: (context, state) => Helpers.openPage<KidsModel>(
           context,
           state,
-          (user) => DetailPage.kids(childModel: user),
+          (user) => DetailPage.kid(kid: user),
         ),
       ),
       GoRoute(

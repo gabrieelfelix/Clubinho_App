@@ -213,22 +213,16 @@ class ManageClubView extends StatelessWidget {
                     .add(DeleteClubRequired(id: state.clubModel!.id)),
                 style: const ButtonStyle(
                     backgroundColor: WidgetStatePropertyAll(Colors.red)),
-                child: BlocBuilder<ManageClubBloc, ManageClubBlocState>(
-                  builder: (context, state) {
-                    if (state.isLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else {
-                      return const Text(
-                        'Apagar clubinho',
-                        style: TextStyle(color: Colors.white),
-                      );
-                    }
-                  },
+                child: const Text(
+                  'Apagar clubinho',
+                  style: TextStyle(color: Colors.white),
                 ),
               )
           ],
         ),
       );
+    } else if (state.isDeleted) {
+      return const Center(child: Text("Clubinho deletado com sucesso"));
     } else {
       return const Center(child: Text("Erro"));
     }

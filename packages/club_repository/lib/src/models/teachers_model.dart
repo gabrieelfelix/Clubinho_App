@@ -1,3 +1,5 @@
+import 'package:authentication_repository/authentication_repository.dart';
+import 'package:club_repository/src/utils/utils.dart';
 import 'package:equatable/equatable.dart';
 
 class TeachersModel extends Equatable {
@@ -6,6 +8,8 @@ class TeachersModel extends Equatable {
   final String name;
   final String email;
   final List<String> classIds;
+  final UserRole userRole;
+  final String clubIdSave;
 
   const TeachersModel({
     required this.id,
@@ -13,11 +17,20 @@ class TeachersModel extends Equatable {
     required this.classIds,
     required this.name,
     required this.email,
+    required this.userRole,
+    required this.clubIdSave,
   });
 
   // Empty user witch represents an unauthenticaded user
-  static const empty =
-      TeachersModel(contact: '', name: '', email: '', classIds: [], id: '');
+  static const empty = TeachersModel(
+    contact: '',
+    name: '',
+    email: '',
+    classIds: [],
+    id: '',
+    userRole: UserRole.teacher,
+    clubIdSave: '',
+  );
 
   //modify TeachersModel parameters
   TeachersModel copyWith({
@@ -26,6 +39,8 @@ class TeachersModel extends Equatable {
     String? email,
     String? id,
     List<String>? classIds,
+    UserRole? userRole,
+    String? clubIdSave,
   }) {
     return TeachersModel(
       id: id ?? this.id,
@@ -33,6 +48,8 @@ class TeachersModel extends Equatable {
       contact: contact ?? this.contact,
       name: name ?? this.name,
       email: email ?? this.email,
+      userRole: userRole ?? this.userRole,
+      clubIdSave: clubIdSave ?? this.clubIdSave,
     );
   }
 
@@ -48,6 +65,8 @@ class TeachersModel extends Equatable {
               ?.map((e) => e as String)
               .toList() ??
           [],
+      userRole: Utils.userRoleToEnum(json['role'] ?? ''),
+      clubIdSave: '',
     );
   }
 
@@ -57,5 +76,6 @@ class TeachersModel extends Equatable {
   bool get isNotEmpty => this != TeachersModel.empty;
 
   @override
-  List<Object?> get props => [contact, name, email, classIds, id];
+  List<Object?> get props =>
+      [contact, name, email, classIds, id, userRole, clubIdSave];
 }

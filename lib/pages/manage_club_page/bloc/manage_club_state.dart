@@ -63,6 +63,7 @@ extension HomePageStateExtensions on ManageClubBlocState {
   bool get isInitial => state == ManageClubPageStatus.initial;
   bool get isLoading => state == ManageClubPageStatus.loading;
   bool get isEmpty => state == ManageClubPageStatus.empty;
+  bool get isDeleted => state == ManageClubPageStatus.deleted;
   bool get isLoaded => state == ManageClubPageStatus.loaded;
   bool get isFailure => state == ManageClubPageStatus.failure;
 }

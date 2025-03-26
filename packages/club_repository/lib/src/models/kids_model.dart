@@ -10,6 +10,7 @@ class KidsModel extends Equatable {
   final String fatherName;
   final String motherName;
   final String notes;
+  final String clubIdSave;
 
   const KidsModel({
     required this.id,
@@ -21,6 +22,7 @@ class KidsModel extends Equatable {
     required this.fatherName,
     required this.motherName,
     required this.notes,
+    required this.clubIdSave,
   });
 
   /// Empty user witch represents an unauthenticaded user
@@ -34,6 +36,7 @@ class KidsModel extends Equatable {
     fullName: '',
     motherName: '',
     notes: '',
+    clubIdSave: '',
   );
 
   ///modify KidsModel parameters
@@ -47,6 +50,7 @@ class KidsModel extends Equatable {
     String? motherName,
     String? notes,
     String? id,
+    String? clubIdSave,
   }) {
     return KidsModel(
       id: id ?? this.id,
@@ -58,6 +62,7 @@ class KidsModel extends Equatable {
       motherName: motherName ?? this.motherName,
       notes: notes ?? this.notes,
       age: age ?? this.age,
+      clubIdSave: clubIdSave ?? this.clubIdSave,
     );
   }
 
@@ -73,6 +78,7 @@ class KidsModel extends Equatable {
       fatherName: json['fatherName'],
       motherName: json['motherName'],
       notes: json['notes'],
+      clubIdSave: '',
     );
   }
 
@@ -92,5 +98,6 @@ class KidsModel extends Equatable {
         motherName,
         notes,
         age,
+        clubIdSave,
       ];
 }

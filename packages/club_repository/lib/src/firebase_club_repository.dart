@@ -48,6 +48,7 @@ class FirebaseClubRepository implements IClubRepository {
         });
       }
       return const Success('Clubinho criado com sucesso!');
+      // ignore: unused_catch_clause
     } on FirebaseException catch (e) {
       return const Error(Failure(message: 'Erro ao criar clubinho!'));
     }
@@ -136,6 +137,7 @@ class FirebaseClubRepository implements IClubRepository {
       } else {
         return const Error(Failure(message: 'Clubinho não existe'));
       }
+      // ignore: unused_catch_clause
     } on FirebaseException catch (e) {
       return const Error(Failure(message: "Erro ao buscar dados"));
     }
@@ -287,6 +289,55 @@ class FirebaseClubRepository implements IClubRepository {
       return const Success('Clube deletado com sucesso.');
     } on FirebaseException catch (e) {
       return Error(Failure(message: "Erro ao deletar clube: ${e.message}"));
+    } catch (e) {
+      return Error(Failure(message: "Erro inesperado: $e"));
+    }
+  }
+
+  @override
+  Future<Result<String, Failure>> deleteTeacher(
+      {required String idTeacher, required String idClub}) async {
+    try {
+      await _firebaseFirestore.collection('teachers').doc(idTeacher).update({
+        'classIds': FieldValue.arrayRemove([idClub])
+      });
+
+      await _firebaseFirestore.collection('clubs').doc(idClub).update({
+        'teachers': FieldValue.arrayRemove([idTeacher])
+      });
+
+      return const Success('Professor deletado com sucesso.');
+    } on FirebaseException catch (e) {
+      return Error(Failure(message: "Erro ao deletar clube: ${e.message}"));
+    } catch (e) {
+      return Error(Failure(message: "Erro inesperado: $e"));
+    }
+  }
+
+  @override
+  Future<Result<String, Failure>> deleteKid({
+    required String idChild,
+    required String clubId,
+  }) async {
+    try {
+      final clubDoc =
+          await _firebaseFirestore.collection('clubs').doc(clubId).get();
+
+      if (!clubDoc.exists) {
+        return const Error(Failure(message: "Clube não encontrado."));
+      }
+
+      List<dynamic> kidsList = clubDoc.data()?['kids'] ?? [];
+
+      kidsList.removeWhere((kid) => kid['id'] == idChild);
+
+      await _firebaseFirestore.collection('clubs').doc(clubId).update({
+        'kids': kidsList,
+      });
+
+      return const Success('Criança deletada com sucesso.');
+    } on FirebaseException catch (e) {
+      return Error(Failure(message: "Erro ao deletar criança: ${e.message}"));
     } catch (e) {
       return Error(Failure(message: "Erro inesperado: $e"));
     }

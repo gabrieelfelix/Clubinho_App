@@ -41,6 +41,7 @@ class ManageMemberPage extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class ManageUsersView extends StatelessWidget {
   const ManageUsersView({super.key, required this.isTeacher, required this.id});
 
@@ -100,8 +101,8 @@ class ManageUsersView extends StatelessWidget {
                 : "${state.childrenModel![index].age} anos"),
             trailing: const Icon(Icons.arrow_forward_ios),
             onTap: () => isTeacher
-                ? onTapUserInfo(context, state.teatchersModel![index])
-                : onTapChildInfo(context, state.childrenModel![index]),
+                ? onTapUserInfo(context, state.teatchersModel![index], id)
+                : onTapChildInfo(context, state.childrenModel![index], id),
           );
         },
       );
@@ -129,12 +130,18 @@ class ManageUsersView extends StatelessWidget {
   }
 
   /// Navigates to the user information when the action is triggered.
-  onTapUserInfo(BuildContext context, TeachersModel model) {
-    context.push(AppRouter.userInformation, extra: model);
+  onTapUserInfo(BuildContext context, TeachersModel model, String id) {
+    context.push(
+      AppRouter.userInformation,
+      extra: model.copyWith(clubIdSave: id),
+    );
   }
 
   /// Navigates to the user information when the action is triggered.
-  onTapChildInfo(BuildContext context, KidsModel model) {
-    context.push(AppRouter.childInformation, extra: model);
+  onTapChildInfo(BuildContext context, KidsModel model, String id) {
+    context.push(
+      AppRouter.childInformation,
+      extra: model.copyWith(clubIdSave: id),
+    );
   }
 }

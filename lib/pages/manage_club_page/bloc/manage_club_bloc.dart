@@ -71,8 +71,6 @@ class ManageClubBloc extends Bloc<IManageClubEvent, ManageClubBlocState> {
 
   Future<void> _onDeleteClubRequired(
       DeleteClubRequired event, Emitter<ManageClubBlocState> emit) async {
-    final clubData = state.clubModel ?? ClubModel.empty;
-
     emit(const ManageClubBlocState.loading());
 
     final response = await _clubRepository.deleteClub(id: event.id);
@@ -81,7 +79,7 @@ class ManageClubBloc extends Bloc<IManageClubEvent, ManageClubBlocState> {
       (success) => emit(
         ManageClubBlocState.deleted(
           message: success,
-        ).copyWith(clubModel: clubData),
+        ),
       ),
       (failure) => emit(
         ManageClubBlocState.failure(message: failure.message),
