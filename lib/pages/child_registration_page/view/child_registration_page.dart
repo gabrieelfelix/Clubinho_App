@@ -112,7 +112,8 @@ class ChildRegistrationView extends StatelessWidget {
                 ),
                 const SizedBox(height: 40),
                 CustomButton(
-                  textLabel: 'Save',
+                  label: 'Save',
+                  isLoading: false,
                   height: 50,
                   onPressed: () =>
                       context.read<ChildRegistrationCubit>().registationChild(

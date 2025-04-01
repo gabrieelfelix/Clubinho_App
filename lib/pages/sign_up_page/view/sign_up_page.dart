@@ -13,19 +13,14 @@ class SignUpPage extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           SignUpBloc(authRepository: getIt<IAuthenticationRepository>()),
-      child: const SignUpPageView(),
+      child: SignUpPageView(),
     );
   }
 }
 
-class SignUpPageView extends StatefulWidget {
-  const SignUpPageView({super.key});
+class SignUpPageView extends StatelessWidget {
+  SignUpPageView({super.key});
 
-  @override
-  State<SignUpPageView> createState() => _SignUpPageViewState();
-}
-
-class _SignUpPageViewState extends State<SignUpPageView> {
   final TextEditingController _nameController = TextEditingController();
 
   final TextEditingController _emailController = TextEditingController();
@@ -37,125 +32,161 @@ class _SignUpPageViewState extends State<SignUpPageView> {
 
   final TextEditingController _phoneController = TextEditingController();
 
-  bool isLoading = false;
-
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<SignUpBloc, SignUpState>(
+      listener: _handlerListener,
+      builder: _handlerBuilder,
+    );
+  }
+
+  /// Dealing with bloc builder
+  Widget _handlerBuilder(
+    BuildContext context,
+    SignUpState state,
+  ) {
     final bloc = context.read<SignUpBloc>();
-    return BlocListener<SignUpBloc, ISignUpState>(
-      listener: (context, state) {
-        if (state is SignUpSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-            ),
-          );
-          setState(() {
-            isLoading = false;
-          });
-        }
-        if (state is SignUpFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-            ),
-          );
-          setState(() {
-            isLoading = false;
-          });
-        }
-        if (state is SignUpProcess) {
-          setState(() {
-            isLoading = true;
-          });
-        }
-      },
-      child: GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Scaffold(
-          body: SingleChildScrollView(
-            child: Center(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 35, vertical: 65),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Hero(
-                        tag: ImageConstant.logoClub,
-                        child: SizedBox(
-                          child: Image.asset(
-                            ImageConstant.logoClub,
-                            filterQuality: FilterQuality.high,
-                            fit: BoxFit.contain,
-                            height: 230,
-                          ),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 65),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Hero(
+                      tag: ImageConstant.logoClub,
+                      child: SizedBox(
+                        child: Image.asset(
+                          ImageConstant.logoClub,
+                          filterQuality: FilterQuality.high,
+                          fit: BoxFit.contain,
+                          height: 230,
                         ),
                       ),
                     ),
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Crie uma conta',
-                        style: TextStyle(fontSize: 22),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Cadastrar-se',
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: context.colors.primary,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    CustomTextField(
-                      hint: 'Nome Completo',
-                      textEditingController: _nameController,
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Ensine o caminho e eles nunca se desviarão!',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey.shade500,
+                      ),
                     ),
-                    const SizedBox(height: 25),
-                    CustomTextField(
-                      hint: 'Email',
-                      textEditingController: _emailController,
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextField(
+                    hint: 'Nome Completo',
+                    textEditingController: _nameController,
+                  ),
+                  const SizedBox(height: 25),
+                  CustomTextField(
+                    hint: 'Email',
+                    textEditingController: _emailController,
+                  ),
+                  const SizedBox(height: 25),
+                  CustomTextField.suffixIcon(
+                    hint: 'Senha',
+                    obscure: state.obscure!,
+                    textEditingController: _passwordController,
+                    suffixIcon: IconButton(
+                      onPressed: () => bloc
+                          .add(const ChangeObscureRequired(firstObscure: true)),
+                      icon: Icon(
+                        state.obscure!
+                            ? Icons.visibility_off
+                            : Icons.remove_red_eye,
+                      ),
+                      color: context.theme.colorScheme.primary,
                     ),
-                    const SizedBox(height: 25),
-                    CustomTextField(
-                      hint: 'Senha',
-                      textEditingController: _passwordController,
+                  ),
+                  const SizedBox(height: 25),
+                  CustomTextField.suffixIcon(
+                    hint: 'Digite a senha novamente',
+                    obscure: state.secondObscure!,
+                    textEditingController: _passwordRepeatController,
+                    suffixIcon: IconButton(
+                      onPressed: () => bloc.add(const ChangeObscureRequired()),
+                      icon: Icon(
+                        state.secondObscure!
+                            ? Icons.visibility_off
+                            : Icons.remove_red_eye,
+                      ),
+                      color: context.theme.colorScheme.primary,
                     ),
-                    const SizedBox(height: 25),
-                    CustomTextField(
-                      hint: 'Digite a senha novamente',
-                      textEditingController: _passwordRepeatController,
+                  ),
+                  const SizedBox(height: 25),
+                  CustomTextField.suffixIcon(
+                    textEditingController: _phoneController,
+                    hint: 'Telefone',
+                    suffixIcon: Icon(
+                      Icons.phone,
+                      color: context.theme.colorScheme.primary,
                     ),
-                    const SizedBox(height: 25),
-                    CustomTextField.suffixIcon(
-                      textEditingController: _phoneController,
-                      hint: 'Telefone',
-                      suffixIcon: const Icon(Icons.phone),
-                    ),
-                    const SizedBox(height: 45),
-                    isLoading
-                        ? const CircularProgressIndicator()
-                        : const SizedBox.shrink(),
-                    const SizedBox(height: 25),
-                    CustomButton(
-                      textLabel: 'Cadastrar',
-                      height: 50,
-                      onPressed: () {
-                        bloc.add(
-                          SignUpRequired(
-                            phone: _phoneController.text,
-                            email: _emailController.text,
-                            username: _nameController.text,
-                            password: _passwordRepeatController.text,
-                          ),
-                        );
-                        // onTapCodeVerification(context);
-                      },
-                    ),
-                    const SizedBox(height: 28),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 25),
+                  CustomButton(
+                    label: 'Cadastrar',
+                    isLoading: state.isLoading,
+                    height: 50,
+                    onPressed: () {
+                      bloc.add(
+                        SignUpRequired(
+                          phone: _phoneController.text,
+                          email: _emailController.text,
+                          username: _nameController.text,
+                          password: _passwordRepeatController.text,
+                        ),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 28),
+                ],
               ),
             ),
           ),
         ),
       ),
     );
+  }
+
+  /// Dealing with bloc listening
+  _handlerListener(BuildContext context, SignUpState state) {
+    if (state.isFailure) {
+      showCustomSnackBar(context, state.message!);
+    }
+    if (state.isSuccess) {
+      showCustomSnackBar(context, state.message!);
+    }
+    if (state.isSuccess) {
+      _clearFields();
+      FocusManager.instance.primaryFocus?.unfocus();
+    }
+  }
+
+  void _clearFields() {
+    _phoneController.clear();
+    _emailController.clear();
+    _passwordController.clear();
+    _passwordRepeatController.clear();
+    _nameController.clear();
   }
 }

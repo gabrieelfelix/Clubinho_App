@@ -18,3 +18,5 @@ class SignInRequired extends IAuthenticationEvent {
 }
 
 class SignOutRequired extends IAuthenticationEvent {}
+
+class ChangeObscureRequired extends IAuthenticationEvent {}

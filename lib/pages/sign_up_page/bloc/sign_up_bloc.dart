@@ -5,18 +5,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 part 'sign_up_bloc_event.dart';
 part 'sign_up_bloc_state.dart';
 
-class SignUpBloc extends Bloc<ISignUpEvent, ISignUpState> {
+class SignUpBloc extends Bloc<ISignUpEvent, SignUpState> {
   final IAuthenticationRepository _authRepository;
 
   SignUpBloc({required IAuthenticationRepository authRepository})
       : _authRepository = authRepository,
-        super(SignUpInitial()) {
+        super(const SignUpState.obscure(obscure: true, secondObscure: true)) {
     on<SignUpRequired>(_onSignUpRequired);
+    on<ChangeObscureRequired>(_onChangeObscureRequired);
   }
 
   Future<void> _onSignUpRequired(
-      SignUpRequired event, Emitter<ISignUpState> emit) async {
-    emit(SignUpProcess());
+      SignUpRequired event, Emitter<SignUpState> emit) async {
+    final bool isObscure = state.obscure!;
+    final bool isSecondObscure = state.secondObscure!;
+    emit(
+      const SignUpState.loading().copyWith(
+        obscure: isObscure,
+        secondObscure: isSecondObscure,
+      ),
+    );
 
     final response = await _authRepository.signUp(
       email: event.email,
@@ -27,11 +35,28 @@ class SignUpBloc extends Bloc<ISignUpEvent, ISignUpState> {
 
     response.when(
       (success) => emit(
-        SignUpSuccess(message: success),
+        SignUpState.success(message: success).copyWith(
+          obscure: isObscure,
+          secondObscure: isSecondObscure,
+        ),
       ),
       (failure) => emit(
-        SignUpFailure(message: failure.message),
+        SignUpState.failure(message: failure.message).copyWith(
+          obscure: isObscure,
+          secondObscure: isSecondObscure,
+        ),
       ),
     );
+  }
+
+  Future<void> _onChangeObscureRequired(
+      ChangeObscureRequired event, Emitter<SignUpState> emit) async {
+    if (event.firstObscure) {
+      emit(SignUpState.obscure(
+          obscure: !state.obscure!, secondObscure: state.secondObscure!));
+    } else {
+      emit(SignUpState.obscure(
+          obscure: state.obscure!, secondObscure: !state.secondObscure!));
+    }
   }
 }

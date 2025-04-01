@@ -1,17 +1,21 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class CustomButton extends StatelessWidget {
   const CustomButton({
     super.key,
-    required this.textLabel,
+    required this.label,
     required this.height,
     this.onPressed,
+    required this.isLoading,
   });
 
-  final String textLabel;
+  final String label;
 
   final double height;
+
+  final bool isLoading;
 
   final void Function()? onPressed;
 
@@ -31,12 +35,18 @@ class CustomButton extends StatelessWidget {
             vertical: 1,
           ),
         ),
-        child: Text(
-          textLabel,
-          style: TextStyle(
-            color: context.colors.onPrimary,
-          ),
-        ),
+        child: isLoading
+            ? LoadingAnimationWidget.waveDots(
+                color: Colors.white,
+                size: 30,
+              )
+            : Text(
+                label,
+                style: TextStyle(
+                  color: context.colors.onPrimary,
+                  fontSize: 15,
+                ),
+              ),
       ),
     );
   }

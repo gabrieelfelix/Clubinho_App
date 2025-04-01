@@ -2,24 +2,29 @@ import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
-  const CustomTextField(
-      {super.key, required this.hint, this.textEditingController})
-      : maxLines = null,
+  const CustomTextField({
+    super.key,
+    required this.hint,
+    this.obscure,
+    this.textEditingController,
+  })  : maxLines = 1,
         suffixIcon = null;
 
-  const CustomTextField.suffixIcon(
-      {super.key,
-      required this.hint,
-      required this.suffixIcon,
-      this.textEditingController})
-      : maxLines = null;
+  const CustomTextField.suffixIcon({
+    super.key,
+    required this.hint,
+    required this.suffixIcon,
+    this.obscure,
+    this.textEditingController,
+  }) : maxLines = 1;
 
-  const CustomTextField.box(
-      {super.key,
-      required this.hint,
-      required int max,
-      this.textEditingController})
-      : maxLines = max,
+  const CustomTextField.box({
+    super.key,
+    required this.hint,
+    this.obscure,
+    required int max,
+    this.textEditingController,
+  })  : maxLines = max,
         suffixIcon = null;
 
   final String hint;
@@ -28,33 +33,42 @@ class CustomTextField extends StatelessWidget {
 
   final Widget? suffixIcon;
 
+  final bool? obscure;
+
   final TextEditingController? textEditingController;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: context.colors.secondary,
-        borderRadius: BorderRadius.circular(12.0),
-        boxShadow: [
-          BoxShadow(
-            color: context.colors.surface.withOpacity(0.2),
-            spreadRadius: 2,
-            blurRadius: 5,
-            offset: const Offset(0, 3),
-          ),
-        ],
+    return TextField(
+      maxLines: maxLines,
+      obscureText: obscure ?? false,
+      controller: textEditingController,
+      style: const TextStyle(
+        color: Colors.black,
       ),
-      child: TextField(
-        maxLines: maxLines,
-        controller: textEditingController,
-        decoration: InputDecoration(
-          suffixIcon: suffixIcon,
-          hintText: hint,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide: BorderSide.none,
+      decoration: InputDecoration(
+        suffixIcon: suffixIcon,
+        // hintText: hint,
+
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.grey.shade300,
           ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.grey.shade300,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        labelText: hint,
+        labelStyle: TextStyle(color: Colors.grey.shade500),
+        floatingLabelStyle: TextStyle(
+          // tá certo?
+          color: GlobalThemeData.lightColorScheme.primary,
         ),
       ),
     );

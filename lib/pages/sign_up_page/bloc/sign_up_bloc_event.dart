@@ -19,3 +19,9 @@ final class SignUpRequired extends ISignUpEvent {
     required this.password,
   });
 }
+
+final class ChangeObscureRequired extends ISignUpEvent {
+  final bool firstObscure;
+
+  const ChangeObscureRequired({this.firstObscure = false});
+}

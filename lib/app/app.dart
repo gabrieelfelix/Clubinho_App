@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         debugShowCheckedModeBanner: false,
         themeMode: ThemeMode.light,
-        theme: GlobalThemData.lightThemeData,
+        theme: GlobalThemeData.lightThemeData,
         routerDelegate: AppRouter.router.routerDelegate,
         routeInformationParser: AppRouter.router.routeInformationParser,
         routeInformationProvider: AppRouter.router.routeInformationProvider,

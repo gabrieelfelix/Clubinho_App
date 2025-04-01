@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:club_app/main.dart';

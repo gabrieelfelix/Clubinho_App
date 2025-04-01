@@ -47,13 +47,19 @@ class VerificationCode extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const VerificationInput(),
+                  // const VerificationInput(),
                   const SizedBox(height: 40),
-                  CustomButton(
-                    textLabel: 'Cadastrar',
-                    height: 50,
-                    onPressed: () {},
-                  ),
+                  // CustomButton(
+                  //   label: Text(
+                  //     'Cadastrar',
+                  //     style: TextStyle(
+                  //       color: context.colors.onPrimary,
+                  //       fontSize: 15,
+                  //     ),
+                  //   ),
+                  //   height: 50,
+                  //   onPressed: () {},
+                  // ),
                   const SizedBox(height: 28),
                 ],
               ),

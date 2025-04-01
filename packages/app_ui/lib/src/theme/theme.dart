@@ -9,7 +9,7 @@ extension ThemeContext on BuildContext {
 //   Color get shadowGrey => const Color(0xFF9E9E9E).withOpacity(0.2);
 // }
 
-class GlobalThemData {
+class GlobalThemeData {
   // static final Color _lightFocusColor = Colors.black.withOpacity(0.12);
 
   static ThemeData lightThemeData = themeData(lightColorScheme);

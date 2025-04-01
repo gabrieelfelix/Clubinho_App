@@ -8,6 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+// theme ( fontes, cores, widgets ) ver no idp
+// responsividade
+// bem estruturado ( ver ethos layout )
+// validações
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
 
@@ -17,120 +21,131 @@ class SignInPage extends StatelessWidget {
       create: (context) => AuthenticationBloc(
         authRepository: getIt<IAuthenticationRepository>(),
       ),
-      child: const SignInPageView(),
+      child: SignInPageView(),
     );
   }
 }
 
-class SignInPageView extends StatefulWidget {
-  const SignInPageView({super.key});
+class SignInPageView extends StatelessWidget {
+  SignInPageView({super.key});
 
-  @override
-  State<SignInPageView> createState() => _SignInPageViewState();
-}
-
-class _SignInPageViewState extends State<SignInPageView> {
   final TextEditingController _emailController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
 
-  bool isLoading = false;
-
   @override
   Widget build(BuildContext context) {
+    return BlocConsumer<AuthenticationBloc, AuthenticationState>(
+      listener: _handlerListener,
+      builder: _handlerBuilder,
+    );
+  }
+
+  /// Dealing with bloc builder
+  Widget _handlerBuilder(
+    BuildContext context,
+    AuthenticationState state,
+  ) {
     final bloc = context.read<AuthenticationBloc>();
-    return BlocListener<AuthenticationBloc, IAuthenticationState>(
-      listener: (context, state) {
-        if (state is SignInProcess) {
-          setState(() {
-            isLoading = true;
-          });
-        }
-        if (state is SignInFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-            ),
-          );
-          setState(() {
-            isLoading = false;
-          });
-        }
-        if (state is SignInSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(state.message),
-            ),
-          );
-          setState(
-            () {
-              isLoading = false;
-              onTapLogin();
-            },
-          );
-        }
-      },
-      child: GestureDetector(
-        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-        child: Scaffold(
-          body: SingleChildScrollView(
-            child: Center(
-              child: Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 35, vertical: 65),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Hero(
-                        tag: ImageConstant.logoClub,
-                        child: SizedBox(
-                          child: Image.asset(
-                            ImageConstant.logoClub,
-                            filterQuality: FilterQuality.high,
-                            fit: BoxFit.contain,
-                            height: 230,
-                          ),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: SingleChildScrollView(
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 65),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20),
+                    child: Hero(
+                      tag: ImageConstant.logoClub,
+                      child: SizedBox(
+                        child: Image.asset(
+                          ImageConstant.logoClub,
+                          filterQuality: FilterQuality.high,
+                          fit: BoxFit.contain,
+                          height: 230,
                         ),
                       ),
                     ),
-                    const Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Entre na sua conta',
-                        style: TextStyle(fontSize: 22),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Entrar',
+                      style: TextStyle(
+                        fontSize: 22,
+                        color: context.colors.primary,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    CustomTextField(
-                      hint: 'Email',
-                      textEditingController: _emailController,
-                    ),
-                    const SizedBox(height: 25),
-                    CustomTextField(
-                      hint: 'Senha',
-                      textEditingController: _passwordController,
-                    ),
-                    const SizedBox(height: 45),
-                    isLoading
-                        ? const CircularProgressIndicator()
-                        : const SizedBox.shrink(),
-                    const SizedBox(height: 25),
-                    CustomButton(
-                      textLabel: 'Entrar',
-                      height: 50,
-                      onPressed: () => bloc.add(
-                        SignInRequired(
-                          email: _emailController.text,
-                          password: _passwordController.text,
-                        ),
+                  ),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Ganhe corações para Jesus desde a infância!',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey.shade500,
                       ),
                     ),
-                    const SizedBox(height: 28),
-                    _buildSignUp(context),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 20),
+                  CustomTextField(
+                    hint: 'Email',
+                    textEditingController: _emailController,
+                  ),
+                  const SizedBox(height: 15),
+                  CustomTextField.suffixIcon(
+                    obscure: state.obscure!,
+                    suffixIcon: IconButton(
+                      onPressed: () => bloc.add(ChangeObscureRequired()),
+                      icon: Icon(
+                        state.obscure!
+                            ? Icons.visibility_off
+                            : Icons.remove_red_eye,
+                      ),
+                      color: context.theme.colorScheme.primary,
+                    ),
+                    hint: 'Senha',
+                    textEditingController: _passwordController,
+                  ),
+                  const SizedBox(height: 15),
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: _buildTextHiperLink(
+                      context: context,
+                      text: 'Esqueceu a senha?',
+                      textLink: 'Clique aqui',
+                      onTap: () {},
+                    ),
+                  ),
+                  const SizedBox(height: 60),
+                  CustomButton(
+                    label: 'Entrar',
+                    isLoading: state.isLoading,
+                    height: 50,
+                    onPressed: () => bloc.add(
+                      SignInRequired(
+                        email: _emailController.text,
+                        password: _passwordController.text,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+                  Align(
+                    alignment: Alignment.center,
+                    child: _buildTextHiperLink(
+                      context: context,
+                      text: 'Não tem uma conta? ',
+                      textLink: 'Cadastre-se',
+                      onTap: () => onTapSignUp(context),
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -139,19 +154,38 @@ class _SignInPageViewState extends State<SignInPageView> {
     );
   }
 
+  /// Dealing with bloc listening
+  _handlerListener(BuildContext context, AuthenticationState state) {
+    if (state.isFailure) {
+      showCustomSnackBar(context, state.message!);
+    }
+    if (state.isSuccess) {
+      showCustomSnackBar(context, state.message!);
+      onTapLogin(context);
+    }
+  }
+
   ///Section Widget
-  Widget _buildSignUp(BuildContext context) {
+  Widget _buildTextHiperLink({
+    required BuildContext context,
+    required String text,
+    required String textLink,
+    required GestureTapCallback onTap,
+  }) {
     return RichText(
       text: TextSpan(
         style: TextStyle(color: context.colors.onSecondary, fontSize: 15),
         children: <TextSpan>[
-          const TextSpan(text: 'Não tem uma conta? '),
           TextSpan(
-            text: 'Cadastre-se',
+            text: ' $text',
+          ),
+          TextSpan(
+            text: ' $textLink',
             style: TextStyle(
-              color: context.colors.tertiary,
+              color: context.colors.primary,
+              fontWeight: FontWeight.bold,
             ),
-            recognizer: TapGestureRecognizer()..onTap = onTapSignUp,
+            recognizer: TapGestureRecognizer()..onTap = onTap,
           ),
         ],
       ),
@@ -159,12 +193,12 @@ class _SignInPageViewState extends State<SignInPageView> {
   }
 
   /// Navigates to the home screen when login is performed.
-  onTapLogin() {
+  onTapLogin(BuildContext context) {
     context.go(AppRouter.homeScreen);
   }
 
   /// Navigates to the Sign Up screen when login is performed.
-  onTapSignUp() {
+  void onTapSignUp(BuildContext context) {
     context.push(AppRouter.signUpScreen);
   }
 }
