@@ -59,11 +59,13 @@ class ChildRegistrationView extends StatelessWidget {
                 const SizedBox(height: 20),
                 CustomTextField(
                   hint: 'Nome Completo',
+                  textInputAction: TextInputAction.next,
                   textEditingController: _fullNameController,
                 ),
                 const SizedBox(height: 20),
                 CustomTextField(
                   hint: 'Idade',
+                  textInputAction: TextInputAction.next,
                   textEditingController: _ageController,
                 ),
                 const SizedBox(height: 20),
@@ -86,11 +88,13 @@ class ChildRegistrationView extends StatelessWidget {
                 const SizedBox(height: 20),
                 CustomTextField(
                   hint: 'Nome da Mãe',
+                  textInputAction: TextInputAction.next,
                   textEditingController: _motherNameController,
                 ),
                 const SizedBox(height: 20),
                 CustomTextField(
                   hint: 'Nome do Pai',
+                  textInputAction: TextInputAction.next,
                   textEditingController: _fatherNameController,
                 ),
                 const SizedBox(height: 20),
@@ -102,6 +106,7 @@ class ChildRegistrationView extends StatelessWidget {
                 const SizedBox(height: 20),
                 CustomTextField(
                   hint: 'Telefone Regex',
+                  textInputAction: TextInputAction.next,
                   textEditingController: _contactController,
                 ),
                 const SizedBox(height: 20),

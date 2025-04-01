@@ -5,33 +5,98 @@ class CustomTextField extends StatelessWidget {
   const CustomTextField({
     super.key,
     required this.hint,
+    required this.textEditingController,
+    required this.textInputAction,
+    this.maxLines,
+    this.onSubmitted,
+    this.onEditingComplete,
+  })  : autofillHints = null,
+        keyboardType = TextInputType.text,
+        suffixIcon = null,
+        enableSuggestions = null,
+        autocorrect = null,
+        obscure = null;
+
+  CustomTextField.password({
+    super.key,
+    required this.hint,
+    required this.suffixIcon,
     this.obscure,
-    this.textEditingController,
+    required this.textEditingController,
+    required this.textInputAction,
+    this.onSubmitted,
+    this.onEditingComplete,
   })  : maxLines = 1,
-        suffixIcon = null;
+        enableSuggestions = false,
+        autocorrect = false,
+        keyboardType = TextInputType.visiblePassword,
+        autofillHints = [AutofillHints.password];
 
   const CustomTextField.suffixIcon({
     super.key,
     required this.hint,
     required this.suffixIcon,
-    this.obscure,
-    this.textEditingController,
-  }) : maxLines = 1;
+    required this.textEditingController,
+    required this.textInputAction,
+    this.onEditingComplete,
+    this.onSubmitted,
+    this.keyboardType,
+    this.autofillHints,
+  })  : maxLines = 1,
+        enableSuggestions = false,
+        obscure = false,
+        autocorrect = true;
+
+  CustomTextField.email({
+    super.key,
+    required this.hint,
+    required this.textEditingController,
+    required this.textInputAction,
+    this.onSubmitted,
+    this.onEditingComplete,
+  })  : maxLines = 1,
+        obscure = false,
+        enableSuggestions = false,
+        keyboardType = TextInputType.emailAddress,
+        autofillHints = [AutofillHints.email],
+        autocorrect = null,
+        suffixIcon = null;
 
   const CustomTextField.box({
     super.key,
     required this.hint,
-    this.obscure,
     required int max,
-    this.textEditingController,
+    this.onSubmitted,
+    this.onEditingComplete,
+    required this.textEditingController,
   })  : maxLines = max,
-        suffixIcon = null;
+        autofillHints = null,
+        keyboardType = TextInputType.text,
+        textInputAction = TextInputAction.done,
+        obscure = false,
+        suffixIcon = null,
+        enableSuggestions = null,
+        autocorrect = null;
 
   final String hint;
 
   final int? maxLines;
 
   final Widget? suffixIcon;
+
+  final TextInputAction? textInputAction;
+
+  final Iterable<String>? autofillHints;
+
+  final TextInputType? keyboardType;
+
+  final bool? enableSuggestions;
+
+  final bool? autocorrect;
+
+  final Function(String)? onSubmitted;
+
+  final Function()? onEditingComplete;
 
   final bool? obscure;
 
@@ -43,6 +108,13 @@ class CustomTextField extends StatelessWidget {
       maxLines: maxLines,
       obscureText: obscure ?? false,
       controller: textEditingController,
+      onEditingComplete: onEditingComplete, //
+      onSubmitted: onSubmitted, //
+      textInputAction: textInputAction, //
+      autofillHints: autofillHints, //
+      keyboardType: keyboardType, //
+      enableSuggestions: enableSuggestions ?? true, //
+      autocorrect: autocorrect ?? true,
       style: const TextStyle(
         color: Colors.black,
       ),

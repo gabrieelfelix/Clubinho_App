@@ -95,16 +95,20 @@ class SignUpPageView extends StatelessWidget {
                   const SizedBox(height: 20),
                   CustomTextField(
                     hint: 'Nome Completo',
+                    textInputAction: TextInputAction.next,
                     textEditingController: _nameController,
                   ),
                   const SizedBox(height: 25),
-                  CustomTextField(
+                  CustomTextField.email(
                     hint: 'Email',
+                    textInputAction: TextInputAction.next,
                     textEditingController: _emailController,
                   ),
                   const SizedBox(height: 25),
-                  CustomTextField.suffixIcon(
+                  CustomTextField.password(
                     hint: 'Senha',
+                    onSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                    textInputAction: TextInputAction.next,
                     obscure: state.obscure!,
                     textEditingController: _passwordController,
                     suffixIcon: IconButton(
@@ -119,8 +123,10 @@ class SignUpPageView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 25),
-                  CustomTextField.suffixIcon(
+                  CustomTextField.password(
                     hint: 'Digite a senha novamente',
+                    textInputAction: TextInputAction.next,
+                    onSubmitted: (_) => FocusScope.of(context).nextFocus(),
                     obscure: state.secondObscure!,
                     textEditingController: _passwordRepeatController,
                     suffixIcon: IconButton(
@@ -136,11 +142,24 @@ class SignUpPageView extends StatelessWidget {
                   const SizedBox(height: 25),
                   CustomTextField.suffixIcon(
                     textEditingController: _phoneController,
+                    keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.send,
+                    autofillHints: const [AutofillHints.telephoneNumber],
                     hint: 'Telefone',
                     suffixIcon: Icon(
                       Icons.phone,
                       color: context.theme.colorScheme.primary,
                     ),
+                    onSubmitted: (st) => st.isNotEmpty
+                        ? bloc.add(
+                            SignUpRequired(
+                              phone: _phoneController.text,
+                              email: _emailController.text,
+                              username: _nameController.text,
+                              password: _passwordRepeatController.text,
+                            ),
+                          )
+                        : {},
                   ),
                   const SizedBox(height: 25),
                   CustomButton(

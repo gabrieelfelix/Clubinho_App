@@ -94,13 +94,15 @@ class SignInPageView extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  CustomTextField(
+                  CustomTextField.email(
                     hint: 'Email',
+                    textInputAction: TextInputAction.next,
                     textEditingController: _emailController,
                   ),
                   const SizedBox(height: 15),
-                  CustomTextField.suffixIcon(
+                  CustomTextField.password(
                     obscure: state.obscure!,
+                    textInputAction: TextInputAction.send,
                     suffixIcon: IconButton(
                       onPressed: () => bloc.add(ChangeObscureRequired()),
                       icon: Icon(
@@ -112,6 +114,14 @@ class SignInPageView extends StatelessWidget {
                     ),
                     hint: 'Senha',
                     textEditingController: _passwordController,
+                    onSubmitted: (st) => st.isNotEmpty
+                        ? bloc.add(
+                            SignInRequired(
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                            ),
+                          )
+                        : {},
                   ),
                   const SizedBox(height: 15),
                   Align(
