@@ -1,6 +1,8 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:formz/formz.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -11,7 +13,7 @@ class AuthenticationBloc
 
   AuthenticationBloc({required IAuthenticationRepository authRepository})
       : _authRepository = authRepository,
-        super(const AuthenticationState.obscure(obscure: true)) {
+        super(const AuthenticationState.initial()) {
     on<SignInRequired>(_onSignInRequired);
     on<SignOutRequired>(_onSignOutRequired);
     on<ChangeObscureRequired>(_onChangeObscureRequired);
@@ -25,12 +27,21 @@ class AuthenticationBloc
 
   Future<void> _onChangeObscureRequired(
       ChangeObscureRequired event, Emitter<AuthenticationState> emit) async {
-    emit(AuthenticationState.obscure(obscure: !state.obscure!));
+    emit(state.copyWith(
+      obscure: !state.obscure!,
+      password: state.password.isPure
+          ? state.password
+          : Password.dirty(state.password.value), // Mantém o valor como dirty
+      email: state.email.isPure
+          ? state.email
+          : Email.dirty(state.email.value), // Mantém o valor como dirty
+    ));
   }
 
   Future<void> _onSignInRequired(
       SignInRequired event, Emitter<AuthenticationState> emit) async {
     final bool isObscure = state.obscure!;
+
     emit(const AuthenticationState.loading().copyWith(obscure: isObscure));
 
     final response = await _authRepository.signIn(

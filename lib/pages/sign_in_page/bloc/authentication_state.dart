@@ -1,63 +1,73 @@
 part of 'authentication_bloc.dart';
 
-enum AuthenticationStateStatus {
-  initial,
-  loading,
-  success,
-  failure,
-  logOut,
-  obscure,
-}
-
 class AuthenticationState extends Equatable {
-  final AuthenticationStateStatus state;
+  final FormzSubmissionStatus state;
   final bool? obscure;
   final String? message;
+  final Email email;
+  final Password password;
 
   const AuthenticationState._({
-    this.state = AuthenticationStateStatus.loading,
+    this.state = FormzSubmissionStatus.inProgress,
     this.obscure,
     this.message,
+    this.email = const Email.pure(),
+    this.password = const Password.pure(),
   });
 
   const AuthenticationState.initial()
-      : this._(state: AuthenticationStateStatus.initial);
+      : this._(state: FormzSubmissionStatus.initial, obscure: true);
 
   const AuthenticationState.failure({required String message})
-      : this._(state: AuthenticationStateStatus.failure, message: message);
+      : this._(state: FormzSubmissionStatus.failure, message: message);
 
   const AuthenticationState.success({required String message})
-      : this._(state: AuthenticationStateStatus.success, message: message);
+      : this._(state: FormzSubmissionStatus.success, message: message);
 
-  const AuthenticationState.obscure({required bool obscure})
-      : this._(state: AuthenticationStateStatus.obscure, obscure: obscure);
+  // const AuthenticationState.obscure({required bool obscure})
+  //     : this._(state: FormzSubmissionStatus.initial, obscure: obscure);
+
+  // const AuthenticationState.validation()
+  //     : this._(state: FormzSubmissionStatus.initial);
+
+  // const AuthenticationState.validationError({required bool obscure})
+  //     : this._(state: FormzSubmissionStatus.initial, obscure: obscure);
 
   const AuthenticationState.logOUt()
-      : this._(state: AuthenticationStateStatus.logOut);
+      : this._(state: FormzSubmissionStatus.canceled);
 
   const AuthenticationState.loading() : this._();
 
   AuthenticationState copyWith({
-    AuthenticationStateStatus? state,
+    FormzSubmissionStatus? state,
     bool? obscure,
     String? message,
+    bool? valid,
+    Email? email,
+    Password? password,
   }) {
     return AuthenticationState._(
       state: state ?? this.state,
       obscure: obscure ?? this.obscure,
       message: message ?? this.message,
+      email: email ?? this.email,
+      password: password ?? this.password,
     );
   }
 
   @override
-  List<Object?> get props => [state, obscure, message];
+  List<Object?> get props => [
+        state,
+        obscure,
+        message,
+        password,
+        email,
+      ];
 }
 
 extension HomePageStateExtensions on AuthenticationState {
-  bool get isInitial => state == AuthenticationStateStatus.initial;
-  bool get isLoading => state == AuthenticationStateStatus.loading;
-  bool get isLogOut => state == AuthenticationStateStatus.logOut;
-  bool get isObscure => state == AuthenticationStateStatus.obscure;
-  bool get isFailure => state == AuthenticationStateStatus.failure;
-  bool get isSuccess => state == AuthenticationStateStatus.success;
+  bool get isInitial => state == FormzSubmissionStatus.initial;
+  bool get isFailure => state == FormzSubmissionStatus.failure;
+  bool get isProgress => state == FormzSubmissionStatus.inProgress;
+  bool get isSuccess => state == FormzSubmissionStatus.success;
 }

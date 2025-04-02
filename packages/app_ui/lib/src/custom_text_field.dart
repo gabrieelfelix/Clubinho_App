@@ -10,6 +10,7 @@ class CustomTextField extends StatelessWidget {
     this.maxLines,
     this.onSubmitted,
     this.onEditingComplete,
+    this.validator,
   })  : autofillHints = null,
         keyboardType = TextInputType.text,
         suffixIcon = null,
@@ -24,6 +25,7 @@ class CustomTextField extends StatelessWidget {
     this.obscure,
     required this.textEditingController,
     required this.textInputAction,
+    this.validator,
     this.onSubmitted,
     this.onEditingComplete,
   })  : maxLines = 1,
@@ -42,6 +44,7 @@ class CustomTextField extends StatelessWidget {
     this.onSubmitted,
     this.keyboardType,
     this.autofillHints,
+    this.validator,
   })  : maxLines = 1,
         enableSuggestions = false,
         obscure = false,
@@ -53,6 +56,7 @@ class CustomTextField extends StatelessWidget {
     required this.textEditingController,
     required this.textInputAction,
     this.onSubmitted,
+    this.validator,
     this.onEditingComplete,
   })  : maxLines = 1,
         obscure = false,
@@ -69,6 +73,7 @@ class CustomTextField extends StatelessWidget {
     this.onSubmitted,
     this.onEditingComplete,
     required this.textEditingController,
+    this.validator,
   })  : maxLines = max,
         autofillHints = null,
         keyboardType = TextInputType.text,
@@ -98,22 +103,25 @@ class CustomTextField extends StatelessWidget {
 
   final Function()? onEditingComplete;
 
+  final String? Function(String?)? validator;
+
   final bool? obscure;
 
   final TextEditingController? textEditingController;
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
       maxLines: maxLines,
       obscureText: obscure ?? false,
       controller: textEditingController,
       onEditingComplete: onEditingComplete, //
-      onSubmitted: onSubmitted, //
+      onFieldSubmitted: onSubmitted, //
       textInputAction: textInputAction, //
       autofillHints: autofillHints, //
       keyboardType: keyboardType, //
       enableSuggestions: enableSuggestions ?? true, //
+      validator: validator,
       autocorrect: autocorrect ?? true,
       style: const TextStyle(
         color: Colors.black,
@@ -121,7 +129,6 @@ class CustomTextField extends StatelessWidget {
       decoration: InputDecoration(
         suffixIcon: suffixIcon,
         // hintText: hint,
-
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             width: 2,
@@ -141,6 +148,21 @@ class CustomTextField extends StatelessWidget {
         floatingLabelStyle: TextStyle(
           // tá certo?
           color: GlobalThemeData.lightColorScheme.primary,
+        ),
+
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.red.shade300,
+          ),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+            width: 2,
+            color: Colors.red.shade300,
+          ),
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );

@@ -12,6 +12,7 @@ import 'package:go_router/go_router.dart';
 // responsividade
 // bem estruturado ( ver ethos layout )
 // validações
+
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
 
@@ -32,6 +33,8 @@ class SignInPageView extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
 
   final TextEditingController _passwordController = TextEditingController();
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -55,107 +58,118 @@ class SignInPageView extends StatelessWidget {
           child: Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 65),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: Hero(
-                      tag: ImageConstant.logoClub,
-                      child: SizedBox(
-                        child: Image.asset(
-                          ImageConstant.logoClub,
-                          filterQuality: FilterQuality.high,
-                          fit: BoxFit.contain,
-                          height: 230,
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Hero(
+                        tag: ImageConstant.logoClub,
+                        child: SizedBox(
+                          child: Image.asset(
+                            ImageConstant.logoClub,
+                            filterQuality: FilterQuality.high,
+                            fit: BoxFit.contain,
+                            height: 230,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Entrar',
-                      style: TextStyle(
-                        fontSize: 22,
-                        color: context.colors.primary,
-                        fontWeight: FontWeight.bold,
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Entrar',
+                        style: TextStyle(
+                          fontSize: 22,
+                          color: context.colors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Ganhe corações para Jesus desde a infância!',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey.shade500,
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Ganhe corações para Jesus desde a infância!',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.grey.shade500,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  CustomTextField.email(
-                    hint: 'Email',
-                    textInputAction: TextInputAction.next,
-                    textEditingController: _emailController,
-                  ),
-                  const SizedBox(height: 15),
-                  CustomTextField.password(
-                    obscure: state.obscure!,
-                    textInputAction: TextInputAction.send,
-                    suffixIcon: IconButton(
-                      onPressed: () => bloc.add(ChangeObscureRequired()),
-                      icon: Icon(
-                        state.obscure!
-                            ? Icons.visibility_off
-                            : Icons.remove_red_eye,
+                    const SizedBox(height: 20),
+                    CustomTextField.email(
+                      hint: 'Email',
+                      textInputAction: TextInputAction.next,
+                      textEditingController: _emailController,
+                      validator: (value) =>
+                          state.email.validator(value ?? '')?.text(),
+                    ),
+                    const SizedBox(height: 15),
+                    CustomTextField.password(
+                      obscure: state.obscure,
+                      textInputAction: TextInputAction.send,
+                      validator: (value) =>
+                          state.password.validator(value ?? '')?.text(),
+                      suffixIcon: IconButton(
+                        onPressed: () => bloc.add(ChangeObscureRequired()),
+                        icon: Icon(
+                          state.obscure!
+                              ? Icons.visibility_off
+                              : Icons.remove_red_eye,
+                        ),
+                        color: context.theme.colorScheme.primary,
                       ),
-                      color: context.theme.colorScheme.primary,
+                      hint: 'Senha',
+                      textEditingController: _passwordController,
+                      onSubmitted: (st) => st.isNotEmpty
+                          ? bloc.add(
+                              SignInRequired(
+                                email: _emailController.text,
+                                password: _passwordController.text,
+                              ),
+                            )
+                          : {},
                     ),
-                    hint: 'Senha',
-                    textEditingController: _passwordController,
-                    onSubmitted: (st) => st.isNotEmpty
-                        ? bloc.add(
-                            SignInRequired(
-                              email: _emailController.text,
-                              password: _passwordController.text,
-                            ),
-                          )
-                        : {},
-                  ),
-                  const SizedBox(height: 15),
-                  Align(
-                    alignment: Alignment.topLeft,
-                    child: _buildTextHiperLink(
-                      context: context,
-                      text: 'Esqueceu a senha?',
-                      textLink: 'Clique aqui',
-                      onTap: () {},
-                    ),
-                  ),
-                  const SizedBox(height: 60),
-                  CustomButton(
-                    label: 'Entrar',
-                    isLoading: state.isLoading,
-                    height: 50,
-                    onPressed: () => bloc.add(
-                      SignInRequired(
-                        email: _emailController.text,
-                        password: _passwordController.text,
+                    const SizedBox(height: 15),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      child: _buildTextHiperLink(
+                        context: context,
+                        text: 'Esqueceu a senha?',
+                        textLink: 'Clique aqui',
+                        onTap: () {},
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 15),
-                  Align(
-                    alignment: Alignment.center,
-                    child: _buildTextHiperLink(
-                      context: context,
-                      text: 'Não tem uma conta? ',
-                      textLink: 'Cadastre-se',
-                      onTap: () => onTapSignUp(context),
+                    const SizedBox(height: 60),
+                    CustomButton(
+                      label: 'Entrar',
+                      isLoading: state.isProgress,
+                      height: 50,
+                      onPressed: () {
+                        _formKey.currentState!.validate()
+                            ? bloc.add(
+                                SignInRequired(
+                                  email: _emailController.text,
+                                  password: _passwordController.text,
+                                ),
+                              )
+                            : null;
+                      },
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 15),
+                    Align(
+                      alignment: Alignment.center,
+                      child: _buildTextHiperLink(
+                        context: context,
+                        text: 'Não tem uma conta? ',
+                        textLink: 'Cadastre-se',
+                        onTap: () => onTapSignUp(context),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

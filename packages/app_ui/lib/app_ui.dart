@@ -6,3 +6,5 @@ export 'src/theme/theme.dart';
 export 'src/utils/image_constant.dart';
 export 'src/verification_input.dart';
 export 'src/custom_snackbar.dart';
+export 'src/form_inputs/email.dart';
+export 'src/form_inputs/password.dart';
