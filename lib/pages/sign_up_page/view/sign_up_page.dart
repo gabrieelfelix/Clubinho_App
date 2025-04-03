@@ -5,6 +5,10 @@ import 'package:club_app/pages/sign_up_page/bloc/sign_up_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+// bug-quando aperto o botão o erro não não sai msm se ja arrumei uma segunda vez clicada
+// bug-quando aperto a primeira vez com tudo vazio os erros não atualizam
+// telefone validação e formatação
+// validação da senha
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
 
@@ -18,6 +22,7 @@ class SignUpPage extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class SignUpPageView extends StatelessWidget {
   SignUpPageView({super.key});
 
@@ -31,6 +36,10 @@ class SignUpPageView extends StatelessWidget {
       TextEditingController();
 
   final TextEditingController _phoneController = TextEditingController();
+
+  final FocusNode _focusNode = FocusNode();
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -54,131 +63,163 @@ class SignUpPageView extends StatelessWidget {
           child: Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 65),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 20),
-                    child: Hero(
-                      tag: ImageConstant.logoClub,
-                      child: SizedBox(
-                        child: Image.asset(
-                          ImageConstant.logoClub,
-                          filterQuality: FilterQuality.high,
-                          fit: BoxFit.contain,
-                          height: 230,
+              child: Form(
+                autovalidateMode: AutovalidateMode.disabled,
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 20),
+                      child: Hero(
+                        tag: ImageConstant.logoClub,
+                        child: SizedBox(
+                          child: Image.asset(
+                            ImageConstant.logoClub,
+                            filterQuality: FilterQuality.high,
+                            fit: BoxFit.contain,
+                            height: 230,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Cadastrar-se',
-                      style: TextStyle(
-                        fontSize: 22,
-                        color: context.colors.primary,
-                        fontWeight: FontWeight.bold,
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Cadastrar-se',
+                        style: TextStyle(
+                          fontSize: 22,
+                          color: context.colors.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Ensine o caminho e eles nunca se desviarão!',
-                      style: TextStyle(
-                        fontSize: 15,
-                        color: Colors.grey.shade500,
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        'Ensine o caminho e eles nunca se desviarão!',
+                        style: TextStyle(
+                          fontSize: 15,
+                          color: Colors.grey.shade500,
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 20),
-                  CustomTextField(
-                    hint: 'Nome Completo',
-                    textInputAction: TextInputAction.next,
-                    textEditingController: _nameController,
-                  ),
-                  const SizedBox(height: 25),
-                  CustomTextField.email(
-                    hint: 'Email',
-                    textInputAction: TextInputAction.next,
-                    textEditingController: _emailController,
-                  ),
-                  const SizedBox(height: 25),
-                  CustomTextField.password(
-                    hint: 'Senha',
-                    onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                    textInputAction: TextInputAction.next,
-                    obscure: state.obscure!,
-                    textEditingController: _passwordController,
-                    suffixIcon: IconButton(
-                      onPressed: () => bloc
-                          .add(const ChangeObscureRequired(firstObscure: true)),
-                      icon: Icon(
-                        state.obscure!
-                            ? Icons.visibility_off
-                            : Icons.remove_red_eye,
+                    const SizedBox(height: 20),
+                    CustomTextField(
+                      hint: 'Nome Completo',
+                      textInputAction: TextInputAction.next,
+                      textEditingController: _nameController,
+                      autofillHints: const [AutofillHints.name],
+                      validator: (vl) =>
+                          state.fullName.validator(vl ?? '')?.text(),
+                    ),
+                    const SizedBox(height: 25),
+                    CustomTextField.email(
+                      hint: 'Email',
+                      textInputAction: TextInputAction.next,
+                      textEditingController: _emailController,
+                      validator: (vl) =>
+                          state.email.validator(vl ?? '')?.text(),
+                    ),
+                    const SizedBox(height: 25),
+                    CustomTextField.password(
+                      hint: 'Senha',
+                      onSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      textInputAction: TextInputAction.next,
+                      obscure: state.obscure!,
+                      textEditingController: _passwordController,
+                      suffixIcon: IconButton(
+                        onPressed: () => bloc.add(
+                            const ChangeObscureRequired(firstObscure: true)),
+                        icon: Icon(
+                          state.obscure!
+                              ? Icons.visibility_off
+                              : Icons.remove_red_eye,
+                        ),
+                        color: context.theme.colorScheme.primary,
                       ),
-                      color: context.theme.colorScheme.primary,
-                    ),
-                  ),
-                  const SizedBox(height: 25),
-                  CustomTextField.password(
-                    hint: 'Digite a senha novamente',
-                    textInputAction: TextInputAction.next,
-                    onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                    obscure: state.secondObscure!,
-                    textEditingController: _passwordRepeatController,
-                    suffixIcon: IconButton(
-                      onPressed: () => bloc.add(const ChangeObscureRequired()),
-                      icon: Icon(
-                        state.secondObscure!
-                            ? Icons.visibility_off
-                            : Icons.remove_red_eye,
+                      onChanged: (vl) => bloc.add(
+                        ChangeConfirmPassRequired(
+                          password: vl,
+                          confirmPassword: _passwordRepeatController.text,
+                        ),
                       ),
-                      color: context.theme.colorScheme.primary,
                     ),
-                  ),
-                  const SizedBox(height: 25),
-                  CustomTextField.suffixIcon(
-                    textEditingController: _phoneController,
-                    keyboardType: TextInputType.phone,
-                    textInputAction: TextInputAction.send,
-                    autofillHints: const [AutofillHints.telephoneNumber],
-                    hint: 'Telefone',
-                    suffixIcon: Icon(
-                      Icons.phone,
-                      color: context.theme.colorScheme.primary,
+                    const SizedBox(height: 25),
+                    CustomTextField.password(
+                      hint: 'Digite a senha novamente',
+                      textInputAction: TextInputAction.next,
+                      onSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                      obscure: state.secondObscure!,
+                      textEditingController: _passwordRepeatController,
+                      suffixIcon: IconButton(
+                        onPressed: () =>
+                            bloc.add(const ChangeObscureRequired()),
+                        icon: Icon(
+                          state.secondObscure!
+                              ? Icons.visibility_off
+                              : Icons.remove_red_eye,
+                          color: context.theme.colorScheme.primary,
+                        ),
+                      ),
+                      validator: (vl) =>
+                          state.confirmedPassword.validator(vl ?? '')?.text(),
+                      onChanged: (vl) {
+                        bloc.add(
+                          ChangeConfirmPassRequired(
+                            password: _passwordController.text,
+                            confirmPassword: vl,
+                          ),
+                        );
+                        //   _formKey.currentState!.validate();
+                      },
+                      error: state.confirmedPassword.displayError != null
+                          ? 'Senhas diferentes'
+                          : null,
                     ),
-                    onSubmitted: (st) => st.isNotEmpty
-                        ? bloc.add(
+                    const SizedBox(height: 25),
+                    CustomTextField.suffixIcon(
+                      textEditingController: _phoneController,
+                      keyboardType: TextInputType.phone,
+                      textInputAction: TextInputAction.send,
+                      autofillHints: const [AutofillHints.telephoneNumber],
+                      hint: 'Telefone',
+                      suffixIcon: Icon(
+                        Icons.phone,
+                        color: context.theme.colorScheme.primary,
+                      ),
+                      onSubmitted: (st) => st.isNotEmpty
+                          ? bloc.add(
+                              SignUpRequired(
+                                phone: _phoneController.text,
+                                email: _emailController.text,
+                                username: _nameController.text,
+                                password: _passwordRepeatController.text,
+                              ),
+                            )
+                          : {},
+                    ),
+                    const SizedBox(height: 25),
+                    CustomButton(
+                      label: 'Cadastrar',
+                      isLoading: state.isLoading,
+                      height: 50,
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          bloc.add(
                             SignUpRequired(
                               phone: _phoneController.text,
                               email: _emailController.text,
                               username: _nameController.text,
                               password: _passwordRepeatController.text,
                             ),
-                          )
-                        : {},
-                  ),
-                  const SizedBox(height: 25),
-                  CustomButton(
-                    label: 'Cadastrar',
-                    isLoading: state.isLoading,
-                    height: 50,
-                    onPressed: () {
-                      bloc.add(
-                        SignUpRequired(
-                          phone: _phoneController.text,
-                          email: _emailController.text,
-                          username: _nameController.text,
-                          password: _passwordRepeatController.text,
-                        ),
-                      );
-                    },
-                  ),
-                  const SizedBox(height: 28),
-                ],
+                          );
+                        }
+                      },
+                    ),
+                    const SizedBox(height: 28),
+                  ],
+                ),
               ),
             ),
           ),

@@ -24,15 +24,6 @@ class AuthenticationState extends Equatable {
   const AuthenticationState.success({required String message})
       : this._(state: FormzSubmissionStatus.success, message: message);
 
-  // const AuthenticationState.obscure({required bool obscure})
-  //     : this._(state: FormzSubmissionStatus.initial, obscure: obscure);
-
-  // const AuthenticationState.validation()
-  //     : this._(state: FormzSubmissionStatus.initial);
-
-  // const AuthenticationState.validationError({required bool obscure})
-  //     : this._(state: FormzSubmissionStatus.initial, obscure: obscure);
-
   const AuthenticationState.logOUt()
       : this._(state: FormzSubmissionStatus.canceled);
 
@@ -42,7 +33,6 @@ class AuthenticationState extends Equatable {
     FormzSubmissionStatus? state,
     bool? obscure,
     String? message,
-    bool? valid,
     Email? email,
     Password? password,
   }) {

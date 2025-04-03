@@ -18,10 +18,31 @@ final class SignUpRequired extends ISignUpEvent {
     required this.username,
     required this.password,
   });
+  @override
+  List<Object> get props => [
+        email,
+        username,
+        password,
+        phone,
+      ];
 }
 
 final class ChangeObscureRequired extends ISignUpEvent {
   final bool firstObscure;
 
   const ChangeObscureRequired({this.firstObscure = false});
+  @override
+  List<Object> get props => [firstObscure];
+}
+
+final class ChangeConfirmPassRequired extends ISignUpEvent {
+  final String confirmPassword;
+  final String password;
+
+  const ChangeConfirmPassRequired({
+    required this.confirmPassword,
+    required this.password,
+  });
+  @override
+  List<Object> get props => [confirmPassword, password];
 }

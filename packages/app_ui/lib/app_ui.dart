@@ -8,3 +8,5 @@ export 'src/verification_input.dart';
 export 'src/custom_snackbar.dart';
 export 'src/form_inputs/email.dart';
 export 'src/form_inputs/password.dart';
+export 'src/form_inputs/full_name.dart';
+export 'src/form_inputs/confirmed_password.dart';

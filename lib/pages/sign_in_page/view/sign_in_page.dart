@@ -12,7 +12,8 @@ import 'package:go_router/go_router.dart';
 // responsividade
 // bem estruturado ( ver ethos layout )
 // validações
-
+//loading OK
+// verificar se tem trim em algum luguar de todos os textfield
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
 

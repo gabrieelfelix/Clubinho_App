@@ -25,7 +25,7 @@ class Email extends FormzInput<String, EmailValidationError> {
   EmailValidationError? validator(String value) {
     if (value.isEmpty) {
       return EmailValidationError.empty;
-    } else if (!_emailRegExp.hasMatch(value)) {
+    } else if (!_emailRegExp.hasMatch(value.trim())) {
       return EmailValidationError.invalid;
     }
 

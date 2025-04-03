@@ -27,14 +27,10 @@ class AuthenticationBloc
 
   Future<void> _onChangeObscureRequired(
       ChangeObscureRequired event, Emitter<AuthenticationState> emit) async {
+    final currentState = state.state;
     emit(state.copyWith(
       obscure: !state.obscure!,
-      password: state.password.isPure
-          ? state.password
-          : Password.dirty(state.password.value), // Mantém o valor como dirty
-      email: state.email.isPure
-          ? state.email
-          : Email.dirty(state.email.value), // Mantém o valor como dirty
+      state: state.isProgress ? currentState : FormzSubmissionStatus.initial,
     ));
   }
 

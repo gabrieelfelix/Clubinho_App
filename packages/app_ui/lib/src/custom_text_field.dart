@@ -11,11 +11,13 @@ class CustomTextField extends StatelessWidget {
     this.onSubmitted,
     this.onEditingComplete,
     this.validator,
-  })  : autofillHints = null,
-        keyboardType = TextInputType.text,
+    this.autofillHints,
+    this.onChanged,
+    this.error,
+  })  : keyboardType = TextInputType.text,
         suffixIcon = null,
-        enableSuggestions = null,
-        autocorrect = null,
+        enableSuggestions = true,
+        autocorrect = false,
         obscure = null;
 
   CustomTextField.password({
@@ -28,6 +30,8 @@ class CustomTextField extends StatelessWidget {
     this.validator,
     this.onSubmitted,
     this.onEditingComplete,
+    this.onChanged,
+    this.error,
   })  : maxLines = 1,
         enableSuggestions = false,
         autocorrect = false,
@@ -45,6 +49,8 @@ class CustomTextField extends StatelessWidget {
     this.keyboardType,
     this.autofillHints,
     this.validator,
+    this.onChanged,
+    this.error,
   })  : maxLines = 1,
         enableSuggestions = false,
         obscure = false,
@@ -58,6 +64,8 @@ class CustomTextField extends StatelessWidget {
     this.onSubmitted,
     this.validator,
     this.onEditingComplete,
+    this.onChanged,
+    this.error,
   })  : maxLines = 1,
         obscure = false,
         enableSuggestions = false,
@@ -74,6 +82,8 @@ class CustomTextField extends StatelessWidget {
     this.onEditingComplete,
     required this.textEditingController,
     this.validator,
+    this.onChanged,
+    this.error,
   })  : maxLines = max,
         autofillHints = null,
         keyboardType = TextInputType.text,
@@ -105,7 +115,11 @@ class CustomTextField extends StatelessWidget {
 
   final String? Function(String?)? validator;
 
+  final String? error;
+
   final bool? obscure;
+
+  final Function(String)? onChanged;
 
   final TextEditingController? textEditingController;
 
@@ -115,6 +129,7 @@ class CustomTextField extends StatelessWidget {
       maxLines: maxLines,
       obscureText: obscure ?? false,
       controller: textEditingController,
+      onChanged: onChanged, //
       onEditingComplete: onEditingComplete, //
       onFieldSubmitted: onSubmitted, //
       textInputAction: textInputAction, //
@@ -127,6 +142,7 @@ class CustomTextField extends StatelessWidget {
         color: Colors.black,
       ),
       decoration: InputDecoration(
+        errorText: error != null ? error : null,
         suffixIcon: suffixIcon,
         // hintText: hint,
         enabledBorder: OutlineInputBorder(

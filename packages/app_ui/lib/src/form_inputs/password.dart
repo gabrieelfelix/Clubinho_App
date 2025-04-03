@@ -24,7 +24,7 @@ class Password extends FormzInput<String, PasswordValidationError> {
   PasswordValidationError? validator(String value) {
     if (value.isEmpty) {
       return PasswordValidationError.empty;
-    } else if (!_passwordRegex.hasMatch(value)) {
+    } else if (!_passwordRegex.hasMatch(value.trim())) {
       return PasswordValidationError.invalid;
     }
 
