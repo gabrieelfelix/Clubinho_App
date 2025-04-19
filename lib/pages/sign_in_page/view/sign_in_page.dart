@@ -8,12 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-// theme ( fontes, cores, widgets ) ver no idp
 // responsividade
-// bem estruturado ( ver ethos layout )
 // validações
-//loading OK
-// verificar se tem trim em algum luguar de todos os textfield
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
 
@@ -61,7 +57,7 @@ class SignInPageView extends StatelessWidget {
               child: Form(
                 key: _formKey,
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.only(bottom: 20),

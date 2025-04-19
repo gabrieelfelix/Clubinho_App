@@ -181,7 +181,6 @@ class SignUpPageView extends StatelessWidget {
                       ),
                       validator: (vl) =>
                           state.confirmedPassword.validator(vl ?? '')?.text(),
-
                       onChanged: (vl) {
                         bloc.add(
                           ChangeConfirmPassRequired(
@@ -190,9 +189,6 @@ class SignUpPageView extends StatelessWidget {
                           ),
                         );
                       },
-                      // error: state.confirmedPassword.displayError != null
-                      //     ? 'Senhas diferentes'
-                      //     : null,
                     ),
                     const SizedBox(height: 25),
                     CustomTextField.suffixIcon(

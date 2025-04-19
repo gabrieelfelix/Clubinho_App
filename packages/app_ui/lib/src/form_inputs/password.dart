@@ -4,7 +4,8 @@ import 'package:formz/formz.dart';
 enum PasswordValidationError {
   /// Generic invalid error.
   invalid,
-  empty
+  empty,
+  withSpace,
 }
 
 /// {@template password}
@@ -23,6 +24,8 @@ class Password extends FormzInput<String, PasswordValidationError> {
   PasswordValidationError? validator(String value) {
     if (value.isEmpty) {
       return PasswordValidationError.empty;
+    } else if (value.contains(' ')) {
+      return PasswordValidationError.withSpace;
     } else if (!_passwordRegex.hasMatch(value.trim())) {
       return PasswordValidationError.invalid;
     }
@@ -38,6 +41,8 @@ extension PasswordValidationErrorExtension on PasswordValidationError {
         return 'Senha inválida';
       case PasswordValidationError.empty:
         return 'Digite uma senha';
+      case PasswordValidationError.withSpace:
+        return 'A senha não pode conter espaços';
     }
   }
 }
