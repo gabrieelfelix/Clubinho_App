@@ -4,10 +4,14 @@ class SignUpState extends Equatable {
   final FormzSubmissionStatus state;
   final bool? obscure;
   final bool? secondObscure;
+  final bool? lowercase;
+  final bool? uppercase;
+  final bool? atLeast8;
   final String? message;
   final Email email;
   final Password password;
   final FullName fullName;
+  final Phone phone;
   final ConfirmedPassword confirmedPassword;
 
   const SignUpState._({
@@ -16,9 +20,13 @@ class SignUpState extends Equatable {
     this.secondObscure,
     this.message,
     this.email = const Email.pure(),
+    this.phone = const Phone.pure(),
     this.password = const Password.pure(),
     this.fullName = const FullName.pure(),
     this.confirmedPassword = const ConfirmedPassword.pure(),
+    this.atLeast8 = false,
+    this.lowercase = false,
+    this.uppercase = false,
   });
 
   const SignUpState.initial()
@@ -35,13 +43,6 @@ class SignUpState extends Equatable {
       : this._(state: FormzSubmissionStatus.success, message: message);
 
   const SignUpState.loading() : this._();
-  // const SignUpState.obscure(
-  //     {required bool obscure, required bool secondObscure})
-  //     : this._(
-  //         state: FormzSubmissionStatus.obscure,
-  //         obscure: obscure,
-  //         secondObscure: secondObscure,
-  //       );
 
   SignUpState copyWith({
     FormzSubmissionStatus? state,
@@ -52,6 +53,11 @@ class SignUpState extends Equatable {
     Password? password,
     FullName? fullName,
     ConfirmedPassword? confirmedPassword,
+    Phone? phone,
+    bool? uppercase,
+    bool? lowercase,
+    bool? atLeast8,
+    bool? valid,
   }) {
     return SignUpState._(
       state: state ?? this.state,
@@ -62,6 +68,10 @@ class SignUpState extends Equatable {
       fullName: fullName ?? this.fullName,
       password: password ?? this.password,
       confirmedPassword: confirmedPassword ?? this.confirmedPassword,
+      phone: phone ?? this.phone,
+      atLeast8: atLeast8 ?? this.atLeast8,
+      lowercase: lowercase ?? this.lowercase,
+      uppercase: uppercase ?? this.uppercase,
     );
   }
 
@@ -75,6 +85,11 @@ class SignUpState extends Equatable {
         password,
         email,
         fullName,
+        phone,
+        password,
+        atLeast8,
+        lowercase,
+        uppercase,
       ];
 }
 

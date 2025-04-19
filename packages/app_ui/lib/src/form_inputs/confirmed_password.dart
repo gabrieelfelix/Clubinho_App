@@ -3,7 +3,7 @@ import 'package:formz/formz.dart';
 /// Validation errors for the [ConfirmedPassword] [FormzInput].
 enum ConfirmedPasswordValidationError {
   /// Generic invalid error.
-  invalid,
+  notMatch,
   empty,
 }
 
@@ -24,14 +24,16 @@ class ConfirmedPassword
 
   @override
   ConfirmedPasswordValidationError? validator(String value) {
-    if (value.isEmpty) {
-      return ConfirmedPasswordValidationError.empty;
-    }
-    if (password.isEmpty || value.trim() != password.trim()) {
-      return ConfirmedPasswordValidationError.invalid;
-    }
+    if (value.isEmpty) return ConfirmedPasswordValidationError.empty;
+    return password == value ? null : ConfirmedPasswordValidationError.notMatch;
+    // if (value.isEmpty) {
+    //   return ConfirmedPasswordValidationError.empty;
+    // }
+    // if (password.isEmpty || value.trim() != password.trim()) {
+    //   return ConfirmedPasswordValidationError.invalid;
+    // }
 
-    return null;
+    // return null;
   }
 }
 
@@ -39,7 +41,7 @@ extension ConfirmedPasswordValidationErrorExtension
     on ConfirmedPasswordValidationError {
   String text() {
     switch (this) {
-      case ConfirmedPasswordValidationError.invalid:
+      case ConfirmedPasswordValidationError.notMatch:
         return 'Senhas diferentes';
       case ConfirmedPasswordValidationError.empty:
         return 'Repita a senha novamente';

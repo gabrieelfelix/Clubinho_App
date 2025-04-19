@@ -46,3 +46,33 @@ final class ChangeConfirmPassRequired extends ISignUpEvent {
   @override
   List<Object> get props => [confirmPassword, password];
 }
+
+// final class ChangePassRequired extends ISignUpEvent {
+//   final String password;
+
+//   const ChangePassRequired({
+//     required this.password,
+//   });
+//   @override
+//   List<Object> get props => [password];
+// }
+
+class ChangePasswordAndConfirmPass extends ISignUpEvent {
+  final String password;
+  final String confirmPassword;
+
+  const ChangePasswordAndConfirmPass({
+    required this.password,
+    required this.confirmPassword,
+  });
+
+  @override
+  List<Object> get props => [password, confirmPassword];
+}
+
+class ResetSignUpForm extends ISignUpEvent {
+  const ResetSignUpForm();
+
+  @override
+  List<Object> get props => [];
+}

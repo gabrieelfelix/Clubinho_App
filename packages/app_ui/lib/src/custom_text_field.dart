@@ -1,5 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -14,11 +15,15 @@ class CustomTextField extends StatelessWidget {
     this.autofillHints,
     this.onChanged,
     this.error,
+    this.inputFormatters,
   })  : keyboardType = TextInputType.text,
         suffixIcon = null,
         enableSuggestions = true,
+        isPhone = false,
         autocorrect = false,
-        obscure = null;
+        obscure = null,
+        autofillHintsBool = null;
+  // validatorPhone = null;
 
   CustomTextField.password({
     super.key,
@@ -32,11 +37,15 @@ class CustomTextField extends StatelessWidget {
     this.onEditingComplete,
     this.onChanged,
     this.error,
+    this.inputFormatters,
   })  : maxLines = 1,
         enableSuggestions = false,
+        isPhone = false,
         autocorrect = false,
         keyboardType = TextInputType.visiblePassword,
-        autofillHints = [AutofillHints.password];
+        autofillHints = [AutofillHints.password],
+        autofillHintsBool = null;
+  // validatorPhone = null;
 
   const CustomTextField.suffixIcon({
     super.key,
@@ -51,11 +60,36 @@ class CustomTextField extends StatelessWidget {
     this.validator,
     this.onChanged,
     this.error,
+    this.inputFormatters,
   })  : maxLines = 1,
         enableSuggestions = false,
         obscure = false,
-        autocorrect = true;
+        isPhone = false,
+        autocorrect = true,
+        autofillHintsBool = null;
+  //  validatorPhone = null;
 
+  const CustomTextField.phone({
+    super.key,
+    required this.hint,
+    required this.suffixIcon,
+    required this.textEditingController,
+    required this.textInputAction,
+    this.onEditingComplete,
+    this.onSubmitted,
+    this.keyboardType,
+    this.autofillHintsBool,
+    this.validator,
+    this.onChanged,
+    this.error,
+    this.inputFormatters,
+    // this.validatorPhone,
+  })  : maxLines = 1,
+        enableSuggestions = false,
+        obscure = false,
+        autocorrect = true,
+        isPhone = true,
+        autofillHints = null;
   CustomTextField.email({
     super.key,
     required this.hint,
@@ -66,13 +100,17 @@ class CustomTextField extends StatelessWidget {
     this.onEditingComplete,
     this.onChanged,
     this.error,
+    this.inputFormatters,
   })  : maxLines = 1,
         obscure = false,
+        isPhone = false,
         enableSuggestions = false,
         keyboardType = TextInputType.emailAddress,
         autofillHints = [AutofillHints.email],
         autocorrect = null,
-        suffixIcon = null;
+        suffixIcon = null,
+        autofillHintsBool = null;
+  //  validatorPhone = null;
 
   const CustomTextField.box({
     super.key,
@@ -83,15 +121,19 @@ class CustomTextField extends StatelessWidget {
     required this.textEditingController,
     this.validator,
     this.onChanged,
+    this.inputFormatters,
     this.error,
   })  : maxLines = max,
         autofillHints = null,
+        isPhone = false,
         keyboardType = TextInputType.text,
         textInputAction = TextInputAction.done,
         obscure = false,
         suffixIcon = null,
         enableSuggestions = null,
-        autocorrect = null;
+        autocorrect = null,
+        autofillHintsBool = null;
+  //  validatorPhone = null;
 
   final String hint;
 
@@ -102,6 +144,8 @@ class CustomTextField extends StatelessWidget {
   final TextInputAction? textInputAction;
 
   final Iterable<String>? autofillHints;
+
+  final bool? autofillHintsBool;
 
   final TextInputType? keyboardType;
 
@@ -115,9 +159,15 @@ class CustomTextField extends StatelessWidget {
 
   final String? Function(String?)? validator;
 
+  // final FutureOr<String?> Function(PhoneNumber?)? validatorPhone;
+
   final String? error;
 
   final bool? obscure;
+
+  final bool isPhone;
+
+  final List<TextInputFormatter>? inputFormatters;
 
   final Function(String)? onChanged;
 
@@ -130,6 +180,7 @@ class CustomTextField extends StatelessWidget {
       obscureText: obscure ?? false,
       controller: textEditingController,
       onChanged: onChanged, //
+      inputFormatters: inputFormatters,
       onEditingComplete: onEditingComplete, //
       onFieldSubmitted: onSubmitted, //
       textInputAction: textInputAction, //
@@ -138,8 +189,8 @@ class CustomTextField extends StatelessWidget {
       enableSuggestions: enableSuggestions ?? true, //
       validator: validator,
       autocorrect: autocorrect ?? true,
-      style: const TextStyle(
-        color: Colors.black,
+      style: TextStyle(
+        color: context.colors.onSecondary,
       ),
       decoration: InputDecoration(
         errorText: error != null ? error : null,
@@ -148,35 +199,36 @@ class CustomTextField extends StatelessWidget {
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(
             width: 2,
-            color: Colors.grey.shade300,
+            color: context.colors.onSurfaceVariant,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: BorderSide(
             width: 2,
-            color: Colors.grey.shade300,
+            color: context.colors.onSurfaceVariant,
+            // color: GlobalThemeData.lightColorScheme.onSurfaceVariant,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
         labelText: hint,
-        labelStyle: TextStyle(color: Colors.grey.shade500),
+        labelStyle: TextStyle(color: context.colors.surface),
         floatingLabelStyle: TextStyle(
-          // tá certo?
-          color: GlobalThemeData.lightColorScheme.primary,
+          color: context.colors.primary,
+          // color: GlobalThemeData.lightColorScheme.primary,
         ),
-
         errorBorder: OutlineInputBorder(
           borderSide: BorderSide(
             width: 2,
-            color: Colors.red.shade300,
+            color: context.colors.error,
           ),
           borderRadius: BorderRadius.circular(10),
         ),
         focusedErrorBorder: OutlineInputBorder(
           borderSide: BorderSide(
             width: 2,
-            color: Colors.red.shade300,
+            color: context.colors.error,
+            // color: Colors.red.shade300,
           ),
           borderRadius: BorderRadius.circular(10),
         ),

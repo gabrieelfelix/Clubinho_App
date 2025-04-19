@@ -10,3 +10,5 @@ export 'src/form_inputs/email.dart';
 export 'src/form_inputs/password.dart';
 export 'src/form_inputs/full_name.dart';
 export 'src/form_inputs/confirmed_password.dart';
+export 'src/form_inputs/mask_formatter.dart';
+export 'src/form_inputs/phone.dart';

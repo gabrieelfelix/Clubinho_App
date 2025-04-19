@@ -37,7 +37,7 @@ class CustomButton extends StatelessWidget {
         ),
         child: isLoading
             ? LoadingAnimationWidget.waveDots(
-                color: Colors.white,
+                color: context.colors.onPrimary,
                 size: 30,
               )
             : Text(

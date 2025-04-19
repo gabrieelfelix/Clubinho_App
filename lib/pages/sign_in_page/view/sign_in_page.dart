@@ -54,7 +54,6 @@ class SignInPageView extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Center(
             child: Padding(
@@ -82,10 +81,8 @@ class SignInPageView extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Entrar',
-                        style: TextStyle(
-                          fontSize: 22,
+                        style: context.text.headlineMedium!.copyWith(
                           color: context.colors.primary,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -93,10 +90,8 @@ class SignInPageView extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Ganhe corações para Jesus desde a infância!',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey.shade500,
-                        ),
+                        style: context.text.bodyMedium!
+                            .copyWith(color: context.colors.surface),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -120,7 +115,7 @@ class SignInPageView extends StatelessWidget {
                               ? Icons.visibility_off
                               : Icons.remove_red_eye,
                         ),
-                        color: context.theme.colorScheme.primary,
+                        color: context.colors.primary,
                       ),
                       hint: 'Senha',
                       textEditingController: _passwordController,
@@ -199,17 +194,16 @@ class SignInPageView extends StatelessWidget {
   }) {
     return RichText(
       text: TextSpan(
-        style: TextStyle(color: context.colors.onSecondary, fontSize: 15),
+        style:
+            context.text.bodySmall!.copyWith(color: context.colors.onSecondary),
         children: <TextSpan>[
           TextSpan(
             text: ' $text',
           ),
           TextSpan(
             text: ' $textLink',
-            style: TextStyle(
-              color: context.colors.primary,
-              fontWeight: FontWeight.bold,
-            ),
+            style: context.text.labelLarge!
+                .copyWith(color: context.colors.primary),
             recognizer: TapGestureRecognizer()..onTap = onTap,
           ),
         ],

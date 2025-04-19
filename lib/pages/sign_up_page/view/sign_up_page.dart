@@ -5,10 +5,11 @@ import 'package:club_app/pages/sign_up_page/bloc/sign_up_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// bug-quando aperto o botão o erro não não sai msm se ja arrumei uma segunda vez clicada
-// bug-quando aperto a primeira vez com tudo vazio os erros não atualizam
-// telefone validação e formatação
-// validação da senha
+// quando digito primeiro o segundo campo de senha quando digito
+// a senha dps disso ele não atualiza so se apertar no o olho
+// mas ele atualiza quando digito um acrater a mais
+
+// dps q o cadastrar diz q ta com erro nada muda, ele não valida dnv
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
 
@@ -37,8 +38,6 @@ class SignUpPageView extends StatelessWidget {
 
   final TextEditingController _phoneController = TextEditingController();
 
-  final FocusNode _focusNode = FocusNode();
-
   final _formKey = GlobalKey<FormState>();
 
   @override
@@ -58,14 +57,13 @@ class SignUpPageView extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        backgroundColor: Colors.white,
         body: SingleChildScrollView(
           child: Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 65),
               child: Form(
-                autovalidateMode: AutovalidateMode.disabled,
                 key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
@@ -87,10 +85,8 @@ class SignUpPageView extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Cadastrar-se',
-                        style: TextStyle(
-                          fontSize: 22,
+                        style: context.text.headlineMedium!.copyWith(
                           color: context.colors.primary,
-                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
@@ -98,10 +94,8 @@ class SignUpPageView extends StatelessWidget {
                       alignment: Alignment.centerLeft,
                       child: Text(
                         'Ensine o caminho e eles nunca se desviarão!',
-                        style: TextStyle(
-                          fontSize: 15,
-                          color: Colors.grey.shade500,
-                        ),
+                        style: context.text.bodyMedium!
+                            .copyWith(color: context.colors.surface),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -128,6 +122,8 @@ class SignUpPageView extends StatelessWidget {
                       textInputAction: TextInputAction.next,
                       obscure: state.obscure!,
                       textEditingController: _passwordController,
+                      validator: (vl) =>
+                          state.password.validator(vl ?? '')?.text(),
                       suffixIcon: IconButton(
                         onPressed: () => bloc.add(
                             const ChangeObscureRequired(firstObscure: true)),
@@ -136,18 +132,39 @@ class SignUpPageView extends StatelessWidget {
                               ? Icons.visibility_off
                               : Icons.remove_red_eye,
                         ),
-                        color: context.theme.colorScheme.primary,
+                        color: context.colors.primary,
                       ),
-                      onChanged: (vl) => bloc.add(
-                        ChangeConfirmPassRequired(
-                          password: vl,
-                          confirmPassword: _passwordRepeatController.text,
-                        ),
-                      ),
+                      onChanged: (vl) {
+                        bloc.add(
+                          ChangePasswordAndConfirmPass(
+                            password: vl,
+                            confirmPassword: state.confirmedPassword.value,
+                          ),
+                        );
+                      },
+                    ),
+                    _buildFeedbackValidator(
+                      context,
+                      state,
+                      state.lowercase!,
+                      'Letra minúscula',
+                    ),
+                    _buildFeedbackValidator(
+                      context,
+                      state,
+                      state.uppercase!,
+                      'Letra maiúscula',
+                    ),
+                    _buildFeedbackValidator(
+                      context,
+                      state,
+                      state.atLeast8!,
+                      'Pelo menos 8 caracteres',
                     ),
                     const SizedBox(height: 25),
                     CustomTextField.password(
                       hint: 'Digite a senha novamente',
+                      key: ValueKey(state.confirmedPassword.password),
                       textInputAction: TextInputAction.next,
                       onSubmitted: (_) => FocusScope.of(context).nextFocus(),
                       obscure: state.secondObscure!,
@@ -159,45 +176,52 @@ class SignUpPageView extends StatelessWidget {
                           state.secondObscure!
                               ? Icons.visibility_off
                               : Icons.remove_red_eye,
-                          color: context.theme.colorScheme.primary,
+                          color: context.colors.primary,
                         ),
                       ),
                       validator: (vl) =>
                           state.confirmedPassword.validator(vl ?? '')?.text(),
+
                       onChanged: (vl) {
                         bloc.add(
                           ChangeConfirmPassRequired(
-                            password: _passwordController.text,
+                            password: state.password.value,
                             confirmPassword: vl,
                           ),
                         );
-                        //   _formKey.currentState!.validate();
                       },
-                      error: state.confirmedPassword.displayError != null
-                          ? 'Senhas diferentes'
-                          : null,
+                      // error: state.confirmedPassword.displayError != null
+                      //     ? 'Senhas diferentes'
+                      //     : null,
                     ),
                     const SizedBox(height: 25),
                     CustomTextField.suffixIcon(
                       textEditingController: _phoneController,
                       keyboardType: TextInputType.phone,
                       textInputAction: TextInputAction.send,
+                      validator: (vl) =>
+                          state.phone.validator(vl ?? '')?.text(),
                       autofillHints: const [AutofillHints.telephoneNumber],
+                      inputFormatters: [MaskFormatter.phoneMaskFormatter],
                       hint: 'Telefone',
                       suffixIcon: Icon(
                         Icons.phone,
-                        color: context.theme.colorScheme.primary,
+                        color: context.colors.primary,
                       ),
-                      onSubmitted: (st) => st.isNotEmpty
-                          ? bloc.add(
+                      onSubmitted: (st) {
+                        if (st.isNotEmpty) {
+                          if (_formKey.currentState!.validate()) {
+                            bloc.add(
                               SignUpRequired(
                                 phone: _phoneController.text,
                                 email: _emailController.text,
                                 username: _nameController.text,
                                 password: _passwordRepeatController.text,
                               ),
-                            )
-                          : {},
+                            );
+                          }
+                        }
+                      },
                     ),
                     const SizedBox(height: 25),
                     CustomButton(
@@ -228,15 +252,57 @@ class SignUpPageView extends StatelessWidget {
     );
   }
 
+  /// Widget Section
+  Widget _buildFeedbackValidator(
+    BuildContext context,
+    SignUpState state,
+    bool validator,
+    String desc,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, top: 5),
+      child: Row(
+        children: [
+          validator
+              ? Icon(
+                  Icons.check_circle_outline,
+                  color: context.colors.primary,
+                )
+              : state.password.value.isEmpty
+                  ? Icon(
+                      Icons.check_circle_outline,
+                      color: context.colors.surface,
+                    )
+                  : Icon(
+                      Icons.check_circle_outline,
+                      color: context.colors.error,
+                    ),
+          Text(
+            ' $desc',
+            style: context.text.bodyMedium!.copyWith(
+              color: validator
+                  ? context.colors.primary
+                  : state.password.value.isEmpty
+                      ? context.colors.surface
+                      : context.colors.error,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   /// Dealing with bloc listening
   _handlerListener(BuildContext context, SignUpState state) {
     if (state.isFailure) {
       showCustomSnackBar(context, state.message!);
+      _clearFields();
+      //   context.read<SignUpBloc>().add(const ResetSignUpForm());
+      //  _formKey.currentState!.reset();
+      FocusManager.instance.primaryFocus?.unfocus();
     }
     if (state.isSuccess) {
       showCustomSnackBar(context, state.message!);
-    }
-    if (state.isSuccess) {
       _clearFields();
       FocusManager.instance.primaryFocus?.unfocus();
     }
