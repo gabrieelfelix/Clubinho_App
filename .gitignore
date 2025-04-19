@@ -11,6 +11,12 @@
 migrate_working_dir/
 .env
 firebase_options.dart
+#android/gradle/wrapper/gradle-wrapper.properties
+#android/settings.gradle
+# android/app/.cxx/
+ firebase.json
+
+
 
 # IntelliJ related
 *.iml

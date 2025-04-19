@@ -1,0 +1,2 @@
+C:/Users/FelixFamily/Developer/club_app/android/app/.cxx/Debug/e2z2s284/armeabi-v7a/CMakeFiles/edit_cache.dir
+C:/Users/FelixFamily/Developer/club_app/android/app/.cxx/Debug/e2z2s284/armeabi-v7a/CMakeFiles/rebuild_cache.dir
