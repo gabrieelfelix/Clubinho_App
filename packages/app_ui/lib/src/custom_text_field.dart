@@ -1,6 +1,7 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextField extends StatelessWidget {
   const CustomTextField({
@@ -175,62 +176,68 @@ class CustomTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      maxLines: maxLines,
-      obscureText: obscure ?? false,
-      controller: textEditingController,
-      onChanged: onChanged, //
-      inputFormatters: inputFormatters,
-      onEditingComplete: onEditingComplete, //
-      onFieldSubmitted: onSubmitted, //
-      textInputAction: textInputAction, //
-      autofillHints: autofillHints, //
-      keyboardType: keyboardType, //
-      enableSuggestions: enableSuggestions ?? true, //
-      validator: validator,
-      autocorrect: autocorrect ?? true,
-      style: TextStyle(
-        color: context.colors.onSecondary,
-      ),
-      decoration: InputDecoration(
-        errorText: error != null ? error : null,
-        suffixIcon: suffixIcon,
-        // hintText: hint,
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            width: 2,
-            color: context.colors.onSurfaceVariant,
-          ),
-          borderRadius: BorderRadius.circular(10),
+    return SizedBox(
+      // height: 40.h,
+      // width: 245.h,
+      child: TextFormField(
+        maxLines: maxLines,
+        obscureText: obscure ?? false,
+        controller: textEditingController,
+        onChanged: onChanged, //
+        inputFormatters: inputFormatters,
+        onEditingComplete: onEditingComplete, //
+        onFieldSubmitted: onSubmitted, //
+        textInputAction: textInputAction, //
+        autofillHints: autofillHints, //
+        keyboardType: keyboardType, //
+        enableSuggestions: enableSuggestions ?? true, //
+        validator: validator,
+        autocorrect: autocorrect ?? true,
+        style: TextStyle(
+          color: context.colors.onSecondary,
         ),
-        focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            width: 2,
-            color: context.colors.onSurfaceVariant,
-            // color: GlobalThemeData.lightColorScheme.onSurfaceVariant,
+
+        decoration: InputDecoration(
+          errorText: error != null ? error : null,
+
+          suffixIcon: suffixIcon,
+          // hintText: hint,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              width: 2.w,
+              color: context.colors.onSurfaceVariant,
+            ),
+            borderRadius: BorderRadius.circular(10),
           ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        labelText: hint,
-        labelStyle: TextStyle(color: context.colors.surface),
-        floatingLabelStyle: TextStyle(
-          color: context.colors.primary,
-          // color: GlobalThemeData.lightColorScheme.primary,
-        ),
-        errorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            width: 2,
-            color: context.colors.error,
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              width: 2.w,
+              color: context.colors.onSurfaceVariant,
+              // color: GlobalThemeData.lightColorScheme.onSurfaceVariant,
+            ),
+            borderRadius: BorderRadius.circular(10),
           ),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        focusedErrorBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            width: 2,
-            color: context.colors.error,
-            // color: Colors.red.shade300,
+          labelText: hint,
+          labelStyle: TextStyle(color: context.colors.surface),
+          floatingLabelStyle: TextStyle(
+            color: context.colors.primary,
+            // color: GlobalThemeData.lightColorScheme.primary,
           ),
-          borderRadius: BorderRadius.circular(10),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              width: 2.w,
+              color: context.colors.error,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              width: 2.w,
+              color: context.colors.error,
+              // color: Colors.red.shade300,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       ),
     );

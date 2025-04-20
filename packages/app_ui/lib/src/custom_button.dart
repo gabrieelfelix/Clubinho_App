@@ -1,5 +1,6 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class CustomButton extends StatelessWidget {
@@ -22,7 +23,7 @@ class CustomButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: double.infinity,
+      width: 245.h,
       height: height,
       child: ElevatedButton(
         onPressed: onPressed,
@@ -38,13 +39,13 @@ class CustomButton extends StatelessWidget {
         child: isLoading
             ? LoadingAnimationWidget.waveDots(
                 color: context.colors.onPrimary,
-                size: 30,
+                size: 23.sp,
               )
             : Text(
                 label,
                 style: TextStyle(
                   color: context.colors.onPrimary,
-                  fontSize: 15,
+                  fontSize: 13.sp,
                 ),
               ),
       ),

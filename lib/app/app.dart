@@ -5,6 +5,7 @@ import 'package:club_app/pages/sign_in_page/bloc/authentication_bloc.dart';
 import 'package:club_app/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 // class MainApp extends StatelessWidget {
 //   const MainApp({super.key});
 
@@ -27,14 +28,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider<AuthenticationBloc>(
       create: (context) => authBloc,
-      child: MaterialApp.router(
-        debugShowCheckedModeBanner: false,
-        themeMode: ThemeMode.light,
-        theme: GlobalThemeData.lightThemeData,
-        routerDelegate: AppRouter.router.routerDelegate,
-        routeInformationParser: AppRouter.router.routeInformationParser,
-        routeInformationProvider: AppRouter.router.routeInformationProvider,
-      ),
+      child: ScreenUtilInit(
+          designSize: const Size(360, 640),
+          minTextAdapt: true,
+          splitScreenMode: true,
+          builder: (_, child) {
+            return MaterialApp.router(
+              debugShowCheckedModeBanner: false,
+              themeMode: ThemeMode.light,
+              theme: GlobalThemeData.lightThemeData,
+              routerDelegate: AppRouter.router.routerDelegate,
+              routeInformationParser: AppRouter.router.routeInformationParser,
+              routeInformationProvider:
+                  AppRouter.router.routeInformationProvider,
+            );
+          }),
     );
   }
 }

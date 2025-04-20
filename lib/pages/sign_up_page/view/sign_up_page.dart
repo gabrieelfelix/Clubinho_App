@@ -4,6 +4,7 @@ import 'package:club_app/main.dart';
 import 'package:club_app/pages/sign_up_page/bloc/sign_up_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 // quando digito primeiro o segundo campo de senha quando digito
 // a senha dps disso ele não atualiza so se apertar no o olho
@@ -60,152 +61,178 @@ class SignUpPageView extends StatelessWidget {
         body: SingleChildScrollView(
           child: Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 65),
-              child: Form(
-                key: _formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Hero(
-                        tag: ImageConstant.logoClub,
-                        child: SizedBox(
-                          child: Image.asset(
-                            ImageConstant.logoClub,
-                            filterQuality: FilterQuality.high,
-                            fit: BoxFit.contain,
-                            height: 230,
+              padding: EdgeInsets.symmetric(
+                horizontal: 35.w,
+                //  vertical: 65,
+              ),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: 245.h,
+                ),
+                child: Form(
+                  key: _formKey,
+                  autovalidateMode: AutovalidateMode.onUserInteraction,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(bottom: 5.h),
+                        child: Hero(
+                          tag: ImageConstant.logoClub,
+                          child: SizedBox(
+                            child: Image.asset(
+                              ImageConstant.logoClub,
+                              filterQuality: FilterQuality.high,
+                              fit: BoxFit.contain,
+                              height: 230.h,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Cadastrar-se',
-                        style: context.text.headlineMedium!.copyWith(
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Cadastrar-se',
+                          style: context.text.headlineMedium!.copyWith(
+                            color: context.colors.primary,
+                          ),
+                        ),
+                      ),
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          'Ensine o caminho e eles nunca se desviarão!',
+                          style: context.text.bodyMedium!
+                              .copyWith(color: context.colors.surface),
+                        ),
+                      ),
+                      SizedBox(height: 15.h),
+                      CustomTextField(
+                        hint: 'Nome Completo',
+                        textInputAction: TextInputAction.next,
+                        textEditingController: _nameController,
+                        autofillHints: const [AutofillHints.name],
+                        validator: (vl) =>
+                            state.fullName.validator(vl ?? '')?.text(),
+                      ),
+                      SizedBox(height: 20.h),
+                      CustomTextField.email(
+                        hint: 'Email',
+                        textInputAction: TextInputAction.next,
+                        textEditingController: _emailController,
+                        validator: (vl) =>
+                            state.email.validator(vl ?? '')?.text(),
+                      ),
+                      SizedBox(height: 20.h),
+                      CustomTextField.password(
+                        hint: 'Senha',
+                        onSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                        textInputAction: TextInputAction.next,
+                        obscure: state.obscure!,
+                        textEditingController: _passwordController,
+                        validator: (vl) =>
+                            state.password.validator(vl ?? '')?.text(),
+                        suffixIcon: IconButton(
+                          onPressed: () => bloc.add(
+                              const ChangeObscureRequired(firstObscure: true)),
+                          icon: Icon(
+                            state.obscure!
+                                ? Icons.visibility_off
+                                : Icons.remove_red_eye,
+                          ),
                           color: context.colors.primary,
                         ),
+                        onChanged: (vl) {
+                          bloc.add(
+                            ChangePasswordAndConfirmPass(
+                              password: vl,
+                              confirmPassword: state.confirmedPassword.value,
+                            ),
+                          );
+                        },
                       ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Ensine o caminho e eles nunca se desviarão!',
-                        style: context.text.bodyMedium!
-                            .copyWith(color: context.colors.surface),
+                      _buildFeedbackValidator(
+                        context,
+                        state,
+                        state.lowercase!,
+                        'Letra minúscula',
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    CustomTextField(
-                      hint: 'Nome Completo',
-                      textInputAction: TextInputAction.next,
-                      textEditingController: _nameController,
-                      autofillHints: const [AutofillHints.name],
-                      validator: (vl) =>
-                          state.fullName.validator(vl ?? '')?.text(),
-                    ),
-                    const SizedBox(height: 25),
-                    CustomTextField.email(
-                      hint: 'Email',
-                      textInputAction: TextInputAction.next,
-                      textEditingController: _emailController,
-                      validator: (vl) =>
-                          state.email.validator(vl ?? '')?.text(),
-                    ),
-                    const SizedBox(height: 25),
-                    CustomTextField.password(
-                      hint: 'Senha',
-                      onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                      textInputAction: TextInputAction.next,
-                      obscure: state.obscure!,
-                      textEditingController: _passwordController,
-                      validator: (vl) =>
-                          state.password.validator(vl ?? '')?.text(),
-                      suffixIcon: IconButton(
-                        onPressed: () => bloc.add(
-                            const ChangeObscureRequired(firstObscure: true)),
-                        icon: Icon(
-                          state.obscure!
-                              ? Icons.visibility_off
-                              : Icons.remove_red_eye,
-                        ),
-                        color: context.colors.primary,
+                      _buildFeedbackValidator(
+                        context,
+                        state,
+                        state.uppercase!,
+                        'Letra maiúscula',
                       ),
-                      onChanged: (vl) {
-                        bloc.add(
-                          ChangePasswordAndConfirmPass(
-                            password: vl,
-                            confirmPassword: state.confirmedPassword.value,
+                      _buildFeedbackValidator(
+                        context,
+                        state,
+                        state.atLeast8!,
+                        'Pelo menos 8 caracteres',
+                      ),
+                      SizedBox(height: 20.h),
+                      CustomTextField.password(
+                        hint: 'Digite a senha novamente',
+                        key: ValueKey(state.confirmedPassword.password),
+                        textInputAction: TextInputAction.next,
+                        onSubmitted: (_) => FocusScope.of(context).nextFocus(),
+                        obscure: state.secondObscure!,
+                        textEditingController: _passwordRepeatController,
+                        suffixIcon: IconButton(
+                          onPressed: () =>
+                              bloc.add(const ChangeObscureRequired()),
+                          icon: Icon(
+                            state.secondObscure!
+                                ? Icons.visibility_off
+                                : Icons.remove_red_eye,
+                            color: context.colors.primary,
                           ),
-                        );
-                      },
-                    ),
-                    _buildFeedbackValidator(
-                      context,
-                      state,
-                      state.lowercase!,
-                      'Letra minúscula',
-                    ),
-                    _buildFeedbackValidator(
-                      context,
-                      state,
-                      state.uppercase!,
-                      'Letra maiúscula',
-                    ),
-                    _buildFeedbackValidator(
-                      context,
-                      state,
-                      state.atLeast8!,
-                      'Pelo menos 8 caracteres',
-                    ),
-                    const SizedBox(height: 25),
-                    CustomTextField.password(
-                      hint: 'Digite a senha novamente',
-                      key: ValueKey(state.confirmedPassword.password),
-                      textInputAction: TextInputAction.next,
-                      onSubmitted: (_) => FocusScope.of(context).nextFocus(),
-                      obscure: state.secondObscure!,
-                      textEditingController: _passwordRepeatController,
-                      suffixIcon: IconButton(
-                        onPressed: () =>
-                            bloc.add(const ChangeObscureRequired()),
-                        icon: Icon(
-                          state.secondObscure!
-                              ? Icons.visibility_off
-                              : Icons.remove_red_eye,
+                        ),
+                        validator: (vl) =>
+                            state.confirmedPassword.validator(vl ?? '')?.text(),
+                        onChanged: (vl) {
+                          bloc.add(
+                            ChangeConfirmPassRequired(
+                              password: state.password.value,
+                              confirmPassword: vl,
+                            ),
+                          );
+                        },
+                      ),
+                      SizedBox(height: 20.h),
+                      CustomTextField.suffixIcon(
+                        textEditingController: _phoneController,
+                        keyboardType: TextInputType.phone,
+                        textInputAction: TextInputAction.send,
+                        validator: (vl) =>
+                            state.phone.validator(vl ?? '')?.text(),
+                        autofillHints: const [AutofillHints.telephoneNumber],
+                        inputFormatters: [MaskFormatter.phoneMaskFormatter],
+                        hint: 'Telefone',
+                        suffixIcon: Icon(
+                          Icons.phone,
                           color: context.colors.primary,
                         ),
+                        onSubmitted: (st) {
+                          if (st.isNotEmpty) {
+                            if (_formKey.currentState!.validate()) {
+                              bloc.add(
+                                SignUpRequired(
+                                  phone: _phoneController.text,
+                                  email: _emailController.text,
+                                  username: _nameController.text,
+                                  password: _passwordRepeatController.text,
+                                ),
+                              );
+                            }
+                          }
+                        },
                       ),
-                      validator: (vl) =>
-                          state.confirmedPassword.validator(vl ?? '')?.text(),
-                      onChanged: (vl) {
-                        bloc.add(
-                          ChangeConfirmPassRequired(
-                            password: state.password.value,
-                            confirmPassword: vl,
-                          ),
-                        );
-                      },
-                    ),
-                    const SizedBox(height: 25),
-                    CustomTextField.suffixIcon(
-                      textEditingController: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      textInputAction: TextInputAction.send,
-                      validator: (vl) =>
-                          state.phone.validator(vl ?? '')?.text(),
-                      autofillHints: const [AutofillHints.telephoneNumber],
-                      inputFormatters: [MaskFormatter.phoneMaskFormatter],
-                      hint: 'Telefone',
-                      suffixIcon: Icon(
-                        Icons.phone,
-                        color: context.colors.primary,
-                      ),
-                      onSubmitted: (st) {
-                        if (st.isNotEmpty) {
+                      SizedBox(height: 20.h),
+                      CustomButton(
+                        label: 'Cadastrar',
+                        isLoading: state.isLoading,
+                        height: 35.h,
+                        onPressed: () {
                           if (_formKey.currentState!.validate()) {
                             bloc.add(
                               SignUpRequired(
@@ -216,29 +243,11 @@ class SignUpPageView extends StatelessWidget {
                               ),
                             );
                           }
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 25),
-                    CustomButton(
-                      label: 'Cadastrar',
-                      isLoading: state.isLoading,
-                      height: 50,
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          bloc.add(
-                            SignUpRequired(
-                              phone: _phoneController.text,
-                              email: _emailController.text,
-                              username: _nameController.text,
-                              password: _passwordRepeatController.text,
-                            ),
-                          );
-                        }
-                      },
-                    ),
-                    const SizedBox(height: 28),
-                  ],
+                        },
+                      ),
+                      const SizedBox(height: 28),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -256,7 +265,7 @@ class SignUpPageView extends StatelessWidget {
     String desc,
   ) {
     return Padding(
-      padding: const EdgeInsets.only(left: 10, top: 5),
+      padding: EdgeInsets.only(left: 10.w, top: 5.h),
       child: Row(
         children: [
           validator

@@ -1,27 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-const textTheme = TextTheme(
+final textTheme = TextTheme(
   headlineMedium: TextStyle(
     // "Entrar"
-    fontSize: 22,
+    fontSize: 22.sp,
     fontWeight: FontWeight.bold,
   ),
   bodyMedium: TextStyle(
     // "Ganhe corações para Jesus..."
-    fontSize: 15,
+    fontSize: 13.sp,
   ),
   bodySmall: TextStyle(
     // "Esqueceu a senha?"
-    fontSize: 15,
+    fontSize: 13.sp,
   ),
   labelLarge: TextStyle(
     // "Clique aqui" e "Cadastre-se"
-    fontSize: 15,
+    fontSize: 13.sp,
     fontWeight: FontWeight.bold,
   ),
   titleMedium: TextStyle(
     // Texto do botão "Entrar"
-    fontSize: 15,
+    fontSize: 13.sp,
     fontWeight: FontWeight.bold,
   ),
 );

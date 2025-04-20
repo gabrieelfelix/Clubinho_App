@@ -6,6 +6,7 @@ import 'package:club_app/routes/routes.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
 // responsividade
@@ -50,121 +51,136 @@ class SignInPageView extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
-        body: SingleChildScrollView(
-          child: Center(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 35, vertical: 65),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20),
-                      child: Hero(
-                        tag: ImageConstant.logoClub,
-                        child: SizedBox(
-                          child: Image.asset(
-                            ImageConstant.logoClub,
-                            filterQuality: FilterQuality.high,
-                            fit: BoxFit.contain,
-                            height: 230,
-                          ),
-                        ),
-                      ),
+        body: LayoutBuilder(
+          builder: (context, constraints) {
+            return SingleChildScrollView(
+              child: Center(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 35.w,
+                    // vertical: 65.h,
+                  ),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                      maxWidth: 245.h,
                     ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Entrar',
-                        style: context.text.headlineMedium!.copyWith(
-                          color: context.colors.primary,
-                        ),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Ganhe corações para Jesus desde a infância!',
-                        style: context.text.bodyMedium!
-                            .copyWith(color: context.colors.surface),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    CustomTextField.email(
-                      hint: 'Email',
-                      textInputAction: TextInputAction.next,
-                      textEditingController: _emailController,
-                      validator: (value) =>
-                          state.email.validator(value ?? '')?.text(),
-                    ),
-                    const SizedBox(height: 15),
-                    CustomTextField.password(
-                      obscure: state.obscure,
-                      textInputAction: TextInputAction.send,
-                      validator: (value) =>
-                          state.password.validator(value ?? '')?.text(),
-                      suffixIcon: IconButton(
-                        onPressed: () => bloc.add(ChangeObscureRequired()),
-                        icon: Icon(
-                          state.obscure!
-                              ? Icons.visibility_off
-                              : Icons.remove_red_eye,
-                        ),
-                        color: context.colors.primary,
-                      ),
-                      hint: 'Senha',
-                      textEditingController: _passwordController,
-                      onSubmitted: (st) => st.isNotEmpty
-                          ? bloc.add(
-                              SignInRequired(
-                                email: _emailController.text,
-                                password: _passwordController.text,
-                              ),
-                            )
-                          : {},
-                    ),
-                    const SizedBox(height: 15),
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child: _buildTextHiperLink(
-                        context: context,
-                        text: 'Esqueceu a senha?',
-                        textLink: 'Clique aqui',
-                        onTap: () {},
-                      ),
-                    ),
-                    const SizedBox(height: 60),
-                    CustomButton(
-                      label: 'Entrar',
-                      isLoading: state.isProgress,
-                      height: 50,
-                      onPressed: () {
-                        _formKey.currentState!.validate()
-                            ? bloc.add(
-                                SignInRequired(
-                                  email: _emailController.text,
-                                  password: _passwordController.text,
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.only(bottom: 5.h),
+                            child: Hero(
+                              tag: ImageConstant.logoClub,
+                              child: SizedBox(
+                                child: Image.asset(
+                                  ImageConstant.logoClub,
+                                  filterQuality: FilterQuality.high,
+                                  fit: BoxFit.contain,
+                                  height: 230.h,
                                 ),
-                              )
-                            : null;
-                      },
-                    ),
-                    const SizedBox(height: 15),
-                    Align(
-                      alignment: Alignment.center,
-                      child: _buildTextHiperLink(
-                        context: context,
-                        text: 'Não tem uma conta? ',
-                        textLink: 'Cadastre-se',
-                        onTap: () => onTapSignUp(context),
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Entrar',
+                              style: context.text.headlineMedium!.copyWith(
+                                color: context.colors.primary,
+                              ),
+                            ),
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              'Ganhe corações para Jesus desde a infância!',
+                              style: context.text.bodyMedium!
+                                  .copyWith(color: context.colors.surface),
+                            ),
+                          ),
+                          SizedBox(height: 17.h),
+                          CustomTextField.email(
+                            hint: 'Email',
+                            textInputAction: TextInputAction.next,
+                            textEditingController: _emailController,
+                            validator: (value) =>
+                                state.email.validator(value ?? '')?.text(),
+                          ),
+                          SizedBox(height: 13.h),
+                          CustomTextField.password(
+                            obscure: state.obscure,
+                            textInputAction: TextInputAction.send,
+                            validator: (value) =>
+                                state.password.validator(value ?? '')?.text(),
+                            suffixIcon: IconButton(
+                              onPressed: () =>
+                                  bloc.add(ChangeObscureRequired()),
+                              icon: Icon(
+                                state.obscure!
+                                    ? Icons.visibility_off
+                                    : Icons.remove_red_eye,
+                              ),
+                              color: context.colors.primary,
+                            ),
+                            hint: 'Senha',
+                            textEditingController: _passwordController,
+                            onSubmitted: (st) => st.isNotEmpty
+                                ? bloc.add(
+                                    SignInRequired(
+                                      email: _emailController.text,
+                                      password: _passwordController.text,
+                                    ),
+                                  )
+                                : {},
+                          ),
+                          SizedBox(height: 13.h),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: _buildTextHiperLink(
+                              context: context,
+                              text: 'Esqueceu a senha?',
+                              textLink: 'Clique aqui',
+                              onTap: () {},
+                            ),
+                          ),
+                          SizedBox(height: 50.h),
+                          CustomButton(
+                            label: 'Entrar',
+                            isLoading: state.isProgress,
+                            height: 35.h,
+                            onPressed: () {
+                              _formKey.currentState!.validate()
+                                  ? bloc.add(
+                                      SignInRequired(
+                                        email: _emailController.text,
+                                        password: _passwordController.text,
+                                      ),
+                                    )
+                                  : null;
+                            },
+                          ),
+                          SizedBox(height: 13.h),
+                          Align(
+                            alignment: Alignment.center,
+                            child: _buildTextHiperLink(
+                              context: context,
+                              text: 'Não tem uma conta? ',
+                              textLink: 'Cadastre-se',
+                              onTap: () => onTapSignUp(context),
+                            ),
+                          ),
+                          SizedBox(height: 13.h),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );
