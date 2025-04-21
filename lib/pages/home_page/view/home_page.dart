@@ -80,7 +80,7 @@ class HomeScreenView extends StatelessWidget {
       ),
       actions: [
         Padding(
-          padding: EdgeInsets.only(right: 25.w),
+          padding: EdgeInsets.only(right: 10.w),
           child: IconButton(
             onPressed: () {},
             icon: const Icon(Icons.notifications),
@@ -100,12 +100,14 @@ class HomeScreenView extends StatelessWidget {
       automaticallyImplyLeading: false,
       backgroundColor: context.colors.primary,
       bottom: TabBar(
+        isScrollable: true,
         labelColor: context.colors.onPrimary,
         unselectedLabelColor: context.colors.onPrimary.withOpacity(0.6),
         dividerColor: Colors.transparent,
+        tabAlignment: TabAlignment.center,
         tabs: [
           const Tab(
-            text: 'Estatisticas Gerais Dashboard',
+            text: 'Estatisticas Gerais',
           ),
           const Tab(
             text: 'Clubinhos',
