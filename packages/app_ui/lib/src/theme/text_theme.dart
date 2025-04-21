@@ -17,6 +17,10 @@ final textTheme = TextTheme(
     // "Esqueceu a senha?"
     fontSize: 13.sp,
   ),
+  labelSmall: TextStyle(
+    fontWeight: FontWeight.w600,
+    fontSize: 12.sp,
+  ),
   labelLarge: TextStyle(
     // "Clique aqui" e "Cadastre-se"
     fontSize: 13.sp,

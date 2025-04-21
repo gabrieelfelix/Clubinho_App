@@ -101,8 +101,12 @@ class HomeScreenView extends StatelessWidget {
       backgroundColor: context.colors.primary,
       bottom: TabBar(
         isScrollable: true,
-        labelColor: context.colors.onPrimary,
-        unselectedLabelColor: context.colors.onPrimary.withOpacity(0.6),
+        unselectedLabelStyle: context.text.labelSmall!.copyWith(
+          color: context.colors.onPrimary.withOpacity(0.6),
+        ),
+        labelStyle: context.text.labelSmall!.copyWith(
+          color: context.colors.onPrimary,
+        ),
         dividerColor: Colors.transparent,
         tabAlignment: TabAlignment.center,
         tabs: [
