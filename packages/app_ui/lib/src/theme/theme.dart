@@ -24,7 +24,7 @@ class GlobalThemeData {
       textTheme: textTheme,
       colorScheme: colorScheme,
       canvasColor: colorScheme.background,
-      scaffoldBackgroundColor: colorScheme.background,
+      // scaffoldBackgroundColor: colorScheme.background,
       // highlightColor: Colors.transparent,
     );
   }

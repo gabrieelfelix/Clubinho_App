@@ -58,6 +58,7 @@ class SignUpPageView extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        backgroundColor: context.colors.onBackground,
         body: SingleChildScrollView(
           child: Center(
             child: Padding(

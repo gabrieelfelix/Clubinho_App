@@ -55,7 +55,6 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   formz: ^0.8.0
   flutter_screenutil: ^5.9.3
-  
   ########
   device_preview: ^1.2.0
 

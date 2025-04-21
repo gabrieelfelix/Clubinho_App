@@ -20,6 +20,11 @@ class CacheClient {
     if (value is T) return value;
     return null;
   }
+
+  /// Clears the entire cache.
+  static void clear() {
+    _instance._cache.clear();
+  }
 }
 // _cache.write(key: userCacheKey, value: user);
 // _cache.read<User>(key: userCacheKey) ?? User.empty;

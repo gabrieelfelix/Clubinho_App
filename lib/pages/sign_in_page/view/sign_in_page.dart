@@ -9,8 +9,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-// responsividade
 // validações
+// só permitir o login com o email verificado
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
 
@@ -51,6 +51,7 @@ class SignInPageView extends StatelessWidget {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
+        backgroundColor: context.colors.onBackground,
         body: LayoutBuilder(
           builder: (context, constraints) {
             return SingleChildScrollView(

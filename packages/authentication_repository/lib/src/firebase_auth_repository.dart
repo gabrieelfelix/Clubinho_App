@@ -120,6 +120,7 @@ class FirebaseAuthRepository implements IAuthenticationRepository {
   @override
   Future<void> logOut() async {
     await _firebaseAuth.signOut();
+    CacheClient.clear();
   }
 
   @override

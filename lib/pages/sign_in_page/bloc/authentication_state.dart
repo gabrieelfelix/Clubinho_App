@@ -60,4 +60,5 @@ extension HomePageStateExtensions on AuthenticationState {
   bool get isFailure => state == FormzSubmissionStatus.failure;
   bool get isProgress => state == FormzSubmissionStatus.inProgress;
   bool get isSuccess => state == FormzSubmissionStatus.success;
+  bool get isCanceled => state == FormzSubmissionStatus.canceled;
 }

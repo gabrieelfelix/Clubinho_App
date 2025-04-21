@@ -1,5 +1,7 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 final textTheme = TextTheme(
   headlineMedium: TextStyle(
@@ -24,5 +26,10 @@ final textTheme = TextTheme(
     // Texto do botão "Entrar"
     fontSize: 13.sp,
     fontWeight: FontWeight.bold,
+  ),
+  titleLarge: GoogleFonts.roboto(
+    fontSize: 11.sp,
+    fontWeight: FontWeight.w900,
+    color: GlobalThemeData.lightColorScheme.onPrimary,
   ),
 );
