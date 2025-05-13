@@ -64,7 +64,6 @@ class FirebaseAuthRepository implements IAuthenticationRepository {
         email: email.trim(),
         password: password.trim(),
       );
-
       // Saves the userId as the document name in the "teachers" collection in Firestore
       final String userId = userCredential.user!.uid;
 

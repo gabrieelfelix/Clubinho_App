@@ -31,7 +31,7 @@ class CreateUserWithEmailAndPasswordFailure extends Failure {
         return const CreateUserWithEmailAndPasswordFailure(
           'Erro interno no servidor. Por favor, tente novamente mais tarde.',
         );
-      case 'email-already-exists':
+      case 'email-already-in-use':
         return const CreateUserWithEmailAndPasswordFailure(
           'Este email já está cadastrado. Por favor, faça login ou use outro email.',
         );
