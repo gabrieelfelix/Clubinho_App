@@ -34,7 +34,8 @@ class SignUpBloc extends Bloc<ISignUpEvent, SignUpState> {
     if (state.isLoading) return;
 
     emit(
-      const SignUpState.loading().copyWith(
+      state.copyWith(
+        state: FormzSubmissionStatus.inProgress,
         obscure: isObscure,
         secondObscure: isSecondObscure,
       ),
@@ -55,9 +56,11 @@ class SignUpBloc extends Bloc<ISignUpEvent, SignUpState> {
         ),
       ),
       (failure) => emit(
-        SignUpState.failure(message: failure.message).copyWith(
+        state.copyWith(
+          state: FormzSubmissionStatus.failure,
           obscure: isObscure,
           secondObscure: isSecondObscure,
+          message: failure.message,
         ),
       ),
     );
@@ -100,7 +103,7 @@ class SignUpBloc extends Bloc<ISignUpEvent, SignUpState> {
       state.copyWith(
         confirmedPassword: confirmedPassword,
         password: Password.dirty(event.password),
-        state: currentState,
+        state: state.isLoading ? currentState : FormzSubmissionStatus.initial,
       ),
     );
   }
@@ -153,7 +156,7 @@ class SignUpBloc extends Bloc<ISignUpEvent, SignUpState> {
         atLeast8: RegExp(r'.{8,}').hasMatch(event.password),
         lowercase: RegExp(r'[a-z]').hasMatch(event.password),
         uppercase: RegExp(r'[A-Z]').hasMatch(event.password),
-        state: currentState,
+        state: state.isLoading ? currentState : FormzSubmissionStatus.initial,
       ),
     );
   }

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   const CustomTextField({
     super.key,
     required this.hint,
@@ -14,6 +14,7 @@ class CustomTextField extends StatelessWidget {
     this.onEditingComplete,
     this.validator,
     this.autofillHints,
+    this.autovalidateMode,
     this.onChanged,
     this.error,
     this.inputFormatters,
@@ -36,6 +37,7 @@ class CustomTextField extends StatelessWidget {
     this.validator,
     this.onSubmitted,
     this.onEditingComplete,
+    this.autovalidateMode,
     this.onChanged,
     this.error,
     this.inputFormatters,
@@ -57,6 +59,7 @@ class CustomTextField extends StatelessWidget {
     this.onEditingComplete,
     this.onSubmitted,
     this.keyboardType,
+    this.autovalidateMode,
     this.autofillHints,
     this.validator,
     this.onChanged,
@@ -77,6 +80,7 @@ class CustomTextField extends StatelessWidget {
     required this.textEditingController,
     required this.textInputAction,
     this.onEditingComplete,
+    this.autovalidateMode,
     this.onSubmitted,
     this.keyboardType,
     this.autofillHintsBool,
@@ -101,6 +105,7 @@ class CustomTextField extends StatelessWidget {
     this.onEditingComplete,
     this.onChanged,
     this.error,
+    this.autovalidateMode,
     this.inputFormatters,
   })  : maxLines = 1,
         obscure = false,
@@ -118,6 +123,7 @@ class CustomTextField extends StatelessWidget {
     required this.hint,
     required int max,
     this.onSubmitted,
+    this.autovalidateMode,
     this.onEditingComplete,
     required this.textEditingController,
     this.validator,
@@ -168,6 +174,8 @@ class CustomTextField extends StatelessWidget {
 
   final bool isPhone;
 
+  final AutovalidateMode? autovalidateMode;
+
   final List<TextInputFormatter>? inputFormatters;
 
   final Function(String)? onChanged;
@@ -175,32 +183,66 @@ class CustomTextField extends StatelessWidget {
   final TextEditingController? textEditingController;
 
   @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  final FocusNode _focusNode = FocusNode();
+  bool _hasInteracted = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(_handleFocusChange);
+  }
+
+  void _handleFocusChange() {
+    if (!_focusNode.hasFocus && !_hasInteracted) {
+      setState(() {
+        _hasInteracted = true;
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    _focusNode.removeListener(_handleFocusChange);
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SizedBox(
       // height: 40.h,
       // width: 245.h,
       child: TextFormField(
-        maxLines: maxLines,
-        obscureText: obscure ?? false,
-        controller: textEditingController,
-        onChanged: onChanged, //
-        inputFormatters: inputFormatters,
-        onEditingComplete: onEditingComplete, //
-        onFieldSubmitted: onSubmitted, //
-        textInputAction: textInputAction, //
-        autofillHints: autofillHints, //
-        keyboardType: keyboardType, //
-        enableSuggestions: enableSuggestions ?? true, //
-        validator: validator,
-        autocorrect: autocorrect ?? true,
+        focusNode: _focusNode,
+        autovalidateMode: widget.autovalidateMode ??
+            (_hasInteracted
+                ? AutovalidateMode.onUserInteraction
+                : AutovalidateMode.onUnfocus),
+        maxLines: widget.maxLines,
+        obscureText: widget.obscure ?? false,
+        controller: widget.textEditingController,
+        onChanged: widget.onChanged, //
+        inputFormatters: widget.inputFormatters,
+        onEditingComplete: widget.onEditingComplete, //
+        onFieldSubmitted: widget.onSubmitted, //
+        textInputAction: widget.textInputAction, //
+        autofillHints: widget.autofillHints, //
+        keyboardType: widget.keyboardType, //
+        enableSuggestions: widget.enableSuggestions ?? true, //
+        validator: widget.validator,
+        autocorrect: widget.autocorrect ?? true,
         style: TextStyle(
           color: context.colors.onSecondary,
         ),
 
         decoration: InputDecoration(
-          errorText: error != null ? error : null,
+          errorText: widget.error != null ? widget.error : null,
 
-          suffixIcon: suffixIcon,
+          suffixIcon: widget.suffixIcon,
           // hintText: hint,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
@@ -217,7 +259,7 @@ class CustomTextField extends StatelessWidget {
             ),
             borderRadius: BorderRadius.circular(10),
           ),
-          labelText: hint,
+          labelText: widget.hint,
           labelStyle: TextStyle(color: context.colors.surface),
           floatingLabelStyle: TextStyle(
             color: context.colors.primary,

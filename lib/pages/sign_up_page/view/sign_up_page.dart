@@ -5,6 +5,7 @@ import 'package:club_app/pages/sign_up_page/bloc/sign_up_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:go_router/go_router.dart';
 
 // quando digito primeiro o segundo campo de senha quando digito
 // a senha dps disso ele não atualiza so se apertar no o olho
@@ -72,7 +73,6 @@ class SignUpPageView extends StatelessWidget {
                 ),
                 child: Form(
                   key: _formKey,
-                  autovalidateMode: AutovalidateMode.onUserInteraction,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
@@ -173,7 +173,6 @@ class SignUpPageView extends StatelessWidget {
                       SizedBox(height: 20.h),
                       CustomTextField.password(
                         hint: 'Digite a senha novamente',
-                        key: ValueKey(state.confirmedPassword.password),
                         textInputAction: TextInputAction.next,
                         onSubmitted: (_) => FocusScope.of(context).nextFocus(),
                         obscure: state.secondObscure!,
@@ -302,23 +301,12 @@ class SignUpPageView extends StatelessWidget {
   _handlerListener(BuildContext context, SignUpState state) {
     if (state.isFailure) {
       showCustomSnackBar(context, state.message!);
-      _clearFields();
-      //   context.read<SignUpBloc>().add(const ResetSignUpForm());
-      //  _formKey.currentState!.reset();
       FocusManager.instance.primaryFocus?.unfocus();
     }
     if (state.isSuccess) {
       showCustomSnackBar(context, state.message!);
-      _clearFields();
       FocusManager.instance.primaryFocus?.unfocus();
+      context.pop();
     }
-  }
-
-  void _clearFields() {
-    _phoneController.clear();
-    _emailController.clear();
-    _passwordController.clear();
-    _passwordRepeatController.clear();
-    _nameController.clear();
   }
 }
