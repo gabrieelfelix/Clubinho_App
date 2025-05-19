@@ -41,9 +41,17 @@ class TakeAttendanceView extends StatelessWidget {
   /// Dealing with bloc listening
   _handlerListener(BuildContext context, AttendanceBlocState state) {
     if (state.isFailure) {
-      showCustomSnackBar(context, state.message!);
+      showCustomSnackBar(
+        context,
+        state.message!,
+        type: SnackBarType.error,
+      );
     } else if (state.isSuccess) {
-      showCustomSnackBar(context, state.message ?? 'Carregado!');
+      showCustomSnackBar(
+        context,
+        state.message ?? 'Carregado!',
+        type: SnackBarType.success,
+      );
     }
   }
 

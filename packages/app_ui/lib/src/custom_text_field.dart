@@ -1,3 +1,5 @@
+// ignore_for_file: prefer_if_null_operators
+
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -166,8 +168,6 @@ class CustomTextField extends StatefulWidget {
 
   final String? Function(String?)? validator;
 
-  // final FutureOr<String?> Function(PhoneNumber?)? validatorPhone;
-
   final String? error;
 
   final bool? obscure;
@@ -188,7 +188,76 @@ class CustomTextField extends StatefulWidget {
 
 class _CustomTextFieldState extends State<CustomTextField> {
   final FocusNode _focusNode = FocusNode();
+
   bool _hasInteracted = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      child: TextFormField(
+        focusNode: _focusNode,
+        autovalidateMode: widget.autovalidateMode ??
+            (_hasInteracted
+                ? AutovalidateMode.onUserInteraction
+                : AutovalidateMode.onUnfocus //
+            ),
+        maxLines: widget.maxLines,
+        obscureText: widget.obscure ?? false,
+        controller: widget.textEditingController,
+        onChanged: widget.onChanged, //
+        inputFormatters: widget.inputFormatters,
+        onEditingComplete: widget.onEditingComplete, //
+        onFieldSubmitted: widget.onSubmitted, //
+        textInputAction: widget.textInputAction, //
+        autofillHints: widget.autofillHints, //
+        keyboardType: widget.keyboardType, //
+        enableSuggestions: widget.enableSuggestions ?? true, //
+        validator: widget.validator,
+        autocorrect: widget.autocorrect ?? true,
+        style: TextStyle(
+          color: context.colors.onSecondary,
+        ),
+
+        decoration: InputDecoration(
+          errorText: widget.error != null ? widget.error : null,
+          suffixIcon: widget.suffixIcon,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              width: 2.w,
+              color: context.colors.onSurfaceVariant,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              width: 2.w,
+              color: context.colors.onSurfaceVariant,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          labelText: widget.hint,
+          labelStyle: TextStyle(color: context.colors.surface),
+          floatingLabelStyle: TextStyle(
+            color: context.colors.primary,
+          ),
+          errorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              width: 2.w,
+              color: context.colors.error,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              width: 2.w,
+              color: context.colors.error,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   void initState() {
@@ -209,79 +278,5 @@ class _CustomTextFieldState extends State<CustomTextField> {
     _focusNode.removeListener(_handleFocusChange);
     _focusNode.dispose();
     super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      // height: 40.h,
-      // width: 245.h,
-      child: TextFormField(
-        focusNode: _focusNode,
-        autovalidateMode: widget.autovalidateMode ??
-            (_hasInteracted
-                ? AutovalidateMode.onUserInteraction
-                : AutovalidateMode.onUnfocus),
-        maxLines: widget.maxLines,
-        obscureText: widget.obscure ?? false,
-        controller: widget.textEditingController,
-        onChanged: widget.onChanged, //
-        inputFormatters: widget.inputFormatters,
-        onEditingComplete: widget.onEditingComplete, //
-        onFieldSubmitted: widget.onSubmitted, //
-        textInputAction: widget.textInputAction, //
-        autofillHints: widget.autofillHints, //
-        keyboardType: widget.keyboardType, //
-        enableSuggestions: widget.enableSuggestions ?? true, //
-        validator: widget.validator,
-        autocorrect: widget.autocorrect ?? true,
-        style: TextStyle(
-          color: context.colors.onSecondary,
-        ),
-
-        decoration: InputDecoration(
-          errorText: widget.error != null ? widget.error : null,
-
-          suffixIcon: widget.suffixIcon,
-          // hintText: hint,
-          enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              width: 2.w,
-              color: context.colors.onSurfaceVariant,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              width: 2.w,
-              color: context.colors.onSurfaceVariant,
-              // color: GlobalThemeData.lightColorScheme.onSurfaceVariant,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          labelText: widget.hint,
-          labelStyle: TextStyle(color: context.colors.surface),
-          floatingLabelStyle: TextStyle(
-            color: context.colors.primary,
-            // color: GlobalThemeData.lightColorScheme.primary,
-          ),
-          errorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              width: 2.w,
-              color: context.colors.error,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderSide: BorderSide(
-              width: 2.w,
-              color: context.colors.error,
-              // color: Colors.red.shade300,
-            ),
-            borderRadius: BorderRadius.circular(10),
-          ),
-        ),
-      ),
-    );
   }
 }

@@ -65,9 +65,17 @@ class DetailPageView extends StatelessWidget {
     return BlocConsumer<DetailPageCubit, DetailPageState>(
       listener: (context, state) {
         if (state is DetailPageSuccess) {
-          showCustomSnackBar(context, state.message!);
+          showCustomSnackBar(
+            context,
+            state.message!,
+            type: SnackBarType.success,
+          );
         } else if (state is DetailPageFailure) {
-          showCustomSnackBar(context, state.message);
+          showCustomSnackBar(
+            context,
+            state.message,
+            type: SnackBarType.error,
+          );
         }
       },
       builder: (context, state) {
@@ -117,7 +125,11 @@ class DetailPageView extends StatelessWidget {
     return BlocConsumer<DetailPageCubit, DetailPageState>(
       listener: (context, state) {
         if (state is DetailPageSuccess) {
-          showCustomSnackBar(context, state.message!);
+          showCustomSnackBar(
+            context,
+            state.message!,
+            type: SnackBarType.success,
+          );
         }
       },
       builder: (context, state) {

@@ -300,11 +300,19 @@ class SignUpPageView extends StatelessWidget {
   /// Dealing with bloc listening
   _handlerListener(BuildContext context, SignUpState state) {
     if (state.isFailure) {
-      showCustomSnackBar(context, state.message!);
+      showCustomSnackBar(
+        context,
+        state.message!,
+        type: SnackBarType.error,
+      );
       FocusManager.instance.primaryFocus?.unfocus();
     }
     if (state.isSuccess) {
-      showCustomSnackBar(context, state.message!);
+      showCustomSnackBar(
+        context,
+        state.message!,
+        type: SnackBarType.success,
+      );
       FocusManager.instance.primaryFocus?.unfocus();
       context.pop();
     }

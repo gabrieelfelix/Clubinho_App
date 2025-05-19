@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:club_app/main.dart';
@@ -9,7 +11,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-// validações
 // só permitir o login com o email verificado
 class SignInPage extends StatelessWidget {
   const SignInPage({super.key});
@@ -106,16 +107,18 @@ class SignInPageView extends StatelessWidget {
                           CustomTextField.email(
                             hint: 'Email',
                             textInputAction: TextInputAction.next,
+                            autovalidateMode: AutovalidateMode.disabled,
                             textEditingController: _emailController,
-                            validator: (value) =>
-                                state.email.validator(value ?? '')?.text(),
+                            // validator: (value) =>
+                            //     state.email.validator(value ?? '')?.text(),
                           ),
                           SizedBox(height: 13.h),
                           CustomTextField.password(
                             obscure: state.obscure,
                             textInputAction: TextInputAction.send,
-                            validator: (value) =>
-                                state.password.validator(value ?? '')?.text(),
+                            autovalidateMode: AutovalidateMode.disabled,
+                            // validator: (value) =>
+                            //     state.password.validator(value ?? '')?.text(),
                             suffixIcon: IconButton(
                               onPressed: () =>
                                   bloc.add(ChangeObscureRequired()),
@@ -190,10 +193,18 @@ class SignInPageView extends StatelessWidget {
   /// Dealing with bloc listening
   _handlerListener(BuildContext context, AuthenticationState state) {
     if (state.isFailure) {
-      showCustomSnackBar(context, state.message!);
+      showCustomSnackBar(
+        context,
+        state.message!,
+        type: SnackBarType.error,
+      );
     }
     if (state.isSuccess) {
-      showCustomSnackBar(context, state.message!);
+      showCustomSnackBar(
+        context,
+        state.message!,
+        type: SnackBarType.success,
+      );
       onTapLogin(context);
     }
   }

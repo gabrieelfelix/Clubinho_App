@@ -77,9 +77,17 @@ class ManageUsersView extends StatelessWidget {
   /// Dealing with bloc listening
   _handlerListener(BuildContext context, ManageMemberState state) {
     if (state.isFailure) {
-      showCustomSnackBar(context, state.message!);
+      showCustomSnackBar(
+        context,
+        state.message!,
+        type: SnackBarType.error,
+      );
     } else if (state.isLoaded) {
-      showCustomSnackBar(context, 'Carregado!');
+      showCustomSnackBar(
+        context,
+        'Carregado!',
+        type: SnackBarType.success,
+      );
     }
   }
 

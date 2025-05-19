@@ -148,9 +148,17 @@ class ChildRegistrationView extends StatelessWidget {
   /// Dealing with bloc listening
   _handlerListener(BuildContext context, ChildRegistrationState state) {
     if (state is ChildRegistrationSuccess) {
-      showCustomSnackBar(context, state.message);
+      showCustomSnackBar(
+        context,
+        state.message,
+        type: SnackBarType.success,
+      );
     } else if (state is ChildRegistrationFailure) {
-      showCustomSnackBar(context, state.message);
+      showCustomSnackBar(
+        context,
+        state.message,
+        type: SnackBarType.error,
+      );
     }
   }
 

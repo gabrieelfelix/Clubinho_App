@@ -108,36 +108,6 @@ class SignUpBloc extends Bloc<ISignUpEvent, SignUpState> {
     );
   }
 
-  // Future<void> _onChangePassRequired(
-  //   ChangePassRequired event,
-  //   Emitter<SignUpState> emit,
-  // ) async {
-  //   final currentState = state.state;
-
-  //   final newPassword = Password.dirty(event.password);
-  //   final confirmedPassword = ConfirmedPassword.dirty(
-  //     password: newPassword.value,
-  //     value: state.confirmedPassword.value,
-  //   );
-
-  //   final passValue = newPassword.value;
-
-  //   final hasUppercase = RegExp(r'[A-Z]').hasMatch(passValue);
-  //   final hasLowercase = RegExp(r'[a-z]').hasMatch(passValue);
-  //   final hasMinLength = passValue.length >= 8;
-
-  //   emit(
-  //     state.copyWith(
-  //       password: newPassword,
-  //       confirmedPassword: confirmedPassword,
-  //       atLeast8: hasMinLength,
-  //       lowercase: hasLowercase,
-  //       uppercase: hasUppercase,
-  //       state: currentState,
-  //     ),
-  //   );
-  // }
-
   Future<void> _onChangePasswordAndConfirmPass(
     ChangePasswordAndConfirmPass event,
     Emitter<SignUpState> emit,
