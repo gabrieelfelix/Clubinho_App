@@ -1,10 +1,13 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:club_app/main.dart';
+import 'package:club_app/pages/clubs_page/bloc/clubs_bloc.dart';
 import 'package:club_app/pages/clubs_page/view/clubs_page.dart';
 import 'package:club_app/pages/sign_in_page/bloc/authentication_bloc.dart';
+import 'package:club_app/pages/users_manage/bloc/users_manage_bloc.dart';
 import 'package:club_app/pages/users_manage/view/users_manage_page.dart';
 import 'package:club_app/routes/routes.dart';
 import 'package:club_app/utils/constants.dart';
+import 'package:club_repository/club_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:app_ui/app_ui.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,10 +19,19 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AuthenticationBloc(
-        authRepository: getIt<IAuthenticationRepository>(),
-      ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => ClubsBloc(
+            clubRepository: getIt<IClubRepository>(),
+          )..add(GetClubsRequired()),
+        ),
+        BlocProvider(
+          create: (_) => UsersManageBloc(
+            authenticationRepository: getIt<IAuthenticationRepository>(),
+          )..add(GetAllUsersRequired()),
+        ),
+      ],
       child: const HomeScreenView(),
     );
   }
@@ -46,11 +58,9 @@ class HomeScreenView extends StatelessWidget {
           body: TabBarView(
             children: [
               Container(color: Colors.blue),
-              const ClubsPage(),
-              if (isAdmin) const UsersManagePage(),
-              Container(
-                color: Colors.red,
-              )
+              ClubsPageView(),
+              if (isAdmin) const UsersManageView(),
+              Container(color: Colors.red),
             ],
           ),
         ),

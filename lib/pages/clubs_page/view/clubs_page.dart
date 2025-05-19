@@ -1,27 +1,25 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
-import 'package:club_app/main.dart';
 import 'package:club_app/pages/clubs_page/bloc/clubs_bloc.dart';
 import 'package:club_app/routes/routes.dart';
 import 'package:club_app/utils/constants.dart';
-import 'package:club_repository/club_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:go_router/go_router.dart';
 
-class ClubsPage extends StatelessWidget {
-  const ClubsPage({super.key});
+// class ClubsPage extends StatelessWidget {
+//   const ClubsPage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => ClubsBloc(clubRepository: getIt<IClubRepository>())
-        ..add(GetClubsRequired()),
-      child: ClubsPageView(),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocProvider(
+//       create: (context) => ClubsBloc(clubRepository: getIt<IClubRepository>())
+//         ..add(GetClubsRequired()),
+//       child: ClubsPageView(),
+//     );
+//   }
+// }
 
 // ignore: must_be_immutable
 class ClubsPageView extends StatelessWidget {

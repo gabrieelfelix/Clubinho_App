@@ -128,7 +128,7 @@ class AppRouter {
         builder: (context, state) => Helpers.openPage<String>(
           context,
           state,
-          (clubId) => const UsersManagePage(),
+          (clubId) => const UsersManageView(),
         ),
       ),
     ],

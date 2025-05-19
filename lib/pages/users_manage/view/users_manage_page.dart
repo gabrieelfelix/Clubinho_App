@@ -1,24 +1,22 @@
 import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
-import 'package:club_app/main.dart';
 import 'package:club_app/pages/users_manage/bloc/users_manage_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// toda vez que entra ele carrega
-class UsersManagePage extends StatelessWidget {
-  const UsersManagePage({super.key});
+// class UsersManagePage extends StatelessWidget {
+//   const UsersManagePage({super.key});
 
-  @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => UsersManageBloc(
-        authenticationRepository: getIt<IAuthenticationRepository>(),
-      )..add(GetAllUsersRequired()),
-      child: const UsersManageView(),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return BlocProvider(
+//       create: (context) => UsersManageBloc(
+//         authenticationRepository: getIt<IAuthenticationRepository>(),
+//       )..add(GetAllUsersRequired()),
+//       child: const UsersManageView(),
+//     );
+//   }
+// }
 
 class UsersManageView extends StatelessWidget {
   const UsersManageView({super.key});
@@ -174,8 +172,6 @@ class UsersManageView extends StatelessWidget {
         return 'Coordinator';
       case UserRole.admin:
         return 'Admin';
-      default:
-        return '';
     }
   }
 
