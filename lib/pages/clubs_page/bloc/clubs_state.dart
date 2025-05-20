@@ -14,11 +14,17 @@ class ClubsBlocState extends Equatable {
   final ClubsState state;
   final List<ClubModel>? clubs;
   final String? message;
+  final Default name;
+  final Default address;
+  final Default code;
 
   const ClubsBlocState._({
     this.state = ClubsState.loading,
     this.clubs,
     this.message,
+    this.address = const Default.pure(),
+    this.name = const Default.pure(),
+    this.code = const Default.pure(),
   });
 
   const ClubsBlocState.initial() : this._(state: ClubsState.initial);

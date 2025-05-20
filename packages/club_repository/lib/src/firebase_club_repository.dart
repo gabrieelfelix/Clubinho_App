@@ -16,7 +16,10 @@ class FirebaseClubRepository implements IClubRepository {
   final userCacheKey = '__user_cache_key__';
 
   @override
-  Future<Result<String, Failure>> createClub({required String name}) async {
+  Future<Result<String, Failure>> createClub({
+    required String name,
+    required String address,
+  }) async {
     const uuid = Uuid();
     final customId = 'club-${uuid.v4().substring(0, 5)}';
 
@@ -39,7 +42,7 @@ class FirebaseClubRepository implements IClubRepository {
         'name': name.trim(),
         'teachers': teacherIds,
         'kids': [],
-        'address': 'Rua teste',
+        'address': address,
       });
 
       for (var teacherId in teacherIds) {

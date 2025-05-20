@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:club_app/main.dart';
 import 'package:club_app/pages/clubs_page/bloc/clubs_bloc.dart';
@@ -37,9 +39,9 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// TO DO
-// se eu der dps alguem como admin ele não recebe acesso a todos os outros clubinhos
-// ( outras trocas de role tbm ver os clubs q ficam na conta)
+//? TO DO
+//! se eu der dps alguem como admin ele não recebe acesso a todos os outros clubinhos
+//! ( outras trocas de role tbm ver os clubs q ficam na conta)
 class HomeScreenView extends StatelessWidget {
   const HomeScreenView({super.key});
 

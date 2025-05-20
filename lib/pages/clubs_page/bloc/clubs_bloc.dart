@@ -1,3 +1,4 @@
+import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:club_app/utils/constants.dart';
 import 'package:club_repository/club_repository.dart';
@@ -42,7 +43,10 @@ class ClubsBloc extends Bloc<IClubsEvent, ClubsBlocState> {
       AddClubRequired event, Emitter<ClubsBlocState> emit) async {
     emit(const ClubsBlocState.loading());
 
-    final response = await _clubRepository.createClub(name: event.name.trim());
+    final response = await _clubRepository.createClub(
+      name: event.name.trim(),
+      address: event.address.trim(),
+    );
 
     response.when(
       (success) => emit(ClubsBlocState.successCreate(message: success)),

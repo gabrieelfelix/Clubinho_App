@@ -14,6 +14,11 @@ import 'package:club_app/app/app.dart';
 import 'package:club_app/app/simple_bloc_observer.dart';
 import 'package:club_app/firebase_options.dart';
 
+//! Red
+//? Blue
+////  riscado
+//Todo laranja
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = SimpleBlocObserver();

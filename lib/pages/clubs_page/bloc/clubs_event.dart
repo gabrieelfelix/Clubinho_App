@@ -11,11 +11,18 @@ class GetClubsRequired extends IClubsEvent {}
 
 class AddClubRequired extends IClubsEvent {
   final String name;
+  final String address;
 
-  const AddClubRequired({required this.name});
+  const AddClubRequired({
+    required this.name,
+    required this.address,
+  });
 
   @override
-  List<Object> get props => [name];
+  List<Object> get props => [
+        name,
+        address,
+      ];
 }
 
 class JoinClubRequired extends IClubsEvent {

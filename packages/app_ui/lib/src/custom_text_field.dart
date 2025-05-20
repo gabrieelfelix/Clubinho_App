@@ -27,6 +27,27 @@ class CustomTextField extends StatefulWidget {
         autocorrect = false,
         obscure = null,
         autofillHintsBool = null;
+  const CustomTextField.pop({
+    super.key,
+    required this.hint,
+    required this.textEditingController,
+    required this.textInputAction,
+    this.maxLines,
+    this.onSubmitted,
+    this.onEditingComplete,
+    this.validator,
+    this.autofillHints,
+    this.autovalidateMode,
+    this.onChanged,
+    this.error,
+    this.inputFormatters,
+  })  : keyboardType = TextInputType.text,
+        suffixIcon = null,
+        enableSuggestions = true,
+        isPhone = false,
+        autocorrect = false,
+        obscure = null,
+        autofillHintsBool = null;
   // validatorPhone = null;
 
   CustomTextField.password({
@@ -217,7 +238,6 @@ class _CustomTextFieldState extends State<CustomTextField> {
         style: TextStyle(
           color: context.colors.onSecondary,
         ),
-
         decoration: InputDecoration(
           errorText: widget.error != null ? widget.error : null,
           suffixIcon: widget.suffixIcon,
@@ -226,14 +246,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
               width: 2.w,
               color: context.colors.onSurfaceVariant,
             ),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
               width: 2.w,
               color: context.colors.onSurfaceVariant,
             ),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
           ),
           labelText: widget.hint,
           labelStyle: TextStyle(color: context.colors.surface),
@@ -245,14 +265,14 @@ class _CustomTextFieldState extends State<CustomTextField> {
               width: 2.w,
               color: context.colors.error,
             ),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderSide: BorderSide(
               width: 2.w,
               color: context.colors.error,
             ),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
           ),
         ),
       ),

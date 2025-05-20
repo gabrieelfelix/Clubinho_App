@@ -25,6 +25,8 @@ class ManageClubPage extends StatelessWidget {
     );
   }
 }
+//? TO DO
+//! Botão de tem certeza pra excluir clubin
 
 class ManageClubView extends StatelessWidget {
   const ManageClubView({super.key});

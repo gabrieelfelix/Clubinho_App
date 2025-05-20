@@ -3,7 +3,8 @@ import 'package:club_repository/club_repository.dart';
 import 'package:multiple_result/multiple_result.dart';
 
 abstract class IClubRepository {
-  Future<Result<String, Failure>> createClub({required String name});
+  Future<Result<String, Failure>> createClub(
+      {required String name, required String address});
 
   Future<Result<List<ClubModel>, Failure>> getAllClubs({required String uuid});
 

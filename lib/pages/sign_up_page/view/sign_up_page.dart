@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:club_app/main.dart';
@@ -7,11 +9,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
 
-// quando digito primeiro o segundo campo de senha quando digito
-// a senha dps disso ele não atualiza so se apertar no o olho
-// mas ele atualiza quando digito um acrater a mais
-
-// dps q o cadastrar diz q ta com erro nada muda, ele não valida dnv
+//// quando digito primeiro o segundo campo de senha quando digito
+//// a senha dps disso ele não atualiza so se apertar no o olho
+//// mas ele atualiza quando digito um acrater a mais
+//// dps q o cadastrar diz q ta com erro nada muda, ele não valida dnv
 class SignUpPage extends StatelessWidget {
   const SignUpPage({super.key});
 
