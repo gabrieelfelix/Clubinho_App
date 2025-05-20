@@ -17,4 +17,6 @@ class ImageConstant {
   /// Toy Horse icon
   static String iconKid =
       '$imageIconsPath/wired-outline-1531-rocking-horse-hover-pinch.png';
+
+  static String iconEmpty = '$imageIconsPath/empty.png';
 }

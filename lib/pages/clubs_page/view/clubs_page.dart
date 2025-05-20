@@ -16,11 +16,13 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 //? novo layout de clubinhos
 //? Loading Shimmer
 //? Responsive layout
+////? Apos definir o design e a cor de fundo ver a questão do estilo do Nenhum Clubinho Vinculado
 //// Regex pra mais de um espaço
 //? Imagem legal quando estiver sem clubinho
 //// quando o textfield do criar/entrar num clubinho da erro ele nao tira o erro quando digita
 //! quando um clubinho é deletado e voltamos pra tela de clubinhos ele nao some
 //// qu8ando entrar em um clubinho o feedback ta funcionando direito?
+
 // ignore: must_be_immutable
 class ClubsPageView extends StatelessWidget {
   ClubsPageView({super.key});
@@ -52,13 +54,10 @@ class ClubsPageView extends StatelessWidget {
           child: ListView.builder(
             itemCount: state.clubs!.length,
             itemBuilder: (context, index) {
-              return Column(
-                children: [
-                  const SizedBox(height: 20),
-                  _buildRoundedSquare(context, state.clubs![index].name,
-                      state.clubs![index].id),
-                  const SizedBox(height: 20),
-                ],
+              return _buildRoundedSquare(
+                context,
+                state.clubs![index].name,
+                state.clubs![index].id,
               );
             },
           ),
@@ -70,8 +69,43 @@ class ClubsPageView extends StatelessWidget {
       );
     } else {
       return Scaffold(
-          floatingActionButton: _buildFloatingActionButton(context),
-          body: const Center(child: Text('Nenhum Clubinho Vinculado!')));
+        floatingActionButton: _buildFloatingActionButton(context),
+        body: RefreshIndicator(
+          onRefresh: () => _refreshClubs(context),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return SingleChildScrollView(
+                physics: const AlwaysScrollableScrollPhysics(),
+                child: ConstrainedBox(
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  child: IntrinsicHeight(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ConstrainedBox(
+                            constraints: BoxConstraints(maxHeight: 350.w),
+                            child: Padding(
+                              padding: EdgeInsets.all(40.sp),
+                              child: Image.asset(
+                                ImageConstant.iconEmpty,
+                                filterQuality: FilterQuality.high,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                          const Text('Nenhum Clubinho Vinculado!'),
+                          SizedBox(height: 70.h),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      );
     }
   }
 
@@ -245,58 +279,75 @@ class ClubsPageView extends StatelessWidget {
 
   /// Section Widget
   Widget _buildRoundedSquare(BuildContext context, String name, String id) {
-    return ElevatedButton(
-      onPressed: () => onTapManageClub(context, id),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: context.colors.surface.withOpacity(0.01),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(50.0),
-        ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: 30,
-            left: 150,
-            child: Text(
-              name,
-              style: TextStyle(
-                color: context.colors.onPrimary,
-                fontSize: 20,
+    final double size = 120.w;
+
+    return Padding(
+      padding:
+          EdgeInsets.only(right: 30.w, left: 30.w, top: 10.h, bottom: 10.h),
+      child: SizedBox(
+        child: AspectRatio(
+          aspectRatio: 1,
+          child: ElevatedButton(
+            onPressed: () => onTapManageClub(context, id),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: context.colors.surface.withOpacity(0.01),
+              padding: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20.r),
               ),
             ),
-          ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: SizedBox(
-              child: Image.asset(
-                'assets/icons/wired-outline-1531-rocking-horse-hover-pinch.png',
-                filterQuality: FilterQuality.high,
-                fit: BoxFit.contain,
-                height: 106,
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 13),
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: context.colors.surface,
-                shape: BoxShape.circle,
-              ),
-              child: Transform(
-                alignment: Alignment.center,
-                transform: Matrix4.rotationZ(10.2),
-                child: Icon(
-                  Icons.arrow_downward_rounded,
-                  color: context.colors.onSecondary,
+            child: Stack(
+              children: [
+                Positioned(
+                  top: 12,
+                  left: 12,
+                  right: 12,
+                  child: Text(
+                    name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: context.colors.onPrimary,
+                      fontSize: 14.sp,
+                    ),
+                  ),
                 ),
-              ),
+                Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8, left: 8),
+                    child: Image.asset(
+                      'assets/icons/wired-outline-1531-rocking-horse-hover-pinch.png',
+                      filterQuality: FilterQuality.high,
+                      fit: BoxFit.contain,
+                      height: size * 0.5,
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Container(
+                    margin: const EdgeInsets.only(bottom: 8, right: 8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: context.colors.surface,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Transform.rotate(
+                      angle: 10.2,
+                      child: Icon(
+                        Icons.arrow_downward_rounded,
+                        color: context.colors.onSecondary,
+                        size: 18.sp,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
+        ),
       ),
     );
   }
