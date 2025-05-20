@@ -24,6 +24,11 @@ class HomePage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
+          create: (_) => AuthenticationBloc(
+            authRepository: getIt<IAuthenticationRepository>(),
+          ),
+        ),
+        BlocProvider(
           create: (_) => ClubsBloc(
             clubRepository: getIt<IClubRepository>(),
           )..add(GetClubsRequired()),

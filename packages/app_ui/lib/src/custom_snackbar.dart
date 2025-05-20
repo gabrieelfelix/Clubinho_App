@@ -10,7 +10,7 @@ void showCustomSnackBar(
   BuildContext context,
   String message, {
   required SnackBarType type,
-  Duration duration = const Duration(seconds: 3),
+  Duration duration = const Duration(seconds: 2),
   SnackBarAction? action,
 }) {
   final theme = Theme.of(context);

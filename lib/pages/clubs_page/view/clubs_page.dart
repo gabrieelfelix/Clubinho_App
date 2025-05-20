@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:app_ui/app_ui.dart';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:club_app/pages/clubs_page/bloc/clubs_bloc.dart';
@@ -10,38 +12,18 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:go_router/go_router.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
-// class ClubsPage extends StatelessWidget {
-//   const ClubsPage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return BlocProvider(
-//       create: (context) => ClubsBloc(clubRepository: getIt<IClubRepository>())
-//         ..add(GetClubsRequired()),
-//       child: ClubsPageView(),
-//     );
-//   }
-// }
-
 //? TO DO
+//? novo layout de clubinhos
 //? Loading Shimmer
 //? Responsive layout
 //// Regex pra mais de um espaço
 //? Imagem legal quando estiver sem clubinho
-//! quando o textfield do criar/entrar num clubinho da erro ele nao tira o erro quando digita
-//! quando um clubinho é deletado quando voltamos pra tela de clubinhos ele nao some
-//! qu8ando entrar em um clubinho o feedback ta funcionando direito?
+//// quando o textfield do criar/entrar num clubinho da erro ele nao tira o erro quando digita
+//! quando um clubinho é deletado e voltamos pra tela de clubinhos ele nao some
+//// qu8ando entrar em um clubinho o feedback ta funcionando direito?
 // ignore: must_be_immutable
 class ClubsPageView extends StatelessWidget {
   ClubsPageView({super.key});
-
-  final TextEditingController _nameController = TextEditingController();
-
-  final TextEditingController _codeController = TextEditingController();
-
-  final TextEditingController _addressController = TextEditingController();
-
-  final _formKey = GlobalKey<FormState>();
 
   bool isCoordinatorOrAdmin = false;
 
@@ -101,8 +83,18 @@ class ClubsPageView extends StatelessWidget {
     required bool event,
   }) {
     final bloc = context.read<ClubsBloc>();
+
     final authUser =
         CacheClient.read<AuthUserModel>(key: AppConstants.userCacheKey);
+
+    final TextEditingController nameController = TextEditingController();
+
+    final TextEditingController codeController = TextEditingController();
+
+    final TextEditingController addressController = TextEditingController();
+
+    final formKey = GlobalKey<FormState>();
+
     return showDialog(
       barrierDismissible: false,
       context: context,
@@ -128,62 +120,71 @@ class ClubsPageView extends StatelessWidget {
                     width: 2.w,
                   ),
                 ),
-                content: Form(
-                  key: _formKey,
-                  child: event
-                      ? Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(
-                              // height: 40.h,
-                              child: CustomTextField(
-                                hint: 'Código do CLubinho',
-                                textInputAction: TextInputAction.next,
-                                textEditingController: _codeController,
-                                validator: (vl) =>
-                                    state.code.validator(vl ?? '')?.text(),
+                content: SingleChildScrollView(
+                  child: Form(
+                    key: formKey,
+                    child: event
+                        ? Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(height: 5.h),
+                              SizedBox(
+                                // height: 40.h,
+                                child: CustomTextField(
+                                  hint: 'Código do CLubinho',
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  textInputAction: TextInputAction.next,
+                                  textEditingController: codeController,
+                                  validator: (vl) =>
+                                      state.code.validator(vl ?? '')?.text(),
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 15.h),
-                            if (state.isLoading)
-                              LoadingAnimationWidget.waveDots(
-                                color: context.colors.primary,
-                                size: 30.sp,
-                              )
-                          ],
-                        )
-                      : Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(
-                              // height: 40.h,
-                              child: CustomTextField(
-                                hint: 'Nome',
-                                textInputAction: TextInputAction.next,
-                                textEditingController: _nameController,
-                                validator: (vl) =>
-                                    state.name.validator(vl ?? '')?.text(),
+                              SizedBox(height: 15.h),
+                              if (state.isLoading)
+                                LoadingAnimationWidget.waveDots(
+                                  color: context.colors.primary,
+                                  size: 30.sp,
+                                )
+                            ],
+                          )
+                        : Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SizedBox(
+                                // height: 40.h,
+                                child: CustomTextField(
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  hint: 'Nome',
+                                  textInputAction: TextInputAction.next,
+                                  textEditingController: nameController,
+                                  validator: (vl) =>
+                                      state.name.validator(vl ?? '')?.text(),
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 20.h),
-                            SizedBox(
-                              child: CustomTextField(
-                                hint: 'Endereço',
-                                maxLines: 3,
-                                textInputAction: TextInputAction.next,
-                                textEditingController: _addressController,
-                                validator: (vl) =>
-                                    state.address.validator(vl ?? '')?.text(),
+                              SizedBox(height: 20.h),
+                              SizedBox(
+                                child: CustomTextField(
+                                  hint: 'Endereço',
+                                  autovalidateMode:
+                                      AutovalidateMode.onUserInteraction,
+                                  maxLines: 3,
+                                  textInputAction: TextInputAction.next,
+                                  textEditingController: addressController,
+                                  validator: (vl) =>
+                                      state.address.validator(vl ?? '')?.text(),
+                                ),
                               ),
-                            ),
-                            SizedBox(height: 15.h),
-                            if (state.isLoading)
-                              LoadingAnimationWidget.waveDots(
-                                color: context.colors.primary,
-                                size: 30.sp,
-                              )
-                          ],
-                        ),
+                              SizedBox(height: 15.h),
+                              if (state.isLoading)
+                                LoadingAnimationWidget.waveDots(
+                                  color: context.colors.primary,
+                                  size: 30.sp,
+                                ),
+                            ],
+                          ),
+                  ),
                 ),
                 actions: [
                   ConstrainedBox(
@@ -210,19 +211,19 @@ class ClubsPageView extends StatelessWidget {
                             isLoading: false,
                             height: 35.h,
                             onPressed: () async {
-                              if (_formKey.currentState!.validate()) {
+                              if (formKey.currentState!.validate()) {
                                 if (event) {
                                   context.read<ClubsBloc>().add(
                                         JoinClubRequired(
-                                          clubInput: _codeController.text,
+                                          clubInput: codeController.text,
                                           userId: authUser!.userId,
                                         ),
                                       );
                                 } else {
                                   context.read<ClubsBloc>().add(
                                         AddClubRequired(
-                                          name: _nameController.text,
-                                          address: _addressController.text,
+                                          name: nameController.text,
+                                          address: addressController.text,
                                         ),
                                       );
                                 }
@@ -385,10 +386,11 @@ class ClubsPageView extends StatelessWidget {
       FocusManager.instance.primaryFocus?.unfocus();
     } else if (state.isCreated) {
       context.read<ClubsBloc>().add(GetClubsRequired());
-
       Navigator.of(context).pop();
     } else if (state.isSuccess) {
       context.read<ClubsBloc>().add(GetClubsRequired());
+      Navigator.of(context).pop();
+      // _clearTextFields();
     }
   }
 
