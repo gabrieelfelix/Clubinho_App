@@ -26,7 +26,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 //? TO DO
 //? Loading Shimmer
 //? Responsive layout
-//? Regex pra mais de um espaço
+//// Regex pra mais de um espaço
 //? Imagem legal quando estiver sem clubinho
 //! quando o textfield do criar/entrar num clubinho da erro ele nao tira o erro quando digita
 //! quando um clubinho é deletado quando voltamos pra tela de clubinhos ele nao some

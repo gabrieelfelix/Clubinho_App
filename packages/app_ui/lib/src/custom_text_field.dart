@@ -226,7 +226,11 @@ class _CustomTextFieldState extends State<CustomTextField> {
         obscureText: widget.obscure ?? false,
         controller: widget.textEditingController,
         onChanged: widget.onChanged, //
-        inputFormatters: widget.inputFormatters,
+        inputFormatters: [
+          MaskFormatter.noDoubleSpaceFormatter,
+          ...?widget.inputFormatters,
+        ],
+
         onEditingComplete: widget.onEditingComplete, //
         onFieldSubmitted: widget.onSubmitted, //
         textInputAction: widget.textInputAction, //
